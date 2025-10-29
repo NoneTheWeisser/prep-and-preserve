@@ -8,52 +8,141 @@ DROP TABLE IF EXISTS "user";
 -------------------------------------------------------
 --------------------------------------------------
 -- TABLE SCHEMAS:
+-- USERS TABLE
 CREATE TABLE "user" (
   "id" SERIAL PRIMARY KEY,
-  "username" VARCHAR (80) UNIQUE NOT NULL,
-  "password" VARCHAR (1000) NOT NULL,
-  "inserted_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
-  "updated_at" TIMESTAMPTZ NOT NULL DEFAULT now()
+  "username" VARCHAR(255) NOT NULL,
+  "password" TEXT NOT NULL,
+  "email" VARCHAR(255) NOT NULL,
+  "profile_image_url" TEXT,
+  "role" VARCHAR(255) NOT NULL DEFAULT 'user',
+  "created_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- RECIPES TABLE
+CREATE TABLE "recipes" (
+  "id" SERIAL PRIMARY KEY,
+  "user_id" INTEGER NOT NULL,
+  "original_recipe_id" INTEGER,
+  "title" VARCHAR(255) NOT NULL,
+  "description" TEXT,
+  "instructions" TEXT NOT NULL,
+  "nutrition" TEXT,
+  "image_url" TEXT,
+  "source_url" TEXT,
+  "is_public" BOOLEAN NOT NULL DEFAULT TRUE,
+  "created_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  FOREIGN KEY ("user_id") REFERENCES "user" ("id"),
+  FOREIGN KEY ("original_recipe_id") REFERENCES "recipes" ("id") ON DELETE SET NULL
+);
+
+-- INGREDIENTS TABLE
+CREATE TABLE "ingredients" (
+  "id" SERIAL PRIMARY KEY,
+  "name" VARCHAR(255) NOT NULL,
+  "category" VARCHAR(255)
+);
+
+-- RECIPE INGREDIENTS (JOIN TABLE)
+CREATE TABLE "recipe_ingredients" (
+  "id" SERIAL PRIMARY KEY,
+  "recipe_id" INTEGER NOT NULL,
+  "ingredient_id" INTEGER NOT NULL,
+  "quantity" DECIMAL(8,2),
+  "unit" VARCHAR(255),
+  FOREIGN KEY ("recipe_id") REFERENCES "recipes" ("id") ON DELETE CASCADE,
+  FOREIGN KEY ("ingredient_id") REFERENCES "ingredients" ("id") ON DELETE CASCADE
+);
+
+-- TAGS TABLE
+CREATE TABLE "tags" (
+  "id" SERIAL PRIMARY KEY,
+  "name" VARCHAR(255) UNIQUE NOT NULL
+);
+
+-- RECIPE TAGS (JOIN TABLE)
+CREATE TABLE "recipe_tags" (
+  "recipe_id" INTEGER NOT NULL,
+  "tag_id" INTEGER NOT NULL,
+  PRIMARY KEY ("recipe_id", "tag_id"),
+  FOREIGN KEY ("recipe_id") REFERENCES "recipes" ("id") ON DELETE CASCADE,
+  FOREIGN KEY ("tag_id") REFERENCES "tags" ("id") ON DELETE CASCADE
+);
+
+-- FAVORITES TABLE
+CREATE TABLE "favorites" (
+  "id" SERIAL PRIMARY KEY,
+  "user_id" INTEGER NOT NULL,
+  "recipe_id" INTEGER NOT NULL,
+  FOREIGN KEY ("user_id") REFERENCES "user" ("id") ON DELETE CASCADE,
+  FOREIGN KEY ("recipe_id") REFERENCES "recipes" ("id") ON DELETE CASCADE
+);
+
+-- MEAL PLAN TABLE
+CREATE TABLE "meal_plan" (
+  "id" SERIAL PRIMARY KEY,
+  "user_id" INTEGER NOT NULL,
+  "recipe_id" INTEGER NOT NULL,
+  "date" DATE NOT NULL,
+  "meal_time" VARCHAR(255) NOT NULL,
+  FOREIGN KEY ("user_id") REFERENCES "user" ("id") ON DELETE CASCADE,
+  FOREIGN KEY ("recipe_id") REFERENCES "recipes" ("id") ON DELETE CASCADE
 );
 
 
--------------------------------------------------------
---------------------------------------------------
--- SEED DATA:
---   You'll need to actually register users via the application in order to get hashed
---   passwords. Once you've done that, you can modify this INSERT statement to include
---   your dummy users. Be sure to copy/paste their hashed passwords, as well.
---   This is only for development purposes! Here's a commented-out example:
--- INSERT INTO "user"
---   ("username", "password")
---   VALUES
---   ('unicorn10', '$2a$10$oGi81qjXmTh/slGzYOr2fu6NGuCwB4kngsiWQPToNrZf5X8hxkeNG'), --pw: 123
---   ('cactusfox', '$2a$10$8./c/6fB2BkzdIrAUMWOxOlR75kgmbx/JMrMA5gA70c9IAobVZquW'); --pw: 123
+-- Initial seed data for ingredients
 
+INSERT INTO ingredients (name, category) VALUES
+('All-purpose flour', 'Baking'),
+('Baking powder', 'Baking'),
+('Baking soda', 'Baking'),
+('Brown sugar', 'Baking'),
+('Granulated sugar', 'Baking'),
+('Butter', 'Dairy'),
+('Milk', 'Dairy'),
+('Eggs', 'Dairy'),
+('Olive oil', 'Oils'),
+('Vegetable oil', 'Oils'),
+('Chicken breast', 'Protein'),
+('Ground beef', 'Protein'),
+('Pork sausage', 'Protein'),
+('Salmon', 'Protein'),
+('Shrimp', 'Protein'),
+('Carrots', 'Produce'),
+('Celery', 'Produce'),
+('Onion', 'Produce'),
+('Garlic', 'Produce'),
+('Tomatoes', 'Produce'),
+('Corn', 'Produce'),
+('Bell pepper', 'Produce'),
+('Potatoes', 'Produce'),
+('Rice', 'Grains'),
+('Pasta', 'Grains'),
+('Bread crumbs', 'Grains'),
+('Parmesan cheese', 'Dairy'),
+('Cheddar cheese', 'Dairy'),
+('Mozzarella cheese', 'Dairy'),
+('Spinach', 'Produce'),
+('Broccoli', 'Produce'),
+('Zucchini', 'Produce'),
+('Lemon juice', 'Condiments'),
+('Soy sauce', 'Condiments'),
+('Worcestershire sauce', 'Condiments'),
+('Salt', 'Seasoning'),
+('Black pepper', 'Seasoning'),
+('Paprika', 'Seasoning'),
+('Cumin', 'Seasoning'),
+('Oregano', 'Seasoning'),
+('Basil', 'Seasoning'),
+('Thyme', 'Seasoning'),
+('Rosemary', 'Seasoning'),
+('Chili powder', 'Seasoning'),
+('Cinnamon', 'Spices'),
+('Nutmeg', 'Spices'),
+('Vanilla extract', 'Baking'),
+('Honey', 'Condiments'),
+('Maple syrup', 'Condiments'),
+('Vinegar', 'Condiments');
 
--------------------------------------------------------
---------------------------------------------------
--- AUTOMAGIC UPDATED_AT:
-
--- Did you know that you can make and execute functions
--- in PostgresQL? Wild, right!? I'm not making this up. Here
--- is proof that I am not making this up:
-  -- https://x-team.com/blog/automatic-timestamps-with-postgresql/
-
--- Create a function that sets a row's updated_at column
--- to NOW():
-CREATE OR REPLACE FUNCTION set_updated_at_to_now() -- 👈
-RETURNS TRIGGER AS $$
-BEGIN
-  NEW.updated_at = NOW();
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
--- Create a trigger on the user table that will execute
--- the set_update_at_to_now function on any rows that
--- have been touched by an UPDATE query:
-CREATE TRIGGER on_user_update
-BEFORE UPDATE ON "user"
-FOR EACH ROW
-EXECUTE PROCEDURE set_updated_at_to_now();
