@@ -102,3 +102,28 @@ button:hover, button:focus {
   text-decoration-color: #20c997;
   text-decoration-thickness: 2px;
 }
+
+/* Create an account styling. */
+.register-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+.register-logo {
+  width: 200px;
+  /* margin-bottom: 1rem; */
+}
+
+.about-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+.about-image {
+  width: 500px;
+  margin-bottom: 1rem;
+}

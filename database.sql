@@ -28,22 +28,17 @@ CREATE TABLE "recipes" (
   "title" VARCHAR(255) NOT NULL,
   "description" TEXT,
   "instructions" TEXT NOT NULL,
+  "ingredients" TEXT NOT NULL,
   "nutrition" TEXT,
   "image_url" TEXT,
   "source_url" TEXT,
   "is_public" BOOLEAN NOT NULL DEFAULT TRUE,
   "created_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  FOREIGN KEY ("user_id") REFERENCES "user" ("id"),
+  FOREIGN KEY ("user_id") REFERENCES "user" ("id") ON DELETE CASCADE,
   FOREIGN KEY ("original_recipe_id") REFERENCES "recipes" ("id") ON DELETE SET NULL
 );
 
--- INGREDIENTS TABLE
-CREATE TABLE "ingredients" (
-  "id" SERIAL PRIMARY KEY,
-  "name" VARCHAR(255) NOT NULL,
-  "category" VARCHAR(255)
-);
 
 -- RECIPE INGREDIENTS (JOIN TABLE)
 CREATE TABLE "recipe_ingredients" (
@@ -62,6 +57,27 @@ CREATE TABLE "tags" (
   "name" VARCHAR(255) UNIQUE NOT NULL
 );
 
+-- FAVORITES TABLE
+CREATE TABLE "favorites" (
+  "id" SERIAL PRIMARY KEY,
+  "user_id" INTEGER NOT NULL,
+  "recipe_id" INTEGER NOT NULL,
+  "created_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  FOREIGN KEY ("user_id") REFERENCES "user" ("id") ON DELETE CASCADE,
+  FOREIGN KEY ("recipe_id") REFERENCES "recipes" ("id") ON DELETE CASCADE,
+  UNIQUE ("user_id", "recipe_id")
+);
+
+
+------- FUTURE Stretch Goals ------
+
+-- INGREDIENTS TABLE
+CREATE TABLE "ingredients" (
+  "id" SERIAL PRIMARY KEY,
+  "name" VARCHAR(255) NOT NULL,
+  "category" VARCHAR(255)
+);
+
 -- RECIPE TAGS (JOIN TABLE)
 CREATE TABLE "recipe_tags" (
   "recipe_id" INTEGER NOT NULL,
@@ -69,15 +85,6 @@ CREATE TABLE "recipe_tags" (
   PRIMARY KEY ("recipe_id", "tag_id"),
   FOREIGN KEY ("recipe_id") REFERENCES "recipes" ("id") ON DELETE CASCADE,
   FOREIGN KEY ("tag_id") REFERENCES "tags" ("id") ON DELETE CASCADE
-);
-
--- FAVORITES TABLE
-CREATE TABLE "favorites" (
-  "id" SERIAL PRIMARY KEY,
-  "user_id" INTEGER NOT NULL,
-  "recipe_id" INTEGER NOT NULL,
-  FOREIGN KEY ("user_id") REFERENCES "user" ("id") ON DELETE CASCADE,
-  FOREIGN KEY ("recipe_id") REFERENCES "recipes" ("id") ON DELETE CASCADE
 );
 
 -- MEAL PLAN TABLE
@@ -90,7 +97,6 @@ CREATE TABLE "meal_plan" (
   FOREIGN KEY ("user_id") REFERENCES "user" ("id") ON DELETE CASCADE,
   FOREIGN KEY ("recipe_id") REFERENCES "recipes" ("id") ON DELETE CASCADE
 );
-
 
 -- Initial seed data for ingredients
 

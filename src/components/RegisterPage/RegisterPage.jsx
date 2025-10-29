@@ -28,8 +28,13 @@ function RegisterPage() {
   };
 
   return (
-    <>
-      <h2>Register Page</h2>
+    <div className="register-container">
+        <img
+          src="/img/prepperservelogo_horizontal.svg"
+          alt="Prep & Preserve logo"
+          className="register-logo"
+        />
+      <h2>Create an Account</h2>
       <form onSubmit={handleRegister}>
         <label htmlFor="username">Username:</label>
         <input
@@ -55,13 +60,15 @@ function RegisterPage() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <button type="submit">Register</button>
+        {/* gotta get cloudinary set up for this part */}
+        <button>Upload Profile Image</button>
+        <button type="submit">Create Account</button>
       </form>
       {
         // Conditionally render registration error:
         errorMessage && <h3>{errorMessage}</h3>
       }
-    </>
+    </div>
   );
 }
 

@@ -18,7 +18,7 @@ function Nav() {
                 <NavLink to="/login">Login</NavLink>
               </li>
               <li>
-                <NavLink to="/registration">Register</NavLink>
+                <NavLink to="/registration">Sign Up</NavLink>
               </li>
             </>
           )

@@ -1,20 +1,19 @@
-import { useState, useEffect } from 'react';
-import useStore from '../../zustand/store';
-
+import { useState, useEffect } from "react";
+import useStore from "../../zustand/store";
 
 function LoginPage() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const logIn = useStore((state) => state.logIn)
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const logIn = useStore((state) => state.logIn);
   const errorMessage = useStore((state) => state.authErrorMessage);
   const setAuthErrorMessage = useStore((state) => state.setAuthErrorMessage);
 
   useEffect(() => {
     // Clear the auth error message when the component unmounts:
     return () => {
-      setAuthErrorMessage('');
-    }
-  }, [])
+      setAuthErrorMessage("");
+    };
+  }, []);
 
   const handleLogIn = (event) => {
     event.preventDefault();
@@ -22,12 +21,17 @@ function LoginPage() {
     logIn({
       username: username,
       password: password,
-    })
+    });
   };
 
   return (
-    <>
-      <h2>Login Page</h2>
+    <div className="register-container">
+      <img
+        src="/img/prepperservelogo_horizontal.svg"
+        alt="Prep & Preserve logo"
+        className="register-logo"
+      />
+      <h2>Sign in</h2>
       <form onSubmit={handleLogIn}>
         <label htmlFor="username">Username:</label>
         <input
@@ -45,18 +49,14 @@ function LoginPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit">
-          Log In
-        </button>
+        <button type="submit">Log In</button>
       </form>
-      { // Conditionally render login error:
-        errorMessage && (
-          <h3>{errorMessage}</h3>
-        )
+      {
+        // Conditionally render login error:
+        errorMessage && <h3>{errorMessage}</h3>
       }
-    </>
+    </div>
   );
 }
-
 
 export default LoginPage;

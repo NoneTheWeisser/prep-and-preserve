@@ -1,6 +1,11 @@
 export default function About() {
   return (
-    <>
+    <div className="about-container">
+      <img
+        src="/img/pexels-katerina-holmes-5908020.jpg"
+        alt="Prep & Preserve logo"
+        className="about-image"
+      />
       <h2>About Prep & Preserve</h2>
       <p>
         This app is named Prep & Preserve for a few reasons. First, I'm a fan of
@@ -16,6 +21,6 @@ export default function About() {
         This project is a solo exploration of full-stack development, including
         React, Zustand, Express, PostgreSQL, Quill, and Cloudinary.
       </p> */}
-    </>
+    </div>
   );
 }
