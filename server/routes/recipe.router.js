@@ -80,7 +80,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
   const sqlText = `
     INSERT INTO recipes (user_id, title, description, instructions, ingredients, image_url, is_public, source_url)
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-    RETURNING*;
+    RETURNING *;
     `;
 
   const sqlValues = [
@@ -90,7 +90,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
     instructions,
     ingredients,
     image_url,
-    is_public ?? true,
+    is_public,
     source_url,
   ];
 
@@ -103,7 +103,53 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
   }
 });
 
-// PUT
+// PUT updating a recipe
+router.put("/:id", rejectUnauthenticated, async (req, res) => {
+    const recipeId = req.params.id;
+    const userId = req.user.id; 
+    const { title, description, instructions, ingredients, image_url, is_public, source_url } = req.body;
+
+    // check if user is owner
+    const checkOwnerQuery = ` SELECT * FROM recipes WHERE id = $1 AND user_id =$2;`;
+
+    try{
+        const ownerResult = await pool.query(checkOwnerQuery, [recipeId, userId]);
+        if (ownerResult.rows.length === 0) {
+            return res.status(403).json({error: "Unauthorized to edit this recipe"})
+        }
+        const updateQuery = `
+            UPDATE recipes
+            SET
+            title = $1,
+            description = $2,
+            instructions = $3, 
+            ingredients = $4, 
+            image_url = $5,
+            is_public = $6, 
+            source_url = $7,
+            updated_at = NOW()
+            WHERE id = $8
+            RETURNING *;
+            `;
+        const updateValues = [
+            title,
+            description,
+            instructions,
+            ingredients,
+            image_url,
+            is_public,
+            source_url,
+            recipeId
+        ];
+
+        const result = await pool.query(updateQuery, updateValues);
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error("Error updating recipe:", error);
+        res.sendStatus(500);
+    }
+});
+
 
 
 // DELETE
