@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import useStore from "../../zustand/store";
+import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
   const [username, setUsername] = useState("");
@@ -7,6 +8,8 @@ function LoginPage() {
   const logIn = useStore((state) => state.logIn);
   const errorMessage = useStore((state) => state.authErrorMessage);
   const setAuthErrorMessage = useStore((state) => state.setAuthErrorMessage);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Clear the auth error message when the component unmounts:
@@ -49,12 +52,21 @@ function LoginPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit">Log In</button>
+        <button type="submit" className="auth-btn primary">
+          Sign In
+        </button>
       </form>
       {
         // Conditionally render login error:
         errorMessage && <h3>{errorMessage}</h3>
       }
+      <button
+        type="button"
+        className="auth-btn secondary"
+        onClick={() => navigate("/registration")}
+      >
+        Create Account
+      </button>
     </div>
   );
 }

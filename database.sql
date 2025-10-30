@@ -11,9 +11,9 @@ DROP TABLE IF EXISTS "user";
 -- USERS TABLE
 CREATE TABLE "user" (
   "id" SERIAL PRIMARY KEY,
-  "username" VARCHAR(255) NOT NULL,
+  "username" VARCHAR(255) UNIQUE NOT NULL,
   "password" TEXT NOT NULL,
-  "email" VARCHAR(255) NOT NULL,
+  "email" VARCHAR(255) UNIQUE NOT NULL,
   "profile_image_url" TEXT,
   "role" VARCHAR(255) NOT NULL DEFAULT 'user',
   "created_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -27,8 +27,8 @@ CREATE TABLE "recipes" (
   "original_recipe_id" INTEGER,
   "title" VARCHAR(255) NOT NULL,
   "description" TEXT,
-  "instructions" TEXT NOT NULL,
   "ingredients" TEXT NOT NULL,
+  "instructions" TEXT NOT NULL,
   "nutrition" TEXT,
   "image_url" TEXT,
   "source_url" TEXT,
@@ -39,22 +39,19 @@ CREATE TABLE "recipes" (
   FOREIGN KEY ("original_recipe_id") REFERENCES "recipes" ("id") ON DELETE SET NULL
 );
 
-
--- RECIPE INGREDIENTS (JOIN TABLE)
-CREATE TABLE "recipe_ingredients" (
-  "id" SERIAL PRIMARY KEY,
-  "recipe_id" INTEGER NOT NULL,
-  "ingredient_id" INTEGER NOT NULL,
-  "quantity" DECIMAL(8,2),
-  "unit" VARCHAR(255),
-  FOREIGN KEY ("recipe_id") REFERENCES "recipes" ("id") ON DELETE CASCADE,
-  FOREIGN KEY ("ingredient_id") REFERENCES "ingredients" ("id") ON DELETE CASCADE
-);
-
 -- TAGS TABLE
 CREATE TABLE "tags" (
   "id" SERIAL PRIMARY KEY,
   "name" VARCHAR(255) UNIQUE NOT NULL
+);
+
+-- RECIPE TAGS (JOIN TABLE)
+CREATE TABLE "recipe_tags" (
+  "recipe_id" INTEGER NOT NULL,
+  "tag_id" INTEGER NOT NULL,
+  PRIMARY KEY ("recipe_id", "tag_id"),
+  FOREIGN KEY ("recipe_id") REFERENCES "recipes" ("id") ON DELETE CASCADE,
+  FOREIGN KEY ("tag_id") REFERENCES "tags" ("id") ON DELETE CASCADE
 );
 
 -- FAVORITES TABLE
@@ -67,6 +64,7 @@ CREATE TABLE "favorites" (
   FOREIGN KEY ("recipe_id") REFERENCES "recipes" ("id") ON DELETE CASCADE,
   UNIQUE ("user_id", "recipe_id")
 );
+
 
 
 ------- FUTURE Stretch Goals ------
