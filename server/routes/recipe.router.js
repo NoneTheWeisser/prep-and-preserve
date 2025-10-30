@@ -1,7 +1,5 @@
 const express = require("express");
-const encryptLib = require("../modules/encryption");
 const pool = require("../modules/pool");
-const userStrategy = require("../strategies/user.strategy");
 const {
   rejectUnauthenticated,
 } = require("../modules/authentication-middleware");
@@ -73,5 +71,41 @@ router.get("/:id", async (req, res) => {
     res.sendStatus(500);
   }
 });
+
+// POST new recipe
+router.post("/", rejectUnauthenticated, async (req, res) => {
+  const { title, description, instructions, ingredients, image_url, is_public, source_url } = req.body;
+  const userId = req.user.id;
+
+  const sqlText = `
+    INSERT INTO recipes (user_id, title, description, instructions, ingredients, image_url, is_public, source_url)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    RETURNING*;
+    `;
+
+  const sqlValues = [
+    userId,
+    title,
+    description,
+    instructions,
+    ingredients,
+    image_url,
+    is_public ?? true,
+    source_url,
+  ];
+
+  try {
+    const result = await pool.query(sqlText, sqlValues);
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error(`Error adding recipe:`, error);
+    res.sendStatus(500);
+  }
+});
+
+// PUT
+
+
+// DELETE
 
 module.exports = router;
