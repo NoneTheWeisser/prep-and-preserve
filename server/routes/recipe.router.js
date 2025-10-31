@@ -112,7 +112,6 @@ router.post("/", rejectUnauthenticated, rejectIfNotOwnerOrAdmin, async (req, res
 // PUT updating a recipe
 router.put("/:id", rejectUnauthenticated, rejectIfNotOwnerOrAdmin, async (req, res) => {
   const recipeId = req.params.id;
-  const userId = req.user.id;
   const {
     title,
     description,
@@ -123,42 +122,38 @@ router.put("/:id", rejectUnauthenticated, rejectIfNotOwnerOrAdmin, async (req, r
     source_url,
   } = req.body;
 
-  // check if user is owner
-  const checkOwnerQuery = ` SELECT * FROM recipes WHERE id = $1 AND user_id =$2;`;
+  const updateQuery = `
+    UPDATE recipes
+    SET
+      title = $1,
+      description = $2,
+      instructions = $3, 
+      ingredients = $4, 
+      image_url = $5,
+      is_public = $6, 
+      source_url = $7,
+      updated_at = NOW()
+    WHERE id = $8
+    RETURNING *;
+  `;
+  const updateValues = [
+    title,
+    description,
+    instructions,
+    ingredients,
+    image_url,
+    is_public,
+    source_url,
+    recipeId,
+  ];
 
   try {
-    const ownerResult = await pool.query(checkOwnerQuery, [recipeId, userId]);
-    if (ownerResult.rows.length === 0) {
-      return res
-        .status(403)
-        .json({ error: "Unauthorized to edit this recipe" });
-    }
-    const updateQuery = `
-            UPDATE recipes
-            SET
-            title = $1,
-            description = $2,
-            instructions = $3, 
-            ingredients = $4, 
-            image_url = $5,
-            is_public = $6, 
-            source_url = $7,
-            updated_at = NOW()
-            WHERE id = $8
-            RETURNING *;
-            `;
-    const updateValues = [
-      title,
-      description,
-      instructions,
-      ingredients,
-      image_url,
-      is_public,
-      source_url,
-      recipeId,
-    ];
-
     const result = await pool.query(updateQuery, updateValues);
+
+    if (result.rows.length === 0) {
+      return res.sendStatus(404);
+    }
+
     res.json(result.rows[0]);
   } catch (error) {
     console.error("Error updating recipe:", error);
@@ -169,26 +164,17 @@ router.put("/:id", rejectUnauthenticated, rejectIfNotOwnerOrAdmin, async (req, r
 // DELETE
 router.delete("/:id", rejectUnauthenticated, rejectIfNotOwnerOrAdmin, async (req, res) => {
   const recipeId = req.params.id;
-  const userId = req.user.id;
-
   try {
-    // Does the recipe belong to the user?
-    const checkSql = `SELECT * FROM recipes WHERE id= $1 AND user_id = $2`;
-    const checkResult = await pool.query(checkSql, [recipeId, userId]);
-
-    if (checkResult.rows.length === 0) {
-      return res
-        .status(403)
-        .json({ error: " You are not authorized to delete this recipe" });
-    }
-    // Delete the recipe...
     const deleteSql = `DELETE FROM recipes WHERE id= $1 RETURNING *;`;
     const deleteResult = await pool.query(deleteSql, [recipeId]);
 
-    res.status(200).json({
-      message: "Recipe deleted successfully",
-      deleted: deleteResult.rows[0],
-    });
+    if (deleteResult.rows.length === 0) {
+      return res.sendStatus(404);
+    }
+      res.status(200).json({
+        message: "Recipe deleted successfully",
+        deleted: deleteResult.rows[0],
+      });
   } catch (error) {
     console.error("Error deleting recipe:", error);
     res.sendStatus(500);

@@ -63,5 +63,4 @@ router.delete('/logout', (req, res, next) => {
   });
 });
 
-
 module.exports = router;

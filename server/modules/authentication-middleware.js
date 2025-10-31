@@ -25,7 +25,7 @@ const rejectIfNotAdmin = (req, res, next) => {
 // Admin and Recipe Owner
 const rejectIfNotOwnerOrAdmin = async (req, res, next) => {
   const userId = req.user.id;
-  const recipe_id = req.body.recipe_id || req.params.recipeId;
+  const recipe_id = req.body.recipe_id || req.params.recipeId || req.params.id;
   // Admin can do all
   if (req.user?.is_admin) {
     return next();
