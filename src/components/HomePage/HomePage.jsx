@@ -8,7 +8,7 @@ function HomePage() {
 
   return (
     <>
-      <h2>Welcome {user.username}</h2>
+      <h1>Welcome {user.username}</h1>
         <img
         src="/img/pexels-photo-326281.jpeg"
         alt="Prep & Preserve logo"

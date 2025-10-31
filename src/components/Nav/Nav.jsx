@@ -11,15 +11,9 @@ function Nav() {
           // User is not logged in, render these links:
           !user.id && (
             <>
-              <li>
-                <NavLink to="/">Home</NavLink>
-              </li>
-              <li>
-                <NavLink to="/login">Login</NavLink>
-              </li>
-              <li>
-                <NavLink to="/registration">Sign Up</NavLink>
-              </li>
+              <li><NavLink to="/">Home</NavLink></li>
+              <li><NavLink to="/login">Login</NavLink></li>
+              <li><NavLink to="/registration">Sign Up</NavLink></li>
             </>
           )
         }
@@ -27,15 +21,18 @@ function Nav() {
           // User is logged in, render these links:
           user.id && (
             <>
-              <li>
-                <NavLink to="/">Home</NavLink>
-              </li>
+              <li><NavLink to="/">Home</NavLink></li>
+              <li><NavLink to="/addrecipe">Add Recipe</NavLink></li>
+              <li><NavLink to="/myrecipes">My Recipe</NavLink></li>
             </>
           )
         }
         {/* Show these links regardless of auth status: */}
         <li>
           <NavLink to="/about">About</NavLink>
+        </li>
+        <li>
+          <NavLink to="/community">Community Recipes</NavLink>
         </li>
       </ul>
     </nav>
