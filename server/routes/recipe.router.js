@@ -187,12 +187,10 @@ router.delete("/:id", rejectUnauthenticated, async (req, res) => {
     const deleteSql = `DELETE FROM recipes WHERE id= $1 RETURNING *;`;
     const deleteResult = await pool.query(deleteSql, [recipeId]);
 
-    res
-      .status(200)
-      .json({
-        message: "Recipe deleted successfully",
-        deleted: deleteResult.rows[0],
-      });
+    res.status(200).json({
+      message: "Recipe deleted successfully",
+      deleted: deleteResult.rows[0],
+    });
   } catch (error) {
     console.error("Error deleting recipe:", error);
     res.sendStatus(500);

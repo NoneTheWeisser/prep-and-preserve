@@ -14,6 +14,8 @@ const passport = require('./strategies/user.strategy');
 // Require router files:
 const userRouter = require('./routes/user.router');
 const recipeRouter = require('./routes/recipe.router');
+const tagsRouter = require('./routes/tags.router');
+
 
 
 // Apply middleware:
@@ -27,6 +29,8 @@ app.use(passport.session());
 // Apply router files:
 app.use('/api/user', userRouter);
 app.use('/api/recipe', recipeRouter);
+app.use('/api/tags', tagsRouter);
+
 
 
 // Start the server:
