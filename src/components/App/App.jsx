@@ -1,17 +1,14 @@
-import { useEffect } from 'react';
-import {
-  Routes,
-  Route,
-  Navigate
-} from "react-router-dom";
+import { useEffect } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 
-import useStore from '../../zustand/store';
-import Nav from '../Nav/Nav';
-import HomePage from '../HomePage/HomePage';
-import LoginPage from '../LoginPage/LoginPage';
-import RegisterPage from '../RegisterPage/RegisterPage';
-import About from '../About/About';
-
+import useStore from "../../zustand/store";
+import Nav from "../Nav/Nav";
+import HomePage from "../HomePage/HomePage";
+import LoginPage from "../LoginPage/LoginPage";
+import RegisterPage from "../RegisterPage/RegisterPage";
+import About from "../About/About";
+import Footer from "../Footer/Footer";
+import Header from "../Header/Header";
 
 function App() {
   const user = useStore((state) => state.user);
@@ -23,18 +20,14 @@ function App() {
 
   return (
     <>
-      <header>
-        <h1>Prep & Preserve</h1>
-        <Nav />
-      </header>
+      <Nav />
+      <Header />
       <main>
         <Routes>
-          <Route 
-            exact path="/"
-            element={<HomePage />}
-          />
-          <Route 
-            exact path="/login"
+          <Route exact path="/" element={<HomePage />} />
+          <Route
+            exact
+            path="/login"
             element={
               user.id ? (
                 <Navigate to="/" replace /> // Redirect authenticated user.
@@ -43,8 +36,9 @@ function App() {
               )
             }
           />
-          <Route 
-            exact path="/registration"
+          <Route
+            exact
+            path="/registration"
             element={
               user.id ? (
                 <Navigate to="/" replace /> // Redirect authenticated user.
@@ -53,26 +47,13 @@ function App() {
               )
             }
           />
-          <Route 
-            exact path="/about"
-            element={ <About  />
-          
-            }
-          />
-          <Route
-            path="*"
-            element={
-              <h2>404 Page</h2>
-            } 
-          />
+          <Route exact path="/about" element={<About />} />
+          <Route path="*" element={<h2>404 Page</h2>} />
         </Routes>
       </main>
-      <footer>
-        <p>Copyright © {new Date().getFullYear()}</p>
-      </footer>
+      <Footer />
     </>
   );
 }
-
 
 export default App;
