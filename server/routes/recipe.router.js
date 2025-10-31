@@ -1,8 +1,6 @@
 const express = require("express");
 const pool = require("../modules/pool");
-const {
-  rejectUnauthenticated,
-} = require("../modules/authentication-middleware");
+const { rejectUnauthenticated, rejectIfNotOwnerOrAdmin } = require("../modules/authentication-middleware");
 
 const router = express.Router();
 // GET all public recipes
@@ -73,7 +71,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // POST new recipe
-router.post("/", rejectUnauthenticated, async (req, res) => {
+router.post("/", rejectUnauthenticated, rejectIfNotOwnerOrAdmin, async (req, res) => {
   const {
     title,
     description,
@@ -112,7 +110,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
 });
 
 // PUT updating a recipe
-router.put("/:id", rejectUnauthenticated, async (req, res) => {
+router.put("/:id", rejectUnauthenticated, rejectIfNotOwnerOrAdmin, async (req, res) => {
   const recipeId = req.params.id;
   const userId = req.user.id;
   const {
@@ -169,7 +167,7 @@ router.put("/:id", rejectUnauthenticated, async (req, res) => {
 });
 
 // DELETE
-router.delete("/:id", rejectUnauthenticated, async (req, res) => {
+router.delete("/:id", rejectUnauthenticated, rejectIfNotOwnerOrAdmin, async (req, res) => {
   const recipeId = req.params.id;
   const userId = req.user.id;
 
