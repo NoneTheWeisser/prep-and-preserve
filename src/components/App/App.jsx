@@ -12,6 +12,7 @@ import Header from "../Header/Header";
 import AddRecipeForm from "../AddRecipeForm/AddRecipeForm";
 import CommunityRecipes from "../CommunityRecipes/CommunityRecipes";
 import MyRecipe from "../MyRecipe/MyRecipe";
+// import RecipePage from "../Recipe/RecipePage";
 
 function App() {
   const user = useStore((state) => state.user);
@@ -53,17 +54,19 @@ function App() {
           <Route
             exact
             path="/addrecipe"
-            element={<AddRecipeForm />
+            element={
+              <AddRecipeForm />
               // user.id ? <AddRecipeForm /> : <Navigate to="/login" replace />
             }
           />
           <Route
             exact
-            path="/myrecipe"
+            path="/myrecipes"
             element={user.id ? <MyRecipe /> : <Navigate to="/login" replace />}
           />
           <Route exact path="/community" element={<CommunityRecipes />} />
           <Route exact path="/about" element={<About />} />
+          {/* <Route exact path="/recipe-page" element={<RecipePage />} /> */}
           <Route path="*" element={<h2>404 Page</h2>} />
         </Routes>
       </main>
