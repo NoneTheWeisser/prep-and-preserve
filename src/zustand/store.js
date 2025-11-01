@@ -35,6 +35,16 @@ const useStore = create((set, get) => ({
     }
   },
 
+  // Fetch recipe by id
+  fetchRecipeById: async (id) => {
+    try {
+      const response = await axios.get(`/api/recipes/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching recipe by id:", error)
+    }
+  },
+  
   // Add new recipe
   addRecipe: async (recipeData) => {
     try {
