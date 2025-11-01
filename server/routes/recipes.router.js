@@ -71,7 +71,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // POST new recipe
-router.post("/", rejectUnauthenticated, rejectIfNotOwnerOrAdmin, async (req, res) => {
+router.post("/", rejectUnauthenticated, async (req, res) => {
   const {
     title,
     description,
