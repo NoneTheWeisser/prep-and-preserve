@@ -13,9 +13,6 @@ import AddRecipeForm from "../AddRecipeForm/AddRecipeForm";
 import CommunityRecipes from "../CommunityRecipes/CommunityRecipes";
 import MyRecipe from "../MyRecipe/MyRecipe";
 
-
-
-
 function App() {
   const user = useStore((state) => state.user);
   const fetchUser = useStore((state) => state.fetchUser);
@@ -56,8 +53,8 @@ function App() {
           <Route
             exact
             path="/addrecipe"
-            element={
-              user.id ? <AddRecipeForm /> : <Navigate to="/login" replace />
+            element={<AddRecipeForm />
+              // user.id ? <AddRecipeForm /> : <Navigate to="/login" replace />
             }
           />
           <Route

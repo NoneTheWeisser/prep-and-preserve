@@ -6,9 +6,9 @@ import createCloudinarySlice from "./slices/cloudinary.slice.js";
 import axios from "axios";
 
 // Combine all slices in the store:
-const useStore = create((...args) => ({
-  ...userSlice(...args),
-  ...createCloudinarySlice(...args),
+const useStore = create((set, get) => ({
+  ...userSlice(set, get),
+  ...createCloudinarySlice(set, get),
   // ...createRecipeSlice(...args),
   // ...getTags(...args),
 
@@ -38,7 +38,7 @@ const useStore = create((...args) => ({
   // Add new recipe
   addRecipe: async (recipeData) => {
     try {
-      const response = await axios.post("/api/routes", recipeData);
+      const response = await axios.post("/api/recipes", recipeData);
       const newRecipe = response.data;
 
       set((state) => ({

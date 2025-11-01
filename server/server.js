@@ -13,7 +13,7 @@ const passport = require('./strategies/user.strategy');
 
 // Require router files:
 const userRouter = require('./routes/user.router');
-const recipeRouter = require('./routes/recipe.router');
+const recipeRouter = require('./routes/recipes.router');
 const tagsRouter = require('./routes/tags.router');
 const recipeTagsRouter = require('./routes/recipeTags.router');
 const favoriteRouter = require('./routes/favorites.router');
@@ -32,7 +32,7 @@ app.use(passport.session());
 
 // Apply router files:
 app.use('/api/user', userRouter);
-app.use('/api/recipe', recipeRouter);
+app.use('/api/recipes', recipeRouter);
 app.use('/api/tags', tagsRouter);
 app.use('/api/recipeTags', recipeTagsRouter);
 app.use('/api/favorites', favoriteRouter);

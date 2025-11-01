@@ -10,7 +10,7 @@ export default function AddRecipeForm() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [sourceUrl, setSourceUrl] = useState("");
-  const [isPublic, setIsPublic] = useState("");
+  const [isPublic, setIsPublic] = useState(true);
   const [tags, setTags] = useState("");
 
   const addRecipe = useStore((state) => state.addRecipe);
@@ -19,9 +19,13 @@ export default function AddRecipeForm() {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log("Submitting recipe:", {
+      title,
+      description,
       ingredients,
       instructions,
       image_url: imageUrl,
+      is_public: isPublic,
+      source_url: sourceUrl
     });
 
     addRecipe({
@@ -116,13 +120,14 @@ export default function AddRecipeForm() {
           onChange={setInstructions}
         />
       </label>
-      <label>
+      <label className="toggle-switch">
         <input
           type="checkbox"
           checked={!isPublic}
           onChange={() => setIsPublic(!isPublic)}
         />
-        Keep this recipe private
+        <span className="slider" />
+        <span className="label-text">Keep this recipe private</span>
       </label>
       <button type="submit">Save Recipe</button>
     </form>
