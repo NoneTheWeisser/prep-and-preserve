@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import InstructionTextEditor from "./InstructionTextEditor";
 import useStore from "../../zustand/store";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function AddRecipeForm() {
   const [instructions, setInstructions] = useState("");
@@ -12,23 +12,14 @@ export default function AddRecipeForm() {
   const [sourceUrl, setSourceUrl] = useState("");
   const [isPublic, setIsPublic] = useState(true);
   const [tags, setTags] = useState("");
+  const navigate = useNavigate();
 
   const addRecipe = useStore((state) => state.addRecipe);
 
   // Form submit
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Submitting recipe:", {
-      title,
-      description,
-      ingredients,
-      instructions,
-      image_url: imageUrl,
-      is_public: isPublic,
-      source_url: sourceUrl
-    });
-
-    addRecipe({
+    const recipeData = {
       title,
       description,
       ingredients,
@@ -36,18 +27,29 @@ export default function AddRecipeForm() {
       image_url: imageUrl,
       is_public: isPublic,
       source_url: sourceUrl,
-      // tags
-    });
-
-    // reset the form
-    setTitle("");
-    setDescription("");
-    setIngredients("");
-    setInstructions("");
-    setImageUrl("");
-    setSourceUrl("");
-    setTags("");
-    setIsPublic(true);
+      tags,
+    };
+    console.log("Submitting recipe:", recipeData);
+    try {
+      const newRecipe = await addRecipe(recipeData);
+      // once submitted, nav to the full view page
+      if (newRecipe?.id) {
+        navigate(`/recipes/${newRecipe.id}`);
+      } else {
+        navigate("/myrecipes");
+      }
+      // reset the form
+      setTitle("");
+      setDescription("");
+      setIngredients("");
+      setInstructions("");
+      setImageUrl("");
+      setSourceUrl("");
+      setTags("");
+      setIsPublic(true);
+    } catch (error) {
+      console.error("Error submitting recipe:", error);
+    }
   };
 
   // cloudinary

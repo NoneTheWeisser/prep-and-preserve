@@ -44,7 +44,7 @@ const useStore = create((set, get) => ({
       console.error("Error fetching recipe by id:", error)
     }
   },
-  
+
   // Add new recipe
   addRecipe: async (recipeData) => {
     try {
@@ -57,6 +57,7 @@ const useStore = create((set, get) => ({
       }));
 
       console.log("Recipe successfully added:", newRecipe);
+      return newRecipe;
     } catch (error) {
       console.error("Error adding recipe:", error);
       alert("Something went wrong while saving your recipe");

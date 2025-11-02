@@ -28,7 +28,7 @@ export default function FullRecipeView() {
   return (
     <div style={{ maxWidth: "700px", margin: "0 auto", padding: "1rem" }}>
       <h1>{recipe.title}</h1>
-      <p>By {recipe.username}</p>
+      <p>Submitted by: {recipe.username}</p>
       {recipe.image_url && (
         <img
           src={recipe.image_url}
@@ -42,8 +42,17 @@ export default function FullRecipeView() {
         <button onClick={() => navigate(`/edit/${id}`)}>Edit</button>
         <button
           onClick={async () => {
-            await deleteRecipe(id);
-            navigate("/myrecipes");
+            const confirmDelete = window.confirm("Are you sure you want to delete this recipe?");
+            if(!confirmDelete) return;
+            try {
+                await deleteRecipe(id);
+                // snackbar later on? 
+                alert("Recipe deleted successfully");
+                navigate("/myrecipes");
+            } catch (error) {
+                alert("Error deleting recipe. Please try again.")
+                console.error("Deleting failed:", error);
+            }
           }}
         >
           Delete
