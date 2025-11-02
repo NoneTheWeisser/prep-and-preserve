@@ -1,16 +1,14 @@
 import { create } from "zustand";
 import userSlice from "./slices/user.slice.js";
 import createCloudinarySlice from "./slices/cloudinary.slice.js";
-// import createRecipeSlice from "./slices/recipe.slice.js";
-// import getTags from "./slices/tag.slice.js";
+import getTags from "./slices/tag.slice.js";
 import axios from "axios";
 
 // Combine all slices in the store:
 const useStore = create((set, get) => ({
   ...userSlice(set, get),
   ...createCloudinarySlice(set, get),
-  // ...createRecipeSlice(...args),
-  // ...getTags(...args),
+  ...getTags(set, get),
 
   recipes: [],
   userRecipes: [],
@@ -41,7 +39,7 @@ const useStore = create((set, get) => ({
       const response = await axios.get(`/api/recipes/${id}`);
       return response.data;
     } catch (error) {
-      console.error("Error fetching recipe by id:", error)
+      console.error("Error fetching recipe by id:", error);
     }
   },
 

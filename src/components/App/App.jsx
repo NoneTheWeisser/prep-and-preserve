@@ -25,7 +25,8 @@ function App() {
   return (
     <>
       <Nav />
-      <Header />
+      {/* for now I dont see a reason for header */}
+      {/* <Header /> */}
       <main>
         <Routes>
           <Route exact path="/" element={<HomePage />} />

@@ -1,19 +1,16 @@
-// import { create } from "zustand";
-// import axios from "axios";
+import axios from "axios";
 
-// const getTags = create((set, get) => ({
-//   tags: [],
-//   isLoadingTags: false,
-//   fetchTags: async () => {
-//     try {
-//       set({ isLoadingTags: true });
-//       const res = await axios.get("/api/tags");
-//       set({ tags: res.data, isLoadingTags: false });
-//     } catch (error) {
-//       console.error("Error fetching tags:", error);
-//       set({ isLoadingTags: false });
-//     }
-//   },
-// }));
+const getTags = (set) => ({
+  allTags: [],
 
-// export default getTags;
+  fetchTags: async () => {
+    try {
+      const response = await axios.get("/api/tags");
+      set({ allTags: response.data });
+    } catch (error) {
+      console.error("Error fetching tags:", error);
+    }
+  },
+});
+
+export default getTags;
