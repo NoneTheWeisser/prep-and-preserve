@@ -13,6 +13,7 @@ import AddRecipeForm from "../AddRecipeForm/AddRecipeForm";
 import CommunityRecipes from "../CommunityRecipes/CommunityRecipes";
 import MyRecipe from "../MyRecipe/MyRecipe";
 import FullRecipeView from "../Recipe/FullRecipeView";
+import EditRecipeForm from "../AddRecipeForm/EditRecipeForm";
 
 function App() {
   const user = useStore((state) => state.user);
@@ -71,8 +72,7 @@ function App() {
           <Route exact path="/community" element={<CommunityRecipes />} />
           <Route exact path="/about" element={<About />} />
           <Route path="/recipes/:id" element={<FullRecipeView />} />
-          {/* when ready could do something like this for edit page */}
-          {/* <Route path="/recipes/:id/edit" element={<EditRecipeForm />} /> */}
+          <Route path="/recipes/edit/:id" element={<EditRecipeForm />} />
           <Route path="*" element={<h2>404 Page</h2>} />
         </Routes>
       </main>

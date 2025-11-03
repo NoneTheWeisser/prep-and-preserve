@@ -39,7 +39,7 @@ export default function FullRecipeView() {
       {recipe.description && <p>{recipe.description}</p>}
       <p>Original Recipe Source: {recipe.source_url}</p>
       <div className="actions">
-        <button onClick={() => navigate(`/edit/${id}`)}>Edit</button>
+        <button onClick={() => navigate(`/recipes/edit/${id}`)}>Edit</button>
         <button
           onClick={async () => {
             const confirmDelete = window.confirm("Are you sure you want to delete this recipe?");

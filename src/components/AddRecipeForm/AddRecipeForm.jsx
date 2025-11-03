@@ -68,12 +68,10 @@ export default function AddRecipeForm() {
     console.log("Submitting recipe:", recipeData);
     try {
       const newRecipe = await addRecipe(recipeData);
-      ////////// TO-DO ///////////
       // Link selected tags to new recipe
       for (let tagId of selectedTags) {
         await axios.post("/api/recipeTags", { recipe_id: newRecipe.id, tag_id: tagId});
       }
-      
       // once submitted, nav to the full view page
       if (newRecipe?.id) {
         navigate(`/recipes/${newRecipe.id}`);
