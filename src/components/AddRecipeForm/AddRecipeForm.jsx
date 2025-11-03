@@ -18,7 +18,7 @@ export default function AddRecipeForm() {
   
   const navigate = useNavigate();
 
-  console.log(selectedTags);
+  // console.log(selectedTags);
   
   const tags = useStore((state) => state.tags);
   const fetchTags = useStore((state) => state.fetchTags);
@@ -174,7 +174,7 @@ export default function AddRecipeForm() {
         <button type="submit">Save Recipe</button>
         {/* debating adding this feature. User could choose to add another recipe 
       instead of submitted just the one and nav to the recipe page*/}
-        <button type="submit">Submit Another Recipe??</button>
+        {/* <button type="submit">Submit Another Recipe??</button> */}
       </form>
     </div>
   );

@@ -6,15 +6,6 @@ import InstructionTextEditor from "./InstructionTextEditor";
 import IngredientTextEditor from "./IngredientTextEditor";
 import axios from "axios";
 
-/*
-  Things to figure out:
-    - Can we take the id and get the thing we want to edit from zustand?
-    - Can we take that thing and put it into the local state for
-      the inputs so that the form is prepopulated?
-    - Can we issue a proper PUT request with the correct data so that
-      the backend can update the thing we're trying to update?
-*/
-
 export default function EditRecipeForm() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -158,7 +149,7 @@ export default function EditRecipeForm() {
               <input
                 type="checkbox"
                 value={tag.id}
-                checked={selectedTags.find(t => t.id === Number(tag.id))}
+                checked={!!selectedTags.find(t => t.id === Number(tag.id))}
                 onChange={() => handleTagChange(tag)}
               />
               {tag.name}
