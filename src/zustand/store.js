@@ -1,14 +1,14 @@
 import { create } from "zustand";
 import userSlice from "./slices/user.slice.js";
 import createCloudinarySlice from "./slices/cloudinary.slice.js";
-import getTags from "./slices/tag.slice.js";
+import tagSlice from "./slices/tag.slice.js";
 import axios from "axios";
 
 // Combine all slices in the store:
 const useStore = create((set, get) => ({
   ...userSlice(set, get),
   ...createCloudinarySlice(set, get),
-  ...getTags(set, get),
+  ...tagSlice(set, get),
 
   recipes: [],
   userRecipes: [],

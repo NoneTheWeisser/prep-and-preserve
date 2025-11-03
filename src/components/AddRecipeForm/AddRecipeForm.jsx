@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import InstructionTextEditor from "./InstructionTextEditor";
 import useStore from "../../zustand/store";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function AddRecipeForm() {
   const [instructions, setInstructions] = useState("");
@@ -11,13 +12,14 @@ export default function AddRecipeForm() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [sourceUrl, setSourceUrl] = useState("");
-  const [isPublic, setIsPublic] = useState(true);
   const [selectedTags, setSelectedTags] = useState("");
+  const [isPublic, setIsPublic] = useState(true);
+  
   const navigate = useNavigate();
-
-  const addRecipe = useStore((state) => state.addRecipe);
-  const allTags = useStore((state) => state.allTags);
+  
+  const tags = useStore((state) => state.tags);
   const fetchTags = useStore((state) => state.fetchTags);
+  const addRecipe = useStore((state) => state.addRecipe);
 
   useEffect(() => {
     fetchTags();
@@ -30,6 +32,24 @@ export default function AddRecipeForm() {
         ? prev.filter((id) => id !== tagId)
         : [...prev, tagId]
     );
+  };
+
+    // cloudinary
+  const openCloudinaryWidget = () => {
+    if (!window.cloudinary) return;
+    const widget = window.cloudinary.createUploadWidget(
+      {
+        cloudName: import.meta.env.VITE_CLOUDINARY_NAME,
+        uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
+        sources: ["local", "url", "camera"],
+      },
+      (error, result) => {
+        if (!error && result && result.event === "success") {
+          setImageUrl(result.info.secure_url);
+        }
+      }
+    );
+    widget.open();
   };
 
   // Form submit
@@ -48,6 +68,12 @@ export default function AddRecipeForm() {
     console.log("Submitting recipe:", recipeData);
     try {
       const newRecipe = await addRecipe(recipeData);
+      ////////// TO-DO ///////////
+      // Link selected tags to new recipe
+      for (let tagId of selectedTags) {
+        await axios.post("/api/recipeTags", { recipe_id: newRecipe.id, tag_id: tagId});
+      }
+      
       // once submitted, nav to the full view page
       if (newRecipe?.id) {
         navigate(`/recipes/${newRecipe.id}`);
@@ -61,29 +87,12 @@ export default function AddRecipeForm() {
       setInstructions("");
       setImageUrl("");
       setSourceUrl("");
-      setTags("");
       setIsPublic(true);
+      setSelectedTags([]);
+
     } catch (error) {
       console.error("Error submitting recipe:", error);
     }
-  };
-
-  // cloudinary
-  const openCloudinaryWidget = () => {
-    if (!window.cloudinary) return;
-    const widget = window.cloudinary.createUploadWidget(
-      {
-        cloudName: import.meta.env.VITE_CLOUDINARY_NAME,
-        uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
-        sources: ["local", "url", "camera"],
-      },
-      (error, result) => {
-        if (!error && result && result.event === "success") {
-          setImageUrl(result.info.secure_url);
-        }
-      }
-    );
-    widget.open();
   };
 
   return (
@@ -122,11 +131,11 @@ export default function AddRecipeForm() {
         />
         <label>Recipe Tags</label>
         <p>
-          Select all tags that apply to your recipe. This will help with
-          filtering.
+          Select all tags that apply to your recipe. 
+          This will help with filtering.
         </p>
         <div className="tag-container">
-          {allTags.map((tag) => (
+          {tags.map((tag) => (
             <label key={tag.id}>
               <input
                 type="checkbox"
@@ -138,11 +147,6 @@ export default function AddRecipeForm() {
             </label>
           ))}
         </div>
-        {/* <input
-          placeholder="recipe tags"
-          value={tags}
-          onChange={(e) => setTags(e.target.value)}
-        /> */}
         <label>
           <h3>Ingredients</h3>
           <InstructionTextEditor

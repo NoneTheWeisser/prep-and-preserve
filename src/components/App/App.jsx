@@ -63,7 +63,10 @@ function App() {
           <Route
             exact
             path="/myrecipes"
-            element={user.id ? <MyRecipe /> : <Navigate to="/login" replace />}
+            element={
+              <MyRecipe />
+              // user.id ? <MyRecipe /> : <Navigate to="/login" replace />
+            }
           />
           <Route exact path="/community" element={<CommunityRecipes />} />
           <Route exact path="/about" element={<About />} />

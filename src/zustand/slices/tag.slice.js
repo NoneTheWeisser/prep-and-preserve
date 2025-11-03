@@ -1,16 +1,16 @@
 import axios from "axios";
 
-const getTags = (set) => ({
-  allTags: [],
+const tagSlice = (set) => ({
+  tags: [],
 
   fetchTags: async () => {
     try {
       const response = await axios.get("/api/tags");
-      set({ allTags: response.data });
+      set({ tags: response.data });
     } catch (error) {
       console.error("Error fetching tags:", error);
     }
   },
 });
 
-export default getTags;
+export default tagSlice;
