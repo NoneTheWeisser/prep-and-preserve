@@ -71,11 +71,6 @@ export default function AddRecipeForm() {
     console.log("Submitting recipe:", recipeData);
     try {
       const newRecipe = await addRecipe(recipeData);
-      // Link selected tags to new recipe
-      // for (let tagId of selectedTags) {
-      //   await axios.post("/api/recipeTags", { recipe_id: newRecipe.id, tag_id: tagId});
-      // }
-      // once submitted, nav to the full view page
       if (newRecipe?.id) {
         navigate(`/recipes/${newRecipe.id}`);
       } else {
@@ -141,7 +136,7 @@ export default function AddRecipeForm() {
               <input
                 type="checkbox"
                 value={tag.id}
-                checked={selectedTags.find(t => t.id === Number(tag.id))}
+                checked={!!selectedTags.find(t => t.id === Number(tag.id))}
                 onChange={() => handleTagChange(tag)}
               />
               {tag.name}

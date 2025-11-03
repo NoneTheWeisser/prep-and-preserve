@@ -104,10 +104,6 @@ export default function EditRecipeForm() {
   return (
     <div>
       <h2>Edit Recipe</h2>
-      <ul>
-        {/* {selectedTags.map(tag => <li key={tag.id}>{tag.name} (id {tag.id})</li>)} */}
-      </ul>
-      {/* Add form copied over */}
       <form onSubmit={handleSubmit}>
         <label>Title</label>
         <input
