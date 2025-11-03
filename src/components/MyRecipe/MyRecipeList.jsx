@@ -14,6 +14,8 @@ export default function MyRecipeList() {
   return (
      <div>
       <h2>My Recipes</h2>
+        {/* <button>Filter</button>
+        <button>Search</button> */}
       <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
         {userRecipes.map((recipe) => (
           <div

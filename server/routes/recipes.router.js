@@ -6,10 +6,16 @@ const router = express.Router();
 // GET all public recipes
 router.get("/", async (req, res) => {
   const sqlText = `
-    SELECT recipes.*, "user".username
+    SELECT recipes.*, "user".username,
+    json_agg(json_build_object('id', "tags"."id", 'name', "tags"."name")) AS "tags"
+    
     FROM recipes
     JOIN "user" ON recipes.user_id = "user".id
-    WHERE is_public = true
+    JOIN "recipe_tags" ON recipe_tags.recipe_id = recipes.id
+    JOIN tags ON tags.id = recipe_tags.tag_id
+    
+    WHERE "is_public" = true
+    GROUP BY recipes.id, "user".username
     ORDER by recipes.created_at DESC;
     `;
   try {
@@ -25,11 +31,17 @@ router.get("/", async (req, res) => {
 router.get("/mine", rejectUnauthenticated, async (req, res) => {
   const userId = req.user.id;
   const sqlText = `
-    SELECT recipes.*, "user".username
+    SELECT recipes.*, "user".username,
+    json_agg(json_build_object('id', "tags"."id", 'name', "tags"."name")) AS "tags"
+    
     FROM recipes
     JOIN "user" ON recipes.user_id = "user".id
-    WHERE recipes.user_id = $1
-    ORDER BY recipes.created_at DESC;
+    JOIN "recipe_tags" ON recipe_tags.recipe_id = recipes.id
+    JOIN tags ON tags.id = recipe_tags.tag_id
+    
+    WHERE user_id = $1
+    GROUP BY recipes.id, "user".username
+    ORDER by recipes.created_at DESC;
     `;
   try {
     const result = await pool.query(sqlText, [userId]);
@@ -80,6 +92,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
     image_url,
     is_public,
     source_url,
+    tags
   } = req.body;
   const userId = req.user.id;
 
@@ -101,7 +114,19 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
   ];
 
   try {
+    // Create the recipe
     const result = await pool.query(sqlText, sqlValues);
+    const recipe_id = result.rows[0].id;
+
+    // Create the tags for the new recipe
+    const sqlText2 = `
+      INSERT INTO recipe_tags (recipe_id, tag_id)
+      VALUES ($1, $2) RETURNING *;
+    `;
+    for (const tag of tags) {
+      await pool.query(sqlText2, [recipe_id, tag.id])
+    }
+
     res.status(201).json(result.rows[0]);
   } catch (error) {
     console.error(`Error adding recipe:`, error);
@@ -120,6 +145,7 @@ router.put("/:id", rejectUnauthenticated, rejectIfNotOwnerOrAdmin, async (req, r
     image_url,
     is_public,
     source_url,
+    tags,
   } = req.body;
 
   const updateQuery = `
@@ -149,6 +175,10 @@ router.put("/:id", rejectUnauthenticated, rejectIfNotOwnerOrAdmin, async (req, r
 
   try {
     const result = await pool.query(updateQuery, updateValues);
+
+    // TODO: Remove all records in recipe_tags (DELETE)
+
+    // TODO: Insert new tags by looping over req.body.tags
 
     if (result.rows.length === 0) {
       return res.sendStatus(404);

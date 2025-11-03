@@ -49,6 +49,7 @@ const useStore = create((set, get) => ({
       const response = await axios.post("/api/recipes", recipeData);
       const newRecipe = response.data;
 
+      // TODO: fetch recipes and user recipes via GET request
       set((state) => ({
         recipes: [newRecipe, ...state.recipes],
         userRecipes: [newRecipe, ...state.userRecipes],

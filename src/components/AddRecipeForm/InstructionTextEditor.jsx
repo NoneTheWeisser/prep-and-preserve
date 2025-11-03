@@ -2,7 +2,7 @@ import React from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; 
 
-export default function RichTextEditor({ value, onChange }) {
+export default function InstructionTextEditor({ value, onChange }) {
   return (
     <div style={{ marginTop: "8px" }}>
 <ReactQuill

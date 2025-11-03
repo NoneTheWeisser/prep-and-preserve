@@ -1,6 +1,7 @@
 import ("../AddRecipeForm/AddRecipeForm.css");
 import React, { useEffect, useState } from "react";
 import InstructionTextEditor from "./InstructionTextEditor";
+import IngredientTextEditor from "./IngredientTextEditor";
 import useStore from "../../zustand/store";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -12,10 +13,12 @@ export default function AddRecipeForm() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [sourceUrl, setSourceUrl] = useState("");
-  const [selectedTags, setSelectedTags] = useState("");
+  const [selectedTags, setSelectedTags] = useState([]);
   const [isPublic, setIsPublic] = useState(true);
   
   const navigate = useNavigate();
+
+  console.log(selectedTags);
   
   const tags = useStore((state) => state.tags);
   const fetchTags = useStore((state) => state.fetchTags);
@@ -26,11 +29,11 @@ export default function AddRecipeForm() {
   }, [fetchTags]);
 
   // Render checkboxes
-  const handleTagChange = (tagId) => {
+  const handleTagChange = (tag) => {
     setSelectedTags((prev) =>
-      prev.includes(tagId)
-        ? prev.filter((id) => id !== tagId)
-        : [...prev, tagId]
+      prev.find(t => t.id === Number(tag.id))
+        ? prev.filter(t => t.id !== tag.id)
+        : [...prev, tag]
     );
   };
 
@@ -63,15 +66,15 @@ export default function AddRecipeForm() {
       image_url: imageUrl,
       is_public: isPublic,
       source_url: sourceUrl,
-      tags: selectedTags,
+      tags: selectedTags
     };
     console.log("Submitting recipe:", recipeData);
     try {
       const newRecipe = await addRecipe(recipeData);
       // Link selected tags to new recipe
-      for (let tagId of selectedTags) {
-        await axios.post("/api/recipeTags", { recipe_id: newRecipe.id, tag_id: tagId});
-      }
+      // for (let tagId of selectedTags) {
+      //   await axios.post("/api/recipeTags", { recipe_id: newRecipe.id, tag_id: tagId});
+      // }
       // once submitted, nav to the full view page
       if (newRecipe?.id) {
         navigate(`/recipes/${newRecipe.id}`);
@@ -138,8 +141,8 @@ export default function AddRecipeForm() {
               <input
                 type="checkbox"
                 value={tag.id}
-                checked={selectedTags.includes(tag.id)}
-                onChange={() => handleTagChange(tag.id)}
+                checked={selectedTags.find(t => t.id === Number(tag.id))}
+                onChange={() => handleTagChange(tag)}
               />
               {tag.name}
             </label>
@@ -147,7 +150,7 @@ export default function AddRecipeForm() {
         </div>
         <label>
           <h3>Ingredients</h3>
-          <InstructionTextEditor
+          <IngredientTextEditor 
             value={ingredients}
             onChange={setIngredients}
           />
