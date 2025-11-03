@@ -50,10 +50,8 @@ const useStore = create((set, get) => ({
       const newRecipe = response.data;
 
       // TODO: fetch recipes and user recipes via GET request
-      set((state) => ({
-        recipes: [newRecipe, ...state.recipes],
-        userRecipes: [newRecipe, ...state.userRecipes],
-      }));
+      await get().fetchRecipes();
+      await get().fetchUserRecipes();
 
       console.log("Recipe successfully added:", newRecipe);
       return newRecipe;

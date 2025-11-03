@@ -1,22 +1,30 @@
 const express = require("express");
 const pool = require("../modules/pool");
-const { rejectUnauthenticated, rejectIfNotOwnerOrAdmin } = require("../modules/authentication-middleware");
+const {
+  rejectUnauthenticated,
+  rejectIfNotOwnerOrAdmin,
+} = require("../modules/authentication-middleware");
 
 const router = express.Router();
 // GET all public recipes
 router.get("/", async (req, res) => {
   const sqlText = `
-    SELECT recipes.*, "user".username,
-    json_agg(json_build_object('id', "tags"."id", 'name', "tags"."name")) AS "tags"
-    
+    SELECT 
+      recipes.*,
+      "user".username,
+      COALESCE(
+        json_agg(
+          json_build_object('id', tags.id, 'name', tags.name)
+        ) FILTER (WHERE tags.id IS NOT NULL),
+        '[]'
+      ) AS tags
     FROM recipes
-    JOIN "user" ON recipes.user_id = "user".id
-    JOIN "recipe_tags" ON recipe_tags.recipe_id = recipes.id
-    JOIN tags ON tags.id = recipe_tags.tag_id
-    
+    LEFT JOIN "user" ON recipes.user_id = "user".id
+    LEFT JOIN recipe_tags ON recipe_tags.recipe_id = recipes.id
+    LEFT JOIN tags ON tags.id = recipe_tags.tag_id
     WHERE "is_public" = true
     GROUP BY recipes.id, "user".username
-    ORDER by recipes.created_at DESC;
+    ORDER BY recipes.created_at DESC;
     `;
   try {
     const result = await pool.query(sqlText);
@@ -31,17 +39,22 @@ router.get("/", async (req, res) => {
 router.get("/mine", rejectUnauthenticated, async (req, res) => {
   const userId = req.user.id;
   const sqlText = `
-    SELECT recipes.*, "user".username,
-    json_agg(json_build_object('id', "tags"."id", 'name', "tags"."name")) AS "tags"
-    
+    SELECT 
+      recipes.*,
+      "user".username,
+      COALESCE(
+        json_agg(
+          json_build_object('id', tags.id, 'name', tags.name)
+        ) FILTER (WHERE tags.id IS NOT NULL),
+        '[]'
+      ) AS tags
     FROM recipes
-    JOIN "user" ON recipes.user_id = "user".id
-    JOIN "recipe_tags" ON recipe_tags.recipe_id = recipes.id
-    JOIN tags ON tags.id = recipe_tags.tag_id
-    
+    LEFT JOIN "user" ON recipes.user_id = "user".id
+    LEFT JOIN recipe_tags ON recipe_tags.recipe_id = recipes.id
+    LEFT JOIN tags ON tags.id = recipe_tags.tag_id
     WHERE user_id = $1
     GROUP BY recipes.id, "user".username
-    ORDER by recipes.created_at DESC;
+    ORDER BY recipes.created_at DESC;
     `;
   try {
     const result = await pool.query(sqlText, [userId]);
@@ -92,7 +105,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
     image_url,
     is_public,
     source_url,
-    tags
+    tags,
   } = req.body;
   const userId = req.user.id;
 
@@ -124,7 +137,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
       VALUES ($1, $2) RETURNING *;
     `;
     for (const tag of tags) {
-      await pool.query(sqlText2, [recipe_id, tag.id])
+      await pool.query(sqlText2, [recipe_id, tag.id]);
     }
 
     res.status(201).json(result.rows[0]);
@@ -135,20 +148,24 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
 });
 
 // PUT updating a recipe
-router.put("/:id", rejectUnauthenticated, rejectIfNotOwnerOrAdmin, async (req, res) => {
-  const recipeId = req.params.id;
-  const {
-    title,
-    description,
-    instructions,
-    ingredients,
-    image_url,
-    is_public,
-    source_url,
-    tags,
-  } = req.body;
+router.put(
+  "/:id",
+  rejectUnauthenticated,
+  rejectIfNotOwnerOrAdmin,
+  async (req, res) => {
+    const recipeId = req.params.id;
+    const {
+      title,
+      description,
+      instructions,
+      ingredients,
+      image_url,
+      is_public,
+      source_url,
+      tags,
+    } = req.body;
 
-  const updateQuery = `
+    const updateQuery = `
     UPDATE recipes
     SET
       title = $1,
@@ -162,53 +179,64 @@ router.put("/:id", rejectUnauthenticated, rejectIfNotOwnerOrAdmin, async (req, r
     WHERE id = $8
     RETURNING *;
   `;
-  const updateValues = [
-    title,
-    description,
-    instructions,
-    ingredients,
-    image_url,
-    is_public,
-    source_url,
-    recipeId,
-  ];
+    const updateValues = [
+      title,
+      description,
+      instructions,
+      ingredients,
+      image_url,
+      is_public,
+      source_url,
+      recipeId,
+    ];
 
-  try {
-    const result = await pool.query(updateQuery, updateValues);
+    try {
+      const result = await pool.query(updateQuery, updateValues);
+      // Remove all records in recipe_tags (DELETE)
+      const deleteTagsQuery = `DELETE from recipe_tags WHERE recipe_id = $1;`;
+      await pool.query(deleteTagsQuery, [recipeId]);
+      // Insert new tags by looping over req.body.tags
+      const insertTagQuery = `INSERT INTO recipe_tags (recipe_id, tag_id) VALUES ($1, $2)`
+      for (const tag of tags) {
+        await pool.query(insertTagQuery, [recipeId, tag.id]);
+      }
 
-    // TODO: Remove all records in recipe_tags (DELETE)
 
-    // TODO: Insert new tags by looping over req.body.tags
+      if (result.rows.length === 0) {
+        return res.sendStatus(404);
+      }
 
-    if (result.rows.length === 0) {
-      return res.sendStatus(404);
+      res.json(result.rows[0]);
+    } catch (error) {
+      console.error("Error updating recipe:", error);
+      res.sendStatus(500);
     }
-
-    res.json(result.rows[0]);
-  } catch (error) {
-    console.error("Error updating recipe:", error);
-    res.sendStatus(500);
   }
-});
+);
 
 // DELETE
-router.delete("/:id", rejectUnauthenticated, rejectIfNotOwnerOrAdmin, async (req, res) => {
-  const recipeId = req.params.id;
-  try {
-    const deleteSql = `DELETE FROM recipes WHERE id= $1 RETURNING *;`;
-    const deleteResult = await pool.query(deleteSql, [recipeId]);
+router.delete(
+  "/:id",
+  rejectUnauthenticated,
+  rejectIfNotOwnerOrAdmin,
+  async (req, res) => {
+    const recipeId = req.params.id;
+    try {
+      const deleteSql = `DELETE FROM recipes WHERE id= $1 RETURNING *;`;
+      const deleteResult = await pool.query(deleteSql, [recipeId]);
 
-    if (deleteResult.rows.length === 0) {
-      return res.sendStatus(404);
-    }
+      if (deleteResult.rows.length === 0) {
+        return res.sendStatus(404);
+      }
       res.status(200).json({
         message: "Recipe deleted successfully",
         deleted: deleteResult.rows[0],
       });
-  } catch (error) {
-    console.error("Error deleting recipe:", error);
-    res.sendStatus(500);
+    } catch (error) {
+      console.error("Error deleting recipe:", error);
+      res.sendStatus(500);
+    }
   }
-});
+);
 
 module.exports = router;

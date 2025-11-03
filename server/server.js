@@ -15,8 +15,8 @@ const passport = require('./strategies/user.strategy');
 const userRouter = require('./routes/user.router');
 const recipeRouter = require('./routes/recipes.router');
 const tagsRouter = require('./routes/tags.router');
-const recipeTagsRouter = require('./routes/recipeTags.router');
 const favoriteRouter = require('./routes/favorites.router');
+// const recipeTagsRouter = require('./routes/recipeTags.router');
 
 
 
@@ -34,8 +34,8 @@ app.use(passport.session());
 app.use('/api/user', userRouter);
 app.use('/api/recipes', recipeRouter);
 app.use('/api/tags', tagsRouter);
-app.use('/api/recipeTags', recipeTagsRouter);
 app.use('/api/favorites', favoriteRouter);
+// app.use('/api/recipeTags', recipeTagsRouter);
 
 
 

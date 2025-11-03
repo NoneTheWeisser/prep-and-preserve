@@ -53,21 +53,34 @@ export default function EditRecipeForm() {
     if (thisRecipe) {
       setTitle(thisRecipe.title);
       setDescription(thisRecipe.description);
-      setImageUrl(thisRecipe.imageUrl);
+      setImageUrl(thisRecipe.image_url);
       setIngredients(thisRecipe.ingredients);
       setInstructions(thisRecipe.instructions);
-      setIsPublic(thisRecipe.isPublic);
+      setIsPublic(thisRecipe.is_public);
       setSourceUrl(thisRecipe.source_url);
       setSelectedTags(thisRecipe.tags);
     }
   }, [userRecipes, tags]);
 
-  // //   handleTagChange checkbox
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // TODO: Make the object for the updated recipe, don't
-    // forget to include the recipe ID (can be found in params)
+    const updatedRecipe = {
+        title,
+        description,
+        instructions,
+        ingredients,
+        image_url: imageUrl,
+        is_public: isPublic,
+        source_url: sourceUrl,
+        tags: selectedTags,
+    }
+    try {
+        await axios.put(`/api/recipes/${id}`, updatedRecipe);
+        navigate(`/recipes/${id}`);
+    } catch (error) {
+        console.error("Error updating recipe:", error);
+    }
   };
 
   // Render checkboxes
@@ -101,7 +114,7 @@ export default function EditRecipeForm() {
     <div>
       <h2>Edit Recipe</h2>
       <ul>
-        {selectedTags.map(tag => <li key={tag.id}>{tag.name} (id {tag.id})</li>)}
+        {/* {selectedTags.map(tag => <li key={tag.id}>{tag.name} (id {tag.id})</li>)} */}
       </ul>
       {/* Add form copied over */}
       <form onSubmit={handleSubmit}>
@@ -139,7 +152,7 @@ export default function EditRecipeForm() {
           Select all tags that apply to your recipe. This will help with
           filtering.
         </p>
-        {/* <div className="tag-container">
+        <div className="tag-container">
           {tags.map((tag) => (
             <label key={tag.id}>
               <input
@@ -151,7 +164,7 @@ export default function EditRecipeForm() {
               {tag.name}
             </label>
           ))}
-        </div> */}
+        </div>
         <label>
           <h3>Ingredients</h3>
           <IngredientTextEditor value={ingredients} onChange={setIngredients} />
