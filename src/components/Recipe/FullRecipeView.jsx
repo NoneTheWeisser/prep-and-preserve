@@ -27,13 +27,20 @@ export default function FullRecipeView() {
     getRecipe();
   }, [id]);
 
-
   if (!recipe) return <p>Loading...</p>;
 
   return (
     <div style={{ maxWidth: "700px", margin: "0 auto", padding: "1rem" }}>
       <h1>{recipe.title}</h1>
       <p>Submitted by: {recipe.username}</p>
+      {recipe.source_url && (
+        <p>
+          Original Recipe Source:{" "}
+          <a href={recipe.source_url} target="_blank" rel="noopener noreferrer">
+            View Recipe
+          </a>
+        </p>
+      )}
       {recipe.image_url && (
         <img
           src={recipe.image_url}
@@ -41,7 +48,6 @@ export default function FullRecipeView() {
           style={{ width: "100%", borderRadius: "8px", marginBottom: "1rem" }}
         />
       )}
-      {recipe.description && <p>{recipe.description}</p>}
       {/* check for owner, otherwise why even show the buttons */}
       {canEdit && (
         <div className="actions">
@@ -67,19 +73,13 @@ export default function FullRecipeView() {
           </button>
         </div>
       )}
+      <h3>Description</h3>
+      {recipe.description && <p>{recipe.description}</p>}
       <h3>Ingredients</h3>
       <div>{parse(recipe.ingredients)}</div>
 
       <h3>Instructions</h3>
       <div>{parse(recipe.instructions)}</div>
-      {recipe.source_url && (
-        <p>
-          Original Recipe Source:{" "}
-          <a href={recipe.source_url} target="_blank" rel="noopener noreferrer">
-            View Recipe
-          </a>
-        </p>
-      )}
     </div>
   );
 }

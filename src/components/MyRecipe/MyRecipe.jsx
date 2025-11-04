@@ -7,11 +7,11 @@ export default function MyRecipe() {
     <div style={{ textAlign: "center" }}>
       <div style={{ position: "relative" }}>
         <img
-          src={"/img/garlic-8227658_1280.jpg"}
+          src={"/img/pexels-rdne-8581016.jpg"}
           alt={"MyRecipe header image"}
           style={{
             width: "100%",
-            height: "350px",
+            height: "500px",
             objectFit: "cover",
             // borderBottom: "4px solid #000000ff",
           }}
@@ -21,8 +21,8 @@ export default function MyRecipe() {
             src={user.profile_image_url}
             alt={`${user.username}'s profile`}
             style={{
-              width: "200px",
-              height: "200px",
+              width: "250px",
+              height: "250px",
               borderRadius: "50%",
               objectFit: "cover",
               border: "4px solid white",

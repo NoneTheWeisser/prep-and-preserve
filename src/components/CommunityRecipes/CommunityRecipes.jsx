@@ -10,7 +10,7 @@ export default function CommunityRecipes() {
           alt={"MyRecipe header image"}
           style={{
             width: "100%",
-            height: "300px",
+            height: "500px",
             objectFit: "cover",
             // borderBottom: "4px solid #000000ff",
           }}
