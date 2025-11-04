@@ -9,6 +9,10 @@ export default function FullRecipeView() {
   const fetchRecipeById = useStore((state) => state.fetchRecipeById);
   const deleteRecipe = useStore((state) => state.deleteRecipe);
   const [recipe, setRecipe] = useState(null);
+  const user = useStore((state) => state.user);
+
+  // TODO look into why admin isn't working properly
+  const canEdit = user && recipe && recipe.user_id === user.id;
 
   const getRecipe = async () => {
     try {
@@ -22,6 +26,7 @@ export default function FullRecipeView() {
   useEffect(() => {
     getRecipe();
   }, [id]);
+
 
   if (!recipe) return <p>Loading...</p>;
 
@@ -37,32 +42,44 @@ export default function FullRecipeView() {
         />
       )}
       {recipe.description && <p>{recipe.description}</p>}
-      <p>Original Recipe Source: {recipe.source_url}</p>
-      <div className="actions">
-        <button onClick={() => navigate(`/recipes/edit/${id}`)}>Edit</button>
-        <button
-          onClick={async () => {
-            const confirmDelete = window.confirm("Are you sure you want to delete this recipe?");
-            if(!confirmDelete) return;
-            try {
+      {/* check for owner, otherwise why even show the buttons */}
+      {canEdit && (
+        <div className="actions">
+          <button onClick={() => navigate(`/recipes/edit/${id}`)}>Edit</button>
+          <button
+            onClick={async () => {
+              const confirmDelete = window.confirm(
+                "Are you sure you want to delete this recipe?"
+              );
+              if (!confirmDelete) return;
+              try {
                 await deleteRecipe(id);
-                // snackbar later on? 
+                // snackbar later on?
                 alert("Recipe deleted successfully");
                 navigate("/myrecipes");
-            } catch (error) {
-                alert("Error deleting recipe. Please try again.")
+              } catch (error) {
+                alert("Error deleting recipe. Please try again.");
                 console.error("Deleting failed:", error);
-            }
-          }}
-        >
-          Delete
-        </button>
-      </div>
+              }
+            }}
+          >
+            Delete
+          </button>
+        </div>
+      )}
       <h3>Ingredients</h3>
       <div>{parse(recipe.ingredients)}</div>
 
       <h3>Instructions</h3>
       <div>{parse(recipe.instructions)}</div>
+      {recipe.source_url && (
+        <p>
+          Original Recipe Source:{" "}
+          <a href={recipe.source_url} target="_blank" rel="noopener noreferrer">
+            View Recipe
+          </a>
+        </p>
+      )}
     </div>
   );
 }

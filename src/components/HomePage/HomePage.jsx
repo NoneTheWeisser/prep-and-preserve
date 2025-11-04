@@ -1,5 +1,6 @@
 import useStore from "../../zustand/store";
 import { useNavigate } from "react-router-dom";
+import CommunityRecipeList from "../CommunityRecipes/CommunityRecipeList";
 
 function HomePage() {
   const user = useStore((state) => state.user);
@@ -74,6 +75,7 @@ function HomePage() {
           </button>
         )}
       </div>
+      <CommunityRecipeList  />
     </div>
   );
 }

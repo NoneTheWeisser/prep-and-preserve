@@ -14,7 +14,7 @@ export default function CommunityRecipeList() {
 
   return (
      <div> 
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem"  }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", marginTop: "20px"  }}>
         {recipes.map((recipe) => (
           <div
             key={recipe.id}
