@@ -1,4 +1,7 @@
+import CommunityRecipeList from "./CommunityRecipeList";
+
 export default function CommunityRecipes() {
+
   return (
     <div style={{ textAlign: "center" }}>
       <div style={{ position: "relative" }}>
@@ -14,7 +17,7 @@ export default function CommunityRecipes() {
         />
       </div>
       <h2>Community Recipes</h2>
-      <p>Coming Soon...</p>
+      <CommunityRecipeList />
     </div>
   );
 }

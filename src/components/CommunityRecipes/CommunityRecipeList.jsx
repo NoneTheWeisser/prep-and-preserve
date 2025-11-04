@@ -2,22 +2,20 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useStore from "../../zustand/store";
 
-export default function MyRecipeList() {
-  const userRecipes = useStore((state) => state.userRecipes);
-  const fetchUserRecipes = useStore((state) => state.fetchUserRecipes);
+export default function CommunityRecipeList() {
+  const fetchRecipes = useStore((state) => state.fetchRecipes);
+  const recipes = useStore((state) => state.recipes);
   const navigate = useNavigate();
+  const user = useStore((state) => state.user);
 
   useEffect(() => {
-    fetchUserRecipes();
-  }, [fetchUserRecipes]);
+    fetchRecipes();
+  }, [fetchRecipes]);
 
   return (
-     <div>
-      {/* <h2>My Recipes</h2> */}
-        {/* <button>Filter</button>
-        <button>Search</button> */}
+     <div> 
       <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem"  }}>
-        {userRecipes.map((recipe) => (
+        {recipes.map((recipe) => (
           <div
             key={recipe.id}
             style={{
@@ -47,8 +45,9 @@ export default function MyRecipeList() {
             <div style={{ padding: "0.5rem" }}>
               <h4 style={{ margin: "0.5rem 0" }}>{recipe.title}</h4>
               <p style={{ margin: 0 }}>
+                {/* Stretch: how do I bring in all users?*/}
+                {/* <img src={user.profile_image_url} alt="author" style={{ width: 24, height: 24, objectFit: "cover", borderRadius: '50%' }} />  */}
                 by {recipe.username}
-                {/* Stretch: <img src={recipe.profile_image_url} alt="author" style={{ width: 24, height: 24, borderRadius: '50%' }} /> */}
               </p>
             </div>
           </div>

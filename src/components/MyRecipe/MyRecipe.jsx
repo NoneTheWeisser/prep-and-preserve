@@ -11,7 +11,7 @@ export default function MyRecipe() {
           alt={"MyRecipe header image"}
           style={{
             width: "100%",
-            height: "300px",
+            height: "350px",
             objectFit: "cover",
             // borderBottom: "4px solid #000000ff",
           }}
@@ -21,13 +21,13 @@ export default function MyRecipe() {
             src={user.profile_image_url}
             alt={`${user.username}'s profile`}
             style={{
-              width: "164px",
-              height: "164px",
+              width: "200px",
+              height: "200px",
               borderRadius: "50%",
               objectFit: "cover",
               border: "4px solid white",
               position: "absolute",
-              bottom: "-10px",
+              bottom: "-40px",
               left: "50%",
               transform: "translateX(-50%)",
               boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
@@ -36,7 +36,7 @@ export default function MyRecipe() {
           />
         )}
       </div>
-      <div style={{ marginTop: "20px" }}>
+      <div style={{ marginTop: "80px" }}>
         <h2>{user ? `${user.username}'s Recipes` : "My Recipes"}</h2>
           {/* <h2>{`${user.username}`}</h2> */} 
         <MyRecipeList />
