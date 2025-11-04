@@ -1,10 +1,16 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import useStore from "../../zustand/store";
 import("../Nav/Nav.css");
 
 function Nav() {
   const user = useStore((store) => store.user);
   const logOut = useStore((state) => state.logOut);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logOut();
+    navigate("/");
+  }
 
   return (
     <nav className="navbar">
@@ -59,7 +65,7 @@ function Nav() {
                 <button
                   type="button"
                   className="logout-btn"
-                  onClick={logOut}
+                  onClick={handleLogout}
                 >
                   Log Out
                 </button>
