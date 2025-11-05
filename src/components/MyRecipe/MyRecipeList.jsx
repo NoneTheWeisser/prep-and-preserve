@@ -2,6 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useStore from "../../zustand/store";
 import RecipeFilterBar from "../RecipeFilterBar/RecipeFilterBar";
+import {
+  Box,
+  Grid,
+  Card,
+  CardMedia,
+  CardContent,
+  Typography,
+  Chip,
+  Stack,
+  CardActionArea,
+} from "@mui/material";
 
 export default function MyRecipeList() {
   const userRecipes = useStore((state) => state.userRecipes);
@@ -45,9 +56,16 @@ export default function MyRecipeList() {
     setFilteredRecipes(filtered);
   };
 
+    // only show the tags that have been assigned to a recipe. 
+const usedTags = tags.filter((tag) =>
+  userRecipes.some((recipe) =>
+    recipe.tags?.some((rt) => rt.id === tag.id)
+  )
+);
+
   return (
     <div>
-      <RecipeFilterBar onFilterChange={handleFilterChange} recipes={userRecipes}/>
+      <RecipeFilterBar tags ={usedTags} onFilterChange={handleFilterChange} recipes={userRecipes}/>
       {/* display selected tags */}
       {selectedTags.length > 0 && (
         <div className="selected-tags">

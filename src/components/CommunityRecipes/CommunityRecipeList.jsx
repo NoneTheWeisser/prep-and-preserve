@@ -56,9 +56,14 @@ export default function CommunityRecipeList() {
     setFilteredRecipes(filtered);
   };
 
+  // only show the tags that have been assigned to a recipe. 
+  const usedTags = tags.filter((tag) =>
+    recipes.some((recipe) => recipe.tags?.some((rt) => rt.id === tag.id))
+  );
+
   return (
     <Box sx={{ p: 4 }}>
-      <RecipeFilterBar onFilterChange={handleFilterChange} />
+      <RecipeFilterBar tags ={usedTags} onFilterChange={handleFilterChange} />
 
       {/* display selected tags */}
       {selectedTags.length > 0 && (
@@ -83,7 +88,7 @@ export default function CommunityRecipeList() {
       )}
 
       {/* Recipe Grid */}
-      {/* TO - DO */}
+      {/* todo: are we going to use the mui grid or keep it like we have it? */}
       <div
         style={{
           display: "flex",

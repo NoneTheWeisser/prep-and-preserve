@@ -8,9 +8,10 @@ import {
   Chip,
 } from "@mui/material";
 
-export default function RecipeFilterBar({ onFilterChange }) {
+export default function RecipeFilterBar({ onFilterChange, ...props }) {
   const fetchTags = useStore((state) => state.fetchTags);
-  const tags = useStore((state) => state.tags);
+  // const tags = useStore((state) => state.tags);
+  const tags = props.tags || [];
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTagIds, setSelectedTags] = useState([]);
@@ -60,18 +61,6 @@ export default function RecipeFilterBar({ onFilterChange }) {
         fullWidth
         size="small"
       />
-        {/* would I need these? */}
-      <ToggleButtonGroup
-        value={matchType}
-        exclusive
-        onChange={(_, newType) => newType && setMatchType(newType)}
-        size="small"
-        sx={{ mb: 1 }}
-      >
-        <ToggleButton value="none">None</ToggleButton>
-        <ToggleButton value="any">Any</ToggleButton>
-        <ToggleButton value="all">All</ToggleButton>
-      </ToggleButtonGroup>
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
         {tags.map((tag) => (
           <Chip
