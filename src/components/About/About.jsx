@@ -53,18 +53,18 @@ export default function About() {
       <div
         style={{
           display: "flex",
-          justifyContent: "space-between", // text left, button right
-          alignItems: "center",            // vertically center content
+          justifyContent: "space-between",
+          alignItems: "center",
           padding: "2rem",
           maxWidth: "1000px",
           margin: "0 auto",
-          backgroundColor: "#f5f5f5",      // subtle background to distinguish section
+          backgroundColor: "#f5f5f5",
           borderRadius: "8px",
           gap: "2rem",
-          flexWrap: "wrap", // makes it responsive on smaller screens
+          flexWrap: "wrap",
         }}
       >
-        <p style={{ flex: "1", fontSize: "1.1rem", lineHeight: "1.5rem", margin: 0 }}>
+        <p style={{ flex: "1", fontSize: "1.1rem", lineHeight: "1.5rem", margin: 0, textAlign: "center" }}>
           Questions? Need assistance? Contact our admin for help or feedback.
         </p>
 
@@ -78,6 +78,7 @@ export default function About() {
             borderRadius: "4px",
             cursor: "pointer",
           }}
+          // TODO: do I include my email? or make an alias? 
           onClick={() => window.location.href = "mailto:nicholas.weisser@gmail.com"}
         >
           Contact Admin
