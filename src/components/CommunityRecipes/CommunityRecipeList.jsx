@@ -8,9 +8,13 @@ export default function CommunityRecipeList() {
   const recipes = useStore((state) => state.recipes);
   const navigate = useNavigate();
   const user = useStore((state) => state.user);
+  const tags = useStore((state) => state.tags);
 
   // Filter & Search
   const [filteredRecipes, setFilteredRecipes] = useState([]);
+  const [selectedTagIds, setSelectedTagIds] = useState([]);
+
+  const selectedTags = tags.filter((tag) => selectedTagIds.includes(tag.id));
 
   useEffect(() => {
     fetchRecipes();
@@ -21,6 +25,8 @@ export default function CommunityRecipeList() {
   }, [recipes]);
 
   const handleFilterChange = ({ searchTerm, selectedTagIds }) => {
+    setSelectedTagIds(selectedTagIds);
+    
     let filtered = recipes;
 
     if (searchTerm) {
@@ -28,12 +34,19 @@ export default function CommunityRecipeList() {
         recipe.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-
+    // filter by many tags
     if (selectedTagIds && selectedTagIds.length > 0) {
-      filtered = filtered.filter((recipe) =>
-        recipe.tags?.find((tag) => selectedTagIds.includes(tag.id))
-      );
+      filtered = filtered.filter((recipe) => {
+        const recipeTagIds = recipe.tags?.map((tag) => tag.id) || [];
+        return selectedTagIds.every((id) => recipeTagIds.includes(id));
+      });
     }
+    // filter by one tag
+    // if (selectedTagIds && selectedTagIds.length > 0) {
+    //   filtered = filtered.filter((recipe) =>
+    //     recipe.tags?.find((tag) => selectedTagIds.includes(tag.id))
+    //   );
+    // }
 
     setFilteredRecipes(filtered);
   };
@@ -41,6 +54,21 @@ export default function CommunityRecipeList() {
   return (
     <div>
       <RecipeFilterBar onFilterChange={handleFilterChange} />
+                    {/* display selected tags */}
+              {selectedTags.length > 0 && (
+                <div className="selected-tags">
+                  <p>Filtering by:</p>
+                  {selectedTags.map((tag) => (
+                    <span 
+                    key={tag.id} 
+                    className="selected-tag"
+                    onClick={() => handleTagChange(tag.id)}
+                    >
+                      {tag.name}{" "}
+                    </span>
+                  ))}
+                </div>
+              )}
       <div
         style={{
           display: "flex",

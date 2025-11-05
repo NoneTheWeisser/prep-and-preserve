@@ -12,30 +12,24 @@ export default function RecipeFilterBar({ onFilterChange }) {
     fetchTags();
   }, []);
 
+  // moved onFilterChange into a useEffect to help solve the warning I was getting 
+  useEffect(() => {
+          if (typeof onFilterChange === "function") {
+        onFilterChange({ searchTerm, selectedTagIds });
+      }
+  }, [searchTerm, selectedTagIds]);
+
 
   // handle search input
 const handleSearchChange = (e) => {
-  const newSearchTerm = e.target.value;
-  setSearchTerm(newSearchTerm);
-
-    if (typeof onFilterChange === "function") {
-      onFilterChange({ searchTerm: newSearchTerm, selectedTagIds });
-    }
+  setSearchTerm(e.target.value);
   };
 
   // Handle Tag Selection
   const handleTagChange = (tagId) => {
-    setSelectedTags((prev) => {
-      const newSelectedTags = prev.includes(tagId)
-        ? prev.filter((id) => id !== tagId)
-        : [...prev, tagId];
-
-      if (typeof onFilterChange === "function") {
-        onFilterChange({ searchTerm, selectedTagIds: newSelectedTags });
-      }
-
-      return newSelectedTags;
-    });
+    setSelectedTags((prev) =>
+      prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]
+    );
   };
 
   return (
@@ -57,7 +51,7 @@ const handleSearchChange = (e) => {
         onChange={handleSearchChange}
         style={{
           padding: "0.5rem",
-          border: "1px soild #ccc",
+          border: "1px solid #ccc",
           borderRadius: "4px",
         }}
       />
@@ -72,3 +66,28 @@ const handleSearchChange = (e) => {
     </div>
   );
 }
+
+
+    // handle search input
+  // const handleSearchChange = (e) => {
+  //   const newSearchTerm = e.target.value;
+  //   setSearchTerm(newSearchTerm);
+
+  //     if (typeof onFilterChange === "function") {
+  //       onFilterChange({ searchTerm: newSearchTerm, selectedTagIds });
+  //     }
+  //   };
+  // Handle Tag Selection
+  // const handleTagChange = (tagId) => {
+  //   setSelectedTags((prev) => {
+  //     const newSelectedTags = prev.includes(tagId)
+  //       ? prev.filter((id) => id !== tagId)
+  //       : [...prev, tagId];
+
+  //     if (typeof onFilterChange === "function") {
+  //       onFilterChange({ searchTerm, selectedTagIds: newSelectedTags });
+  //     }
+
+  //     return newSelectedTags;
+  //   });
+  // };
