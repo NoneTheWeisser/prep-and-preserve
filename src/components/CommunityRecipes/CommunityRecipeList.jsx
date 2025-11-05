@@ -2,6 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useStore from "../../zustand/store";
 import RecipeFilterBar from "../RecipeFilterBar/RecipeFilterBar";
+import {
+  Box,
+  Grid,
+  Card,
+  CardMedia,
+  CardContent,
+  Typography,
+  Chip,
+  Stack,
+  CardActionArea,
+} from "@mui/material";
 
 export default function CommunityRecipeList() {
   const fetchRecipes = useStore((state) => state.fetchRecipes);
@@ -26,7 +37,7 @@ export default function CommunityRecipeList() {
 
   const handleFilterChange = ({ searchTerm, selectedTagIds }) => {
     setSelectedTagIds(selectedTagIds);
-    
+
     let filtered = recipes;
 
     if (searchTerm) {
@@ -41,35 +52,38 @@ export default function CommunityRecipeList() {
         return selectedTagIds.every((id) => recipeTagIds.includes(id));
       });
     }
-    // filter by one tag
-    // if (selectedTagIds && selectedTagIds.length > 0) {
-    //   filtered = filtered.filter((recipe) =>
-    //     recipe.tags?.find((tag) => selectedTagIds.includes(tag.id))
-    //   );
-    // }
 
     setFilteredRecipes(filtered);
   };
 
   return (
-    <div>
+    <Box sx={{ p: 4 }}>
       <RecipeFilterBar onFilterChange={handleFilterChange} />
-                    {/* display selected tags */}
-              {selectedTags.length > 0 && (
-                <div className="selected-tags">
-                  <p>Filtering by:</p>
-                  {selectedTags.map((tag) => (
-                    <span 
-                    key={tag.id} 
-                    className="selected-tag"
-                    // TODO: be nice to remove them with a click in this section
-                    // onClick={() => handleTagChange(tag.id)}
-                    >
-                      {tag.name}{" "}
-                    </span>
-                  ))}
-                </div>
-              )}
+
+      {/* display selected tags */}
+      {selectedTags.length > 0 && (
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{ mt: 2, mb: 2, flexWrap: "wrap" }}
+        >
+          <Typography variant="subtitle1">Filtering by:</Typography>
+          {selectedTags.map((tag) => (
+            <Chip
+              key={tag.id}
+              label={tag.name}
+              color="primary"
+              variant="outlined"
+              sx={{ cursor: "pointer" }}
+              // TODO: remove on click
+              // onClick={() => handleTagChange(tag.id)}
+            />
+          ))}
+        </Stack>
+      )}
+
+      {/* Recipe Grid */}
+      {/* TO - DO */}
       <div
         style={{
           display: "flex",
@@ -120,6 +134,6 @@ export default function CommunityRecipeList() {
           ))
         )}
       </div>
-    </div>
+    </Box>
   );
 }

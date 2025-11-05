@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
 import useStore from "../../zustand/store";
+import {
+  Box,
+  TextField,
+  ToggleButton,
+  ToggleButtonGroup,
+  Chip,
+} from "@mui/material";
 
 export default function RecipeFilterBar({ onFilterChange }) {
   const fetchTags = useStore((state) => state.fetchTags);
@@ -7,63 +14,75 @@ export default function RecipeFilterBar({ onFilterChange }) {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTagIds, setSelectedTags] = useState([]);
+  const [matchType, setMatchType] = useState("all");
 
   useEffect(() => {
     fetchTags();
   }, []);
 
-  // moved onFilterChange into a useEffect to help solve the warning I was getting 
+  // moved onFilterChange into a useEffect to help solve the warning I was getting
   useEffect(() => {
-          if (typeof onFilterChange === "function") {
-        onFilterChange({ searchTerm, selectedTagIds });
-      }
-  }, [searchTerm, selectedTagIds]);
-
+    if (typeof onFilterChange === "function") {
+      onFilterChange({ searchTerm, selectedTagIds, matchType });
+    }
+  }, [searchTerm, selectedTagIds, matchType]);
 
   // handle search input
-const handleSearchChange = (e) => {
-  setSearchTerm(e.target.value);
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
   };
 
   // Handle Tag Selection
   const handleTagChange = (tagId) => {
     setSelectedTags((prev) =>
-      prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]
+      prev.includes(tagId)
+        ? prev.filter((id) => id !== tagId)
+        : [...prev, tagId]
     );
   };
 
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         display: "flex",
         flexDirection: "column",
-        gap: "0.5rem",
-        marginBottom: "1.5rem",
-        padding: "0.5rem 1rem",
-        backgroundColor: "#fafafa",
-        borderRadius: "5px",
+        gap: 2,
+        mb: 2,
+        p: 2,
+        bgcolor: "#fafafa",
+        borderRadius: 1,
       }}
     >
-      <input
-        type="text"
+      <TextField
         placeholder="Search Recipes..."
         value={searchTerm}
         onChange={handleSearchChange}
-        style={{
-          padding: "0.5rem",
-          border: "1px solid #ccc",
-          borderRadius: "4px",
-        }}
+        fullWidth
+        size="small"
       />
-      {/* could be a dropdown/accordion ? */}
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+        {/* would I need these? */}
+      <ToggleButtonGroup
+        value={matchType}
+        exclusive
+        onChange={(_, newType) => newType && setMatchType(newType)}
+        size="small"
+        sx={{ mb: 1 }}
+      >
+        <ToggleButton value="none">None</ToggleButton>
+        <ToggleButton value="any">Any</ToggleButton>
+        <ToggleButton value="all">All</ToggleButton>
+      </ToggleButtonGroup>
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
         {tags.map((tag) => (
-          <button key={tag.id} onClick={() => handleTagChange(tag.id)}>
-            {tag.name}
-          </button>
+          <Chip
+            key={tag.id}
+            label={tag.name}
+            color={selectedTagIds.includes(tag.id) ? "primary" : "default"}
+            onClick={() => handleTagChange(tag.id)}
+            clickable
+          />
         ))}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
-
