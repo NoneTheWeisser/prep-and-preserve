@@ -67,27 +67,3 @@ const handleSearchChange = (e) => {
   );
 }
 
-
-    // handle search input
-  // const handleSearchChange = (e) => {
-  //   const newSearchTerm = e.target.value;
-  //   setSearchTerm(newSearchTerm);
-
-  //     if (typeof onFilterChange === "function") {
-  //       onFilterChange({ searchTerm: newSearchTerm, selectedTagIds });
-  //     }
-  //   };
-  // Handle Tag Selection
-  // const handleTagChange = (tagId) => {
-  //   setSelectedTags((prev) => {
-  //     const newSelectedTags = prev.includes(tagId)
-  //       ? prev.filter((id) => id !== tagId)
-  //       : [...prev, tagId];
-
-  //     if (typeof onFilterChange === "function") {
-  //       onFilterChange({ searchTerm, selectedTagIds: newSelectedTags });
-  //     }
-
-  //     return newSelectedTags;
-  //   });
-  // };
