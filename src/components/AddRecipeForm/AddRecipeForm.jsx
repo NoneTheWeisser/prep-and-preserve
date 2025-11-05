@@ -1,4 +1,4 @@
-import ("../AddRecipeForm/AddRecipeForm.css");
+import("../AddRecipeForm/AddRecipeForm.css");
 import React, { useEffect, useState } from "react";
 import InstructionTextEditor from "./InstructionTextEditor";
 import IngredientTextEditor from "./IngredientTextEditor";
@@ -15,11 +15,11 @@ export default function AddRecipeForm() {
   const [sourceUrl, setSourceUrl] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
   const [isPublic, setIsPublic] = useState(true);
-  
+
   const navigate = useNavigate();
 
   // console.log(selectedTags);
-  
+
   const tags = useStore((state) => state.tags);
   const fetchTags = useStore((state) => state.fetchTags);
   const addRecipe = useStore((state) => state.addRecipe);
@@ -31,13 +31,13 @@ export default function AddRecipeForm() {
   // Render checkboxes
   const handleTagChange = (tag) => {
     setSelectedTags((prev) =>
-      prev.find(t => t.id === Number(tag.id))
-        ? prev.filter(t => t.id !== tag.id)
+      prev.find((t) => t.id === Number(tag.id))
+        ? prev.filter((t) => t.id !== tag.id)
         : [...prev, tag]
     );
   };
 
-    // cloudinary
+  // cloudinary
   const openCloudinaryWidget = () => {
     if (!window.cloudinary) return;
     const widget = window.cloudinary.createUploadWidget(
@@ -66,7 +66,7 @@ export default function AddRecipeForm() {
       image_url: imageUrl,
       is_public: isPublic,
       source_url: sourceUrl,
-      tags: selectedTags
+      tags: selectedTags,
     };
     console.log("Submitting recipe:", recipeData);
     try {
@@ -85,34 +85,40 @@ export default function AddRecipeForm() {
       setSourceUrl("");
       setIsPublic(true);
       setSelectedTags([]);
-
     } catch (error) {
       console.error("Error submitting recipe:", error);
     }
   };
 
   return (
-    <div>
-      <h2>Add Recipe</h2>
-
-      <form onSubmit={handleSubmit}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center", 
+        alignItems: "center", 
+        minHeight: "100vh", 
+        backgroundColor: "#f5f5f5", 
+        padding: "2rem",
+      }}
+    >
+      <form
+        style={{
+          width: "100%",
+          maxWidth: "700px", 
+          backgroundColor: "#fff",
+          padding: "2rem",
+          borderRadius: "8px",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        }}
+        onSubmit={handleSubmit}
+        >
+        <h2>Add Recipe</h2>
         <label>Title</label>
         <input
           placeholder="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
-        <div>
-          <button type="button" onClick={openCloudinaryWidget}>
-            Upload Image
-          </button>
-          {imageUrl && (
-            <div>
-              <p>Uploaded Image:</p>
-              <img src={imageUrl} width={150} alt="Uploaded recipe" />
-            </div>
-          )}
-        </div>
         <label>Description</label>
         <input
           placeholder="description"
@@ -127,8 +133,8 @@ export default function AddRecipeForm() {
         />
         <label>Recipe Tags</label>
         <p>
-          Select all tags that apply to your recipe. 
-          This will help with filtering.
+          Select all tags that apply to your recipe. This will help with
+          filtering.
         </p>
         <div className="tag-container">
           {tags.map((tag) => (
@@ -136,7 +142,7 @@ export default function AddRecipeForm() {
               <input
                 type="checkbox"
                 value={tag.id}
-                checked={!!selectedTags.find(t => t.id === Number(tag.id))}
+                checked={!!selectedTags.find((t) => t.id === Number(tag.id))}
                 onChange={() => handleTagChange(tag)}
               />
               {tag.name}
@@ -145,10 +151,7 @@ export default function AddRecipeForm() {
         </div>
         <label>
           <h3>Ingredients</h3>
-          <IngredientTextEditor 
-            value={ingredients}
-            onChange={setIngredients}
-          />
+          <IngredientTextEditor value={ingredients} onChange={setIngredients} />
         </label>
         <label>
           <h3>Instructions</h3>
@@ -166,6 +169,17 @@ export default function AddRecipeForm() {
           <span className="slider" />
           <span className="label-text">Keep this recipe private</span>
         </label>
+        <div>
+          <button type="button" onClick={openCloudinaryWidget}>
+            Upload Image
+          </button>
+          {imageUrl && (
+            <div>
+              <p>Uploaded Image:</p>
+              <img src={imageUrl} width={150} alt="Uploaded recipe" />
+            </div>
+          )}
+        </div>
         <button type="submit">Save Recipe</button>
         {/* debating adding this feature. User could choose to add another recipe 
       instead of submitted just the one and nav to the recipe page*/}

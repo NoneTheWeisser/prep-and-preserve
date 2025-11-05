@@ -102,26 +102,34 @@ export default function EditRecipeForm() {
 
   // }
   return (
-    <div>
-      <h2>Edit Recipe</h2>
-      <form onSubmit={handleSubmit}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center", 
+        alignItems: "center", 
+        minHeight: "100vh", 
+        backgroundColor: "#f5f5f5", 
+        padding: "2rem",
+      }}
+    >
+      <form
+        style={{
+          width: "100%",
+          maxWidth: "700px", 
+          backgroundColor: "#fff",
+          padding: "2rem",
+          borderRadius: "8px",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        }}
+        onSubmit={handleSubmit}
+        >
+        <h2>Edit Recipe</h2>
         <label>Title</label>
         <input
           placeholder="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
-        <div>
-          <button type="button" onClick={openCloudinaryWidget}>
-            Upload Image
-          </button>
-          {imageUrl && (
-            <div>
-              <p>Uploaded Image:</p>
-              <img src={imageUrl} width={150} alt="Uploaded recipe" />
-            </div>
-          )}
-        </div>
         <label>Description</label>
         <input
           placeholder="description"
@@ -145,7 +153,7 @@ export default function EditRecipeForm() {
               <input
                 type="checkbox"
                 value={tag.id}
-                checked={!!selectedTags.find(t => t.id === Number(tag.id))}
+                checked={!!selectedTags.find((t) => t.id === Number(tag.id))}
                 onChange={() => handleTagChange(tag)}
               />
               {tag.name}
@@ -172,6 +180,17 @@ export default function EditRecipeForm() {
           <span className="slider" />
           <span className="label-text">Keep this recipe private</span>
         </label>
+        <div>
+          <button type="button" onClick={openCloudinaryWidget}>
+            Upload Image
+          </button>
+          {imageUrl && (
+            <div>
+              <p>Uploaded Image:</p>
+              <img src={imageUrl} width={150} alt="Uploaded recipe" />
+            </div>
+          )}
+        </div>
         <button type="submit">Update Recipe</button>
       </form>
     </div>

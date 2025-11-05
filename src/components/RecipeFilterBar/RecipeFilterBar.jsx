@@ -5,8 +5,6 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  FormControlLabel,
-  Checkbox,
   Chip,
   Stack,
   Typography,
@@ -22,8 +20,6 @@ export default function RecipeFilterBar({ onFilterChange, ...props }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTagIds, setSelectedTags] = useState([]);
 
-  const [matchType, setMatchType] = useState("all");
-
   useEffect(() => {
     fetchTags();
   }, []);
@@ -31,9 +27,9 @@ export default function RecipeFilterBar({ onFilterChange, ...props }) {
   // moved onFilterChange into a useEffect to help solve the warning I was getting
   useEffect(() => {
     if (typeof onFilterChange === "function") {
-      onFilterChange({ searchTerm, selectedTagIds, matchType });
+      onFilterChange({ searchTerm, selectedTagIds });
     }
-  }, [searchTerm, selectedTagIds, matchType]);
+  }, [searchTerm, selectedTagIds]);
 
   // handle search input
   const handleSearchChange = (e) => setSearchTerm(e.target.value);
@@ -47,12 +43,11 @@ export default function RecipeFilterBar({ onFilterChange, ...props }) {
     );
   };
 
-  // Clear tags?
+  // Clear tags
   const clearTag = (tagId) => {
     setSelectedTags((prev) => prev.filter((id) => id !== tagId));
   };
   const clearAllTags = () => setSelectedTags([]);
-
   const selectedTags = tags.filter((tag) => selectedTagIds.includes(tag.id));
 
   return (
@@ -76,7 +71,7 @@ export default function RecipeFilterBar({ onFilterChange, ...props }) {
         size="small"
       />
       {/* Accordion for tag list */}
-      <Accordion elevation={0} disableGutters>
+      <Accordion elevation={0} disableGutters >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           Filter
         </AccordionSummary>
