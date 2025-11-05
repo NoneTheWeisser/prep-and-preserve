@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
-import useStore from "../../zustand/store";
 import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  FormControlLabel,
+  Checkbox,
   Box,
   TextField,
-  ToggleButton,
-  ToggleButtonGroup,
-  Chip,
 } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import useStore from "../../zustand/store";
 
 export default function RecipeFilterBar({ onFilterChange, ...props }) {
   const fetchTags = useStore((state) => state.fetchTags);
@@ -15,6 +18,7 @@ export default function RecipeFilterBar({ onFilterChange, ...props }) {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTagIds, setSelectedTags] = useState([]);
+
   const [matchType, setMatchType] = useState("all");
 
   useEffect(() => {
@@ -61,17 +65,27 @@ export default function RecipeFilterBar({ onFilterChange, ...props }) {
         fullWidth
         size="small"
       />
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-        {tags.map((tag) => (
-          <Chip
-            key={tag.id}
-            label={tag.name}
-            color={selectedTagIds.includes(tag.id) ? "primary" : "default"}
-            onClick={() => handleTagChange(tag.id)}
-            clickable
-          />
-        ))}
-      </Box>
+      {/* Accordion Filter Section (hopefully) */}
+      <Accordion elevation={0} disableGutters>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          Filter
+        </AccordionSummary>
+
+        <AccordionDetails sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+          {tags.map((tag) => (
+            <FormControlLabel
+              key={tag.id}
+              control={
+                <Checkbox
+                  checked={selectedTagIds.includes(tag.id)}
+                  onChange={() => handleTagChange(tag.id)}
+                />
+              }
+              label={tag.name}
+            />
+          ))}
+        </AccordionDetails>
+      </Accordion>
     </Box>
   );
 }
