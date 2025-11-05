@@ -8,42 +8,39 @@ function HomePage() {
   const navigate = useNavigate();
 
   return (
-    <div style={{ textAlign: "center" }}>
-      <div style={{ position: "relative" }}>
-        <img
-          src="/img/pexels-photo-326281.jpeg"
-          alt="Prep & Preserve logo"
-          className="register-logo"
-          style={{
-            width: "100%",
-            height: "600px",
-            objectFit: "cover",
-          }}
-          />
+    <div style={{ textAlign: "left" }}>
+      <div
+        style={{
+          position: "relative",
+          height: "500px",
+          width: "100%",
+          color: "white",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "flex-start",
+          paddingLeft: "5%",
+          backgroundImage: `url("/img/pexels-photo-326281.jpeg")`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
         <img
           src="/img/prepperservelogo_vertical_white.svg"
           alt="Prep & Preserve White logo"
-          className="register-logo"
           style={{
             width: "200px",
-            // height: "164px",
-            objectFit: "cover",
-            position: "absolute",
-            bottom: "500px",
-            left: "5%",
+            marginBottom: "1rem",
           }}
-          />
-          <h1>Welcome {user.username}</h1>
+        />
+        <h1 style={{ marginBottom: "1rem" }}>Welcome {user.username}</h1>
         <p
-            style={{
-            width: "200px",
-            // height: "164px",
-            // objectFit: "cover",
-            position: "absolute",
-            bottom: "200px",
-            color: "white",
-            left: "5%",
-          }}>
+          style={{
+            maxWidth: "600px",
+            lineHeight: "1.5rem",
+            fontSize: "1.1rem",
+          }}
+        >
           Welcome to your personal recipe book! Here you can save and organize
           the recipes you love, all in one clean, easy-to-read space. Add your
           own recipes or explore those shared by others. Format instructions,
@@ -52,30 +49,45 @@ function HomePage() {
           fingertips.
         </p>
         {/* conditional buttons */}
-        {!user.id ? (
-          <>
+        <div
+          style={{
+            position: "absolute",
+            bottom: "20px",
+            right: "5%",
+            display: "flex",
+            gap: "1rem", // space between buttons
+          }}
+        >
+          {!user.id ? (
+            <>
+              <button
+                type="button"
+                className="auth-btn secondary"
+                onClick={() => navigate("/login")}
+              >
+                Sign In
+              </button>
+              <button
+                type="button"
+                className="auth-btn secondary"
+                onClick={() => navigate("/registration")}
+              >
+                Create Account
+              </button>
+            </>
+          ) : (
             <button
               type="button"
               className="auth-btn secondary"
-              onClick={() => navigate("/login")}
+              onClick={logOut}
             >
-              Sign In
+              Log Out
             </button>
-            <button
-              type="button"
-              className="auth-btn secondary"
-              onClick={() => navigate("/registration")}
-            >
-              Create Account
-            </button>
-          </>
-        ) : (
-          <button type="button" className="auth-btn secondary" onClick={logOut}>
-            Log Out
-          </button>
-        )}
+          )}
+        </div>
       </div>
-      <CommunityRecipeList  />
+      <h3 style={{textAlign:"center"}}>Trending Recipes</h3>
+      <CommunityRecipeList />
     </div>
   );
 }
