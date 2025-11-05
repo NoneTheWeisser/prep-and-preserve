@@ -7,8 +7,14 @@ export default function MyRecipeList() {
   const userRecipes = useStore((state) => state.userRecipes);
   const fetchUserRecipes = useStore((state) => state.fetchUserRecipes);
   const navigate = useNavigate();
+  const user = useStore((state) => state.user);
+  const tags = useStore((state) => state.tags);
 
+  // Filter & Search
   const [filteredRecipes, setFilteredRecipes] = useState([]);
+  const [selectedTagIds, setSelectedTagIds] = useState([]);
+
+  const selectedTags = tags.filter((tag) => selectedTagIds.includes(tag.id));
 
   useEffect(() => {
     fetchUserRecipes();
@@ -19,6 +25,7 @@ export default function MyRecipeList() {
   }, [userRecipes]);
 
   const handleFilterChange = ({ searchTerm, selectedTagIds }) => {
+    setSelectedTagIds(selectedTagIds);
     let filtered = userRecipes;
 
     if (searchTerm) {
@@ -27,10 +34,12 @@ export default function MyRecipeList() {
       );
     }
 
+    // filter by many tags
     if (selectedTagIds && selectedTagIds.length > 0) {
-      filtered = filtered.filter((recipe) =>
-        recipe.tags?.find((tag) => selectedTagIds.includes(tag.id))
-      );
+      filtered = filtered.filter((recipe) => {
+        const recipeTagIds = recipe.tags?.map((tag) => tag.id) || [];
+        return selectedTagIds.every((id) => recipeTagIds.includes(id));
+      });
     }
 
     setFilteredRecipes(filtered);
@@ -38,8 +47,23 @@ export default function MyRecipeList() {
 
   return (
     <div>
-      <RecipeFilterBar onFilterChange={handleFilterChange} />
-
+      <RecipeFilterBar onFilterChange={handleFilterChange} recipes={userRecipes}/>
+      {/* display selected tags */}
+      {selectedTags.length > 0 && (
+        <div className="selected-tags">
+          <p>Filtering by:</p>
+          {selectedTags.map((tag) => (
+            <span
+              key={tag.id}
+              className="selected-tag"
+              // TODO: be nice to remove them with a click in this section
+              // onClick={() => handleTagChange(tag.id)}
+            >
+              {tag.name}{" "}
+            </span>
+          ))}
+        </div>
+      )}
       <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
         {filteredRecipes.length === 0 ? (
           <p>No Recipes Found.</p>

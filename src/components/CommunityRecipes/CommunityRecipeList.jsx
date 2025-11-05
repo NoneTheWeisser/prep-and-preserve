@@ -63,7 +63,7 @@ export default function CommunityRecipeList() {
                     key={tag.id} 
                     className="selected-tag"
                     // TODO: be nice to remove them with a click in this section
-                    onClick={() => handleTagChange(tag.id)}
+                    // onClick={() => handleTagChange(tag.id)}
                     >
                       {tag.name}{" "}
                     </span>
