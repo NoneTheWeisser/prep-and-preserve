@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import {
+  Box,
+  TextField,
   Accordion,
   AccordionSummary,
   AccordionDetails,
   FormControlLabel,
   Checkbox,
-  Box,
-  TextField,
+  Chip,
+  Stack,
+  Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import useStore from "../../zustand/store";
@@ -33,9 +36,7 @@ export default function RecipeFilterBar({ onFilterChange, ...props }) {
   }, [searchTerm, selectedTagIds, matchType]);
 
   // handle search input
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
+  const handleSearchChange = (e) => setSearchTerm(e.target.value);
 
   // Handle Tag Selection
   const handleTagChange = (tagId) => {
@@ -45,6 +46,14 @@ export default function RecipeFilterBar({ onFilterChange, ...props }) {
         : [...prev, tagId]
     );
   };
+
+  // Clear tags?
+  const clearTag = (tagId) => {
+    setSelectedTags((prev) => prev.filter((id) => id !== tagId));
+  };
+  const clearAllTags = () => setSelectedTags([]);
+
+  const selectedTags = tags.filter((tag) => selectedTagIds.includes(tag.id));
 
   return (
     <Box
@@ -58,6 +67,7 @@ export default function RecipeFilterBar({ onFilterChange, ...props }) {
         borderRadius: 1,
       }}
     >
+      {/* Search box, needs updating */}
       <TextField
         placeholder="Search Recipes..."
         value={searchTerm}
@@ -65,27 +75,42 @@ export default function RecipeFilterBar({ onFilterChange, ...props }) {
         fullWidth
         size="small"
       />
-      {/* Accordion Filter Section (hopefully) */}
+      {/* Accordion for tag list */}
       <Accordion elevation={0} disableGutters>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           Filter
         </AccordionSummary>
-
         <AccordionDetails sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
           {tags.map((tag) => (
-            <FormControlLabel
+            <Chip
               key={tag.id}
-              control={
-                <Checkbox
-                  checked={selectedTagIds.includes(tag.id)}
-                  onChange={() => handleTagChange(tag.id)}
-                />
-              }
               label={tag.name}
+              clickable
+              color={selectedTagIds.includes(tag.id) ? "primary" : "default"}
+              variant={selectedTagIds.includes(tag.id) ? "filled" : "outlined"}
+              onClick={() => handleTagChange(tag.id)}
             />
           ))}
         </AccordionDetails>
       </Accordion>
+      {/* Selected Tag Chips */}
+      {selectedTags.length > 0 && (
+        <Stack direction="row" spacing={1} flexWrap="wrap">
+          <Typography variant="body2" sx={{ alignSelf: "center" }}>
+            Filtering by:
+          </Typography>
+          {selectedTags.map((tag) => (
+            <Chip
+              key={tag.id}
+              label={tag.name}
+              onDelete={() => clearTag(tag.id)}
+              color="primary"
+              variant="outlined"
+            />
+          ))}
+          <Chip label="Clear All" onClick={clearAllTags} />
+        </Stack>
+      )}
     </Box>
   );
 }

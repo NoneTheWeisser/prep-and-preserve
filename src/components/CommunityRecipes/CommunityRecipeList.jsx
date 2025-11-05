@@ -65,28 +65,6 @@ export default function CommunityRecipeList() {
     <Box sx={{ p: 4 }}>
       <RecipeFilterBar tags ={usedTags} onFilterChange={handleFilterChange} />
 
-      {/* display selected tags */}
-      {selectedTags.length > 0 && (
-        <Stack
-          direction="row"
-          spacing={1}
-          sx={{ mt: 2, mb: 2, flexWrap: "wrap" }}
-        >
-          <Typography variant="subtitle1">Filtering by:</Typography>
-          {selectedTags.map((tag) => (
-            <Chip
-              key={tag.id}
-              label={tag.name}
-              color="primary"
-              variant="outlined"
-              sx={{ cursor: "pointer" }}
-              // TODO: remove on click
-              // onClick={() => handleTagChange(tag.id)}
-            />
-          ))}
-        </Stack>
-      )}
-
       {/* Recipe Grid */}
       {/* todo: are we going to use the mui grid or keep it like we have it? */}
       <div
