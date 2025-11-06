@@ -25,14 +25,12 @@ export default function CommunityRecipeList() {
 
   // // Favorites
   const fetchFavorites = useStore((state) => state.fetchFavorites);
-  const isFavorited = useStore((state) => state.isFavorited);
+  const favorites = useStore((state) => state.favorites);
   const toggleFavorite = useStore((state) => state.toggleFavorite);
 
   // Filter & Search
   const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [selectedTagIds, setSelectedTagIds] = useState([]);
-
-  // const selectedTags = tags.filter((tag) => selectedTagIds.includes(tag.id));
 
   useEffect(() => {
     fetchRecipes();
@@ -107,14 +105,14 @@ export default function CommunityRecipeList() {
                 }}
                 style={{
                   position: "absolute",
-                  top: "8px",
-                  right: "8px",
+                  bottom: "4px",
+                  right: "4px",
                   background: "none",
                   border: "none",
                   cursor: "pointer",
                 }}
               >
-                {isFavorited(recipe.id) ? (
+                {favorites.some((fav) => fav.id === recipe.id) ? (
                   <FavoriteIcon style={{ color: "red" }} />
                 ) : (
                   <FavoriteBorderIcon style={{ color: "#777" }} />

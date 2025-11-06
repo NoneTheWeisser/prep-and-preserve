@@ -12,24 +12,28 @@ const createFavoritesSlice = (set, get) => ({
       console.error("Error fetching favorites:", error);
     }
   },
+  //   Toggle Favorites
+toggleFavorite: async (recipeId) => {
+  const { favorites } = get();
+  const isFavorited = favorites.some((fav) => fav.id === recipeId);
 
-  // toggle Favorites
-  toggleFavorite: async (recipeId) => {
-    const { favorites } = get();
-    const isFavorited = favorites.some((fav) => fav.id === recipeId);
-
-    try {
-      if (isFavorited) {
-        await axios.delete(`/api/favorites/${recipeId}`);
-        set({ favorites: favorites.filter((fav) => fav.id !== recipeId) });
-      } else {
-        await axios.post("/api/favorites", { recipe_id: recipeId });
-        await get().fetchFavorites();
-      }
-    } catch (error) {
-      console.error("toggleFavorite error:", error);
+  try {
+    if (isFavorited) {
+      // Remove instantly
+      set({ favorites: favorites.filter((fav) => fav.id !== recipeId) });
+      await axios.delete(`/api/favorites/${recipeId}`);
+    } else {
+      // Add instantly using API response
+      const response = await axios.post("/api/favorites", { recipe_id: recipeId });
+      set({ favorites: [...favorites, response.data] });
     }
-  },
+  } catch (error) {
+    console.error("toggleFavorite error:", error);
+    set({ favorites });
+  }
+},
+
+
   // find T/F
   isFavorited: (recipeId) => {
     return get().favorites.some((fav) => fav.id === recipeId);
