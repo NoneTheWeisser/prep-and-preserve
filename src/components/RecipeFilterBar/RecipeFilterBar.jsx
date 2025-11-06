@@ -1,16 +1,8 @@
 import { useEffect, useState } from "react";
-import {
-  Box,
-  TextField,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Chip,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, TextField, Button, Chip, Stack, Typography, InputAdornment } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import useStore from "../../zustand/store";
+import SearchIcon from "@mui/icons-material/Search";
 
 export default function RecipeFilterBar({ onFilterChange, ...props }) {
   const fetchTags = useStore((state) => state.fetchTags);
@@ -19,6 +11,7 @@ export default function RecipeFilterBar({ onFilterChange, ...props }) {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTagIds, setSelectedTags] = useState([]);
+  const [accordionOpen, setAccordionOpen] = useState(false);
 
   useEffect(() => {
     fetchTags();
@@ -62,32 +55,62 @@ export default function RecipeFilterBar({ onFilterChange, ...props }) {
         borderRadius: 1,
       }}
     >
-      {/* Search box, needs updating */}
-      <TextField
-        placeholder="Search Recipes..."
-        value={searchTerm}
-        onChange={handleSearchChange}
-        fullWidth
-        size="small"
-      />
-      {/* Accordion for tag list */}
-      <Accordion elevation={0} disableGutters >
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+      {/* Filter and search bar row */}
+      <Stack direction="row" spacing={2}>
+        <Button
+          variant="contained"
+          onClick={() => setAccordionOpen((prev) => !prev)}
+          sx={{ width: "25%" }}
+          endIcon={
+            <ExpandMoreIcon
+              sx={{
+                transform: accordionOpen ? "rotate(180deg)" : "none",
+                transition: "0.2s",
+              }}
+            />
+          }
+        >
           Filter
-        </AccordionSummary>
-        <AccordionDetails sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+        </Button>
+        {/* Search box */}
+        <TextField
+          placeholder="Search Recipes..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+          size="small"
+          fullWidth
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Stack>
+      {/* Accordion for tags conditionally rendered using state*/}
+      {accordionOpen && (
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "8px 8px", // first = row gap, second = column gap
+          }}
+        >
+          {" "}
           {tags.map((tag) => (
             <Chip
               key={tag.id}
               label={tag.name}
+              sx={{ mb: 1 }}
               clickable
               color={selectedTagIds.includes(tag.id) ? "primary" : "default"}
               variant={selectedTagIds.includes(tag.id) ? "filled" : "outlined"}
               onClick={() => handleTagChange(tag.id)}
             />
           ))}
-        </AccordionDetails>
-      </Accordion>
+        </Box>
+      )}
       {/* Selected Tag Chips */}
       {selectedTags.length > 0 && (
         <Stack direction="row" spacing={1} flexWrap="wrap">
@@ -98,6 +121,7 @@ export default function RecipeFilterBar({ onFilterChange, ...props }) {
             <Chip
               key={tag.id}
               label={tag.name}
+              sx={{ mb: 2 }}
               onDelete={() => clearTag(tag.id)}
               color="primary"
               variant="outlined"
@@ -107,5 +131,7 @@ export default function RecipeFilterBar({ onFilterChange, ...props }) {
         </Stack>
       )}
     </Box>
+
+    // Todo: add mobile or responsive
   );
 }
