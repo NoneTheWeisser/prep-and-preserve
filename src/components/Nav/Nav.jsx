@@ -94,6 +94,7 @@ export default function Nav() {
                   {page.label}
                 </Button>
               ))}
+              {/* If I'm going to have it in the drop down I dont need it here */}
               {/* {user?.id && (
                 <Button
                   onClick={handleLogout}
