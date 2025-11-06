@@ -27,6 +27,7 @@ export default function CommunityRecipeList() {
   const fetchFavorites = useStore((state) => state.fetchFavorites);
   const favorites = useStore((state) => state.favorites);
   const toggleFavorite = useStore((state) => state.toggleFavorite);
+  console.log('toggleFavorite', toggleFavorite);
 
   // Filter & Search
   const [filteredRecipes, setFilteredRecipes] = useState([]);
