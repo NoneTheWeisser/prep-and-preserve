@@ -59,7 +59,7 @@ nav a {
 nav a.active {
   color: rgba(0, 0, 0, 0.75);
   text-decoration: underline;
-  text-decoration-color: #20c997;
+  /* text-decoration-color: #20c997; */
   text-decoration-thickness: 2px;
   transition: 0.7s;
 }
@@ -80,7 +80,7 @@ input {
 
 input:focus {
   outline: none;
-  box-shadow: 0 0 3px 1px #20c997;
+  /* box-shadow: 0 0 3px 1px #20c997; */
   transition: 0.7s;
 }
 
@@ -92,16 +92,16 @@ button {
 button:hover, button:focus {
   outline-color: transparent;
   outline-style:solid;
-  box-shadow: 0 0 3px 1px #20c997;
+  /* box-shadow: 0 0 3px 1px #20c997; */
   transition: 0.7s;
 }
 
 /* Fun Squiggle Underline Style: */
-.squiggle {
+/* .squiggle {
   text-decoration: wavy underline;
   text-decoration-color: #20c997;
   text-decoration-thickness: 2px;
-}
+} */
 
 /* Create an account styling. */
 .register-container {
