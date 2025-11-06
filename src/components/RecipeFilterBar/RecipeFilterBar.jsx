@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { Box, TextField, Button, Chip, Stack, Typography, InputAdornment } from "@mui/material";
+import {
+  Box,
+  TextField,
+  Button,
+  Chip,
+  Stack,
+  Typography,
+  InputAdornment,
+} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import useStore from "../../zustand/store";
 import SearchIcon from "@mui/icons-material/Search";
@@ -59,6 +67,7 @@ export default function RecipeFilterBar({ onFilterChange, ...props }) {
       <Stack direction="row" spacing={2}>
         <Button
           variant="contained"
+          color="secondary"
           onClick={() => setAccordionOpen((prev) => !prev)}
           sx={{ width: "25%" }}
           endIcon={
@@ -79,7 +88,7 @@ export default function RecipeFilterBar({ onFilterChange, ...props }) {
           onChange={handleSearchChange}
           size="small"
           fullWidth
-          InputProps={{
+          slotProps={{
             endAdornment: (
               <InputAdornment position="end">
                 <SearchIcon />

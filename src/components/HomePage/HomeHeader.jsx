@@ -1,4 +1,5 @@
 import React from "react";
+import { Box, Typography, Button, Stack } from "@mui/material";
 import useStore from "../../zustand/store";
 import { useNavigate } from "react-router-dom";
 
@@ -8,38 +9,38 @@ export default function HomeHeader() {
   const navigate = useNavigate();
 
   return (
-    <div style={{ textAlign: "left" }}>
-      <div
-        style={{
+     <Box>
+      {/* Hero Section */}
+      <Box
+        sx={{
           position: "relative",
-          height: "500px",
+          height: 500,
           width: "100%",
           color: "white",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "flex-start",
-          paddingLeft: "5%",
+          px: { xs: 2, md: "5%" },
           backgroundImage: `url("/img/pexels-photo-326281.jpeg")`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
-        <img
+        <Box
+          component="img"
           src="/img/prepperservelogo_vertical_white.svg"
           alt="Prep & Preserve White logo"
-          style={{
-            width: "200px",
-            marginBottom: "1rem",
-          }}
+          sx={{ width: 200, mb: 2 }}
         />
-        <h1 style={{ marginBottom: "1rem" }}>Welcome {user.username}</h1>
-        <p
-          style={{
-            maxWidth: "600px",
-            lineHeight: "1.5rem",
-            fontSize: "1.1rem",
-          }}
+
+        <Typography variant="h3" sx={{ mb: 2 }}>
+          Welcome {user.username || ""}
+        </Typography>
+
+        <Typography
+          variant="body1"
+          sx={{ maxWidth: 600, lineHeight: 1.5, fontSize: "1.1rem" }}
         >
           Welcome to your personal recipe book! Here you can save and organize
           the recipes you love, all in one clean, easy-to-read space. Add your
@@ -47,46 +48,43 @@ export default function HomeHeader() {
           add ingredients, and even upload images to make your collection truly
           yours. Cook without distractions and keep all your favorites at your
           fingertips.
-        </p>
-        {/* conditional buttons */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: "20px",
-            right: "5%",
-            display: "flex",
-            gap: "1rem", // space between buttons
-          }}
+        </Typography>
+
+        {/* Conditional Buttons */}
+        <Stack
+          direction="row"
+          spacing={2}
+          sx={{ position: "absolute", bottom: 30, right: { xs: 16, md: "5%" } }}
         >
           {!user.id ? (
             <>
-              <button
-                type="button"
-                className="auth-btn secondary"
+              <Button
+                variant="contained"
+                color="error"
                 onClick={() => navigate("/login")}
               >
                 Sign In
-              </button>
-              <button
-                type="button"
-                className="auth-btn secondary"
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
                 onClick={() => navigate("/registration")}
               >
                 Create Account
-              </button>
+              </Button>
             </>
           ) : (
-            <button
-              type="button"
-              className="auth-btn secondary"
-              onClick={logOut}
-            >
+            <Button variant="contained" color="secondary" onClick={logOut}>
               Log Out
-            </button>
+            </Button>
           )}
-        </div>
-      </div>
-      <h3 style={{ textAlign: "center" }}>Trending Recipes</h3>
-    </div>
+        </Stack>
+      </Box>
+
+      {/* Trending Recipes Section */}
+      <Typography variant="h5" sx={{ textAlign: "center", mt: 4 }}>
+        Trending Recipes
+      </Typography>
+    </Box>
   );
 }
