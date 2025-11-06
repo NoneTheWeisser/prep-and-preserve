@@ -4,6 +4,7 @@ import userSlice from "./slices/user.slice.js";
 import createCloudinarySlice from "./slices/cloudinary.slice.js";
 import tagSlice from "./slices/tag.slice.js";
 import recipeSlice from "./slices/recipe.slice.js";
+import createFavoritesSlice from "./slices/favorites.slice.js";
 
 // Combine all slices in the store:
 const useStore = create(
@@ -12,6 +13,7 @@ const useStore = create(
     ...createCloudinarySlice(set, get),
     ...tagSlice(set, get),
     ...recipeSlice(set, get),
+    ...createFavoritesSlice(set, get),
   }))
 );
 

@@ -18,28 +18,19 @@ const createFavoritesSlice = (set, get) => ({
     const { favorites } = get();
     const isFavorited = favorites.some((fav) => fav.id === recipeId);
 
-    if (isFavorited) {
-      // remove favorite
-      try {
+    try {
+      if (isFavorited) {
         await axios.delete(`/api/favorites/${recipeId}`);
-        set({ favorites: favorites.filter((f) => f.id !== recipeId) });
-      } catch (error) {
-        console.error("Error removing favorite:", error);
-      }
-    } else {
-      // add favorite
-      try {
-        const response = await axios.post("/api/favorites", {
-          recipe_id: recipeId,
-        });
-        // refetch the data
+        set({ favorites: favorites.filter((fav) => fav.id !== recipeId) });
+      } else {
+        await axios.post("/api/favorites", { recipe_id: recipeId });
         await get().fetchFavorites();
-      } catch (error) {
-        console.error("Error adding favorite:", error);
       }
+    } catch (error) {
+      console.error("toggleFavorite error:", error);
     }
   },
-    // find T/F
+  // find T/F
   isFavorited: (recipeId) => {
     return get().favorites.some((fav) => fav.id === recipeId);
   },

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useStore from "../../zustand/store";
 import RecipeFilterBar from "../RecipeFilterBar/RecipeFilterBar";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import {
   Box,
   Grid,
@@ -21,9 +23,10 @@ export default function CommunityRecipeList() {
   const user = useStore((state) => state.user);
   const tags = useStore((state) => state.tags);
 
-  // Favorites
-  const isFavorites = useStore((state) => state.isFavorites);
-  const toggleFavorite = useState((state) => state.toggleFavorite);
+  // // Favorites
+  const fetchFavorites = useStore((state) => state.fetchFavorites);
+  const isFavorited = useStore((state) => state.isFavorited);
+  const toggleFavorite = useStore((state) => state.toggleFavorite);
 
   // Filter & Search
   const [filteredRecipes, setFilteredRecipes] = useState([]);
@@ -33,7 +36,8 @@ export default function CommunityRecipeList() {
 
   useEffect(() => {
     fetchRecipes();
-  }, [fetchRecipes]);
+    fetchFavorites();
+  }, [fetchRecipes, fetchFavorites]);
 
   useEffect(() => {
     setFilteredRecipes(recipes);
@@ -60,14 +64,14 @@ export default function CommunityRecipeList() {
     setFilteredRecipes(filtered);
   };
 
-  // only show the tags that have been assigned to a recipe. 
+  // only show the tags that have been assigned to a recipe.
   const usedTags = tags.filter((tag) =>
     recipes.some((recipe) => recipe.tags?.some((rt) => rt.id === tag.id))
   );
 
   return (
     <Box sx={{ p: 4 }}>
-      <RecipeFilterBar tags ={usedTags} onFilterChange={handleFilterChange} />
+      <RecipeFilterBar tags={usedTags} onFilterChange={handleFilterChange} />
 
       {/* Recipe Grid */}
       {/* todo: are we going to use the mui grid or keep it like we have it? */}
@@ -90,10 +94,33 @@ export default function CommunityRecipeList() {
                 border: "1px solid #ccc",
                 borderRadius: "8px",
                 overflow: "hidden",
+                position: "relative",
                 cursor: "pointer",
               }}
               onClick={() => navigate(`/recipes/${recipe.id}`)}
             >
+              {/* Favorite Button */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleFavorite(recipe.id);
+                }}
+                style={{
+                  position: "absolute",
+                  top: "8px",
+                  right: "8px",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
+                {isFavorited(recipe.id) ? (
+                  <FavoriteIcon style={{ color: "red" }} />
+                ) : (
+                  <FavoriteBorderIcon style={{ color: "#777" }} />
+                )}
+              </button>
+
               {recipe.image_url ? (
                 <img
                   src={recipe.image_url}
