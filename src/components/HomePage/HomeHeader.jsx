@@ -9,52 +9,86 @@ export default function HomeHeader() {
   const navigate = useNavigate();
 
   return (
-     <Box>
+    <Box>
       {/* Hero Section */}
       <Box
+        Box
         sx={{
           position: "relative",
-          height: 500,
+          height: { xs: 450, md: 500 },
           width: "100%",
-          color: "white",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          alignItems: "flex-start",
           px: { xs: 2, md: "5%" },
           backgroundImage: `url("/img/pexels-photo-326281.jpeg")`,
           backgroundSize: "cover",
           backgroundPosition: "center",
+          color: "white",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            bgcolor: "rgba(0,0,0,0.5)",
+            zIndex: 1,
+          },
         }}
       >
-        <Box
-          component="img"
-          src="/img/prepperservelogo_vertical_white.svg"
-          alt="Prep & Preserve White logo"
-          sx={{ width: 200, mb: 2 }}
-        />
+        {/* Hero Content */}
+        <Box sx={{ position: "relative", zIndex: 2 }}>
+          <Box
+            component="img"
+            src="/img/prepperservelogo_vertical_white.svg"
+            alt="Prep & Preserve White logo"
+            sx={{ width: { xs: 85, md: 200 }, mb: 1, mt: 2}}
+          />
 
-        <Typography variant="h3" sx={{ mb: 2 }}>
-          Welcome {user.username || ""}
-        </Typography>
+          <Typography
+            variant="h4"
+            sx={{
+              mb: 2,
+              fontSize: { xs: "1.5rem", md: "2.5rem" },
+              fontWeight: 600,
+            }}
+          >
+            Welcome {user.username || ""}
+          </Typography>
 
-        <Typography
-          variant="body1"
-          sx={{ maxWidth: 600, lineHeight: 1.5, fontSize: "1.1rem" }}
-        >
-          Welcome to your personal recipe book! Here you can save and organize
-          the recipes you love, all in one clean, easy-to-read space. Add your
-          own recipes or explore those shared by others. Format instructions,
-          add ingredients, and even upload images to make your collection truly
-          yours. Cook without distractions and keep all your favorites at your
-          fingertips.
-        </Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              maxWidth: { xs: "100%", md: 600 },
+              lineHeight: 1.5,
+              fontSize: { xs: "0.9rem", sm: "1rem", md: "1.1rem" }, // smaller on mobile
+              mb: { xs: 3, md: 4 }, // margin bottom to avoid overlap with buttons
+            }}
+          >
+            Welcome to your personal recipe book! Here you can save and organize
+            the recipes you love, all in one clean, easy-to-read space. Add your
+            own recipes or explore those shared by others. Format instructions,
+            add ingredients, and even upload images to make your collection
+            truly yours. Cook without distractions and keep all your favorites
+            at your fingertips.
+          </Typography>
+        </Box>
 
         {/* Conditional Buttons */}
-        <Stack
-          direction="row"
-          spacing={2}
-          sx={{ position: "absolute", bottom: 30, right: { xs: 16, md: "5%" } }}
+        {/* Buttons */}
+        <Box
+          sx={{
+            position: "relative",
+            zIndex: 2,
+            mt: "auto",
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            gap: 2,
+            justifyContent: { xs: "center", sm: "flex-end" },
+            width: "100%",
+            mb: 4,
+          }}
         >
           {!user.id ? (
             <>
@@ -74,11 +108,11 @@ export default function HomeHeader() {
               </Button>
             </>
           ) : (
-            <Button variant="contained" color="secondary" onClick={logOut}>
+            <Button variant="contained" color="error" onClick={logOut}>
               Log Out
             </Button>
           )}
-        </Stack>
+        </Box>
       </Box>
 
       {/* Trending Recipes Section */}

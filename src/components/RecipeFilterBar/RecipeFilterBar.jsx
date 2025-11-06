@@ -51,6 +51,8 @@ export default function RecipeFilterBar({ onFilterChange, ...props }) {
   const clearAllTags = () => setSelectedTags([]);
   const selectedTags = tags.filter((tag) => selectedTagIds.includes(tag.id));
 
+  
+
   return (
     <Box
       sx={{
@@ -88,7 +90,7 @@ export default function RecipeFilterBar({ onFilterChange, ...props }) {
           onChange={handleSearchChange}
           size="small"
           fullWidth
-          slotProps={{
+          InputProps={{
             endAdornment: (
               <InputAdornment position="end">
                 <SearchIcon />
