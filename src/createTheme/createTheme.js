@@ -1,22 +1,28 @@
+// theme.js
 import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#1976d2", // your main primary color
-      light: "#63a4ff",
-      dark: "#004ba0",
-      contrastText: "#fff", // text on top of primary color
+      main: "#BF8C6F",
+      light: "#E2BCA3",
+      dark: "#9E6B53",
+      contrastText: "#fff",
     },
     secondary: {
-      main: "#9c27b0",
-      light: "#d05ce3",
-      dark: "#6a0080",
+      main: "#afac9a",
+      light: "#d6d4c6",
+      dark: "#82816e",
+      contrastText: "#000",
+    },
+    error: {
+      main: "#720000", 
+      dark: "#500300",
       contrastText: "#fff",
     },
     background: {
-      default: "#f5f5f5", // page background
-      paper: "#fff",       // card/paper background
+      default: "#faf9f4",
+      paper: "#fff",
     },
     text: {
       primary: "#333",
@@ -25,8 +31,19 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: "Roboto, Arial, sans-serif",
-    h1: { fontWeight: 700 },
-    body1: { fontSize: "1rem" },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        containedPrimary: {
+          backgroundColor: "#720000",
+          color: "#fff",
+          "&:hover": {
+            backgroundColor: "#500300",
+          },
+        },
+      },
+    },
   },
 });
 
