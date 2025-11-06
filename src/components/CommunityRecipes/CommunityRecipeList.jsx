@@ -69,7 +69,7 @@ export default function CommunityRecipeList() {
   );
 
   return (
-    <Box sx={{ p: 4 }}>
+    <Box sx={{ p: 5, textAlign: 'left' }}>
       <RecipeFilterBar tags={usedTags} onFilterChange={handleFilterChange} />
 
       {/* Recipe Grid */}
@@ -138,8 +138,6 @@ export default function CommunityRecipeList() {
               <div style={{ padding: "0.5rem" }}>
                 <h4 style={{ margin: "0.5rem 0" }}>{recipe.title}</h4>
                 <p style={{ margin: 0 }}>
-                  {/* Stretch: how do I bring in all users?*/}
-                  {/* <img src={user.profile_image_url} alt="author" style={{ width: 24, height: 24, objectFit: "cover", borderRadius: '50%' }} />  */}
                   by {recipe.username}
                 </p>
               </div>
