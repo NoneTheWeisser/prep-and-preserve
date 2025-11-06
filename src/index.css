@@ -34,10 +34,10 @@ body {
 main {
   flex-grow: 1;
 }
-
+/* adjust flex-basis if want more of a header container height  */
 header, footer {
   display: flex;
-  flex-basis: auto;
+  flex-basis: 4em; 
   align-items: center;
   justify-content: space-between;
 }
