@@ -32,7 +32,7 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
       `SELECT * FROM favorites WHERE user_id = $1 AND recipe_id =$2`,
       [req.user.id, recipe_id]
     );
-    if (checkResult.rows.Length > 0) {
+    if (checkResult.rows.length > 0) {
       return res.status(409).json({ error: "Recipe already favorited" });
     }
 

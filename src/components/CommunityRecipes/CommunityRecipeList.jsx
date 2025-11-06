@@ -21,11 +21,15 @@ export default function CommunityRecipeList() {
   const user = useStore((state) => state.user);
   const tags = useStore((state) => state.tags);
 
+  // Favorites
+  const isFavorites = useStore((state) => state.isFavorites);
+  const toggleFavorite = useState((state) => state.toggleFavorite);
+
   // Filter & Search
   const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [selectedTagIds, setSelectedTagIds] = useState([]);
 
-  const selectedTags = tags.filter((tag) => selectedTagIds.includes(tag.id));
+  // const selectedTags = tags.filter((tag) => selectedTagIds.includes(tag.id));
 
   useEffect(() => {
     fetchRecipes();
