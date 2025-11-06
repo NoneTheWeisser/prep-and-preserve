@@ -1,17 +1,18 @@
 import { create } from "zustand";
+import { devtools } from "zustand/middleware";
 import userSlice from "./slices/user.slice.js";
 import createCloudinarySlice from "./slices/cloudinary.slice.js";
 import tagSlice from "./slices/tag.slice.js";
 import recipeSlice from "./slices/recipe.slice.js";
 
 // Combine all slices in the store:
-const useStore = create((set, get) => ({
-  ...userSlice(set, get),
-  ...createCloudinarySlice(set, get),
-  ...tagSlice(set, get),
-  ...recipeSlice(set, get), 
+const useStore = create(
+  devtools((set, get) => ({
+    ...userSlice(set, get),
+    ...createCloudinarySlice(set, get),
+    ...tagSlice(set, get),
+    ...recipeSlice(set, get),
+  }))
+);
 
-}));
-
-  
 export default useStore;

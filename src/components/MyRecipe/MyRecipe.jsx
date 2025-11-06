@@ -29,7 +29,7 @@ export default function MyRecipe() {
             transform: "translateX(-50%)",
             border: "4px solid white",
             boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-            bgcolor: "#1976d2", // fallback color
+            bgcolor: "#afac9aff", // fallback color
             fontSize: 64,
           }}
         >
