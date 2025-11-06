@@ -44,24 +44,3 @@ export default function MyRecipe() {
     </div>
   );
 }
-
-        // old profile pic code
-        {/* {user?.profile_image_url && (
-          <img
-            src={user.profile_image_url}
-            alt={`${user.username}'s profile`}
-            style={{
-              width: "250px",
-              height: "250px",
-              borderRadius: "50%",
-              objectFit: "cover",
-              border: "4px solid white",
-              position: "absolute",
-              bottom: "-40px",
-              left: "50%",
-              transform: "translateX(-50%)",
-              boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-              backgroundColor: "#fff",
-            }}
-          />
-        )} */}

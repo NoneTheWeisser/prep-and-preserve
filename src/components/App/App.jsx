@@ -8,7 +8,6 @@ import LoginPage from "../LoginPage/LoginPage";
 import RegisterPage from "../RegisterPage/RegisterPage";
 import About from "../About/About";
 import Footer from "../Footer/Footer";
-import Header from "../Header/Header";
 import AddRecipeForm from "../AddRecipeForm/AddRecipeForm";
 import CommunityRecipes from "../CommunityRecipes/CommunityRecipes";
 import MyRecipe from "../MyRecipe/MyRecipe";
@@ -26,8 +25,6 @@ function App() {
   return (
     <>
       <Nav />
-      {/* for now I dont see a reason for header */}
-      {/* <Header /> */}
       <main>
         <Routes>
           <Route exact path="/" element={<HomePage />} />
