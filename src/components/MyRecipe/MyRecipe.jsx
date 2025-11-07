@@ -1,6 +1,7 @@
 import MyRecipeList from "./MyRecipeList";
 import useStore from "../../zustand/store";
 import Avatar from "@mui/material/Avatar";
+import { Typography } from "@mui/material";
 
 export default function MyRecipe() {
   const user = useStore((state) => state.user);
@@ -18,7 +19,7 @@ export default function MyRecipe() {
           }}
         />
         <Avatar
-          src={user?.profile_image_url || undefined} 
+          src={user?.profile_image_url || undefined}
           alt={user?.username || "User"}
           sx={{
             width: 250,
@@ -37,7 +38,9 @@ export default function MyRecipe() {
         </Avatar>
       </div>
       <div style={{ marginTop: "80px" }}>
-        <h2>{user ? `${user.username}'s Recipes` : "My Recipes"}</h2>
+        <Typography variant="h5" sx={{ textAlign: "center", mt: 4 }}>
+          {user ? `${user.username}'s recipes` : "My Recipes"}
+        </Typography>
         {/* <h2>{`${user.username}`}</h2> */}
         <MyRecipeList />
       </div>
