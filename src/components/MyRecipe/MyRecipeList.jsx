@@ -73,17 +73,6 @@ export default function MyRecipeList() {
 
   return (
     <Box sx={{ p: 2 }}>
-      {/* Toggle Button */}
-      <Box sx={{ mb: 2 }}>
-        <Button
-          variant="contained"
-          onClick={() => setShowFavorites(!showFavorites)}
-        >
-          {showFavorites
-            ? "Show My Recipes Only"
-            : "Show Favorites & My Recipes"}
-        </Button>
-      </Box>
       <RecipeFilterBar
         tags={usedTags}
         onFilterChange={({ searchTerm, selectedTagIds }) => {
@@ -91,22 +80,20 @@ export default function MyRecipeList() {
           setSelectedTagIds(selectedTagIds);
         }}
       />
-
-      {selectedTags.length > 0 && (
-        <Box sx={{ mb: 2 }}>
-          <Typography variant="body2">Filtering by:</Typography>
-          <Stack direction="row" spacing={1} sx={{ flexWrap: "wrap", mt: 1 }}>
-            {selectedTags.map((tag) => (
-              <Box
-                key={tag.id}
-                sx={{ bgcolor: "#eee", px: 1, py: 0.5, borderRadius: 1 }}
-              >
-                {tag.name}
-              </Box>
-            ))}
-          </Stack>
-        </Box>
-      )}
+      {/* Toggle Button */}
+      <Box sx={{ mb: 0 }}>
+        {" "}
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setShowFavorites((prev) => !prev)}
+          fullWidth
+        >
+          {showFavorites
+            ? "Show My Recipes Only"
+            : "Show Favorites & My Recipes"}
+        </Button>
+      </Box>
 
       {filteredRecipes.length === 0 ? (
         <Typography>No Recipes Found.</Typography>

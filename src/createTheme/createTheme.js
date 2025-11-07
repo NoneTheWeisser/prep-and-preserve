@@ -32,19 +32,19 @@ const theme = createTheme({
   typography: {
     fontFamily: "Roboto, Arial, sans-serif",
   },
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        containedPrimary: {
-          backgroundColor: "#720000",
-          color: "#fff",
-          "&:hover": {
-            backgroundColor: "#500300",
-          },
-        },
-      },
-    },
-  },
+  // components: {
+  //   MuiButton: {
+  //     styleOverrides: {
+  //       containedPrimary: {
+  //         backgroundColor: "#720000",
+  //         color: "#fff",
+  //         "&:hover": {
+  //           backgroundColor: "#500300",
+  //         },
+  //       },
+  //     },
+  //   },
+  // },
 });
 
 export default theme;
