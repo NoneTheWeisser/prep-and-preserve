@@ -65,13 +65,13 @@ export default function CommunityRecipeList() {
   );
 
   return (
-    <Box sx={{ p: 2, textAlign: "left" }}>
+    <Box sx={{ p: 4, textAlign: "left" }}>
       <RecipeFilterBar tags={usedTags} onFilterChange={handleFilterChange} />
 
       {filteredRecipes.length === 0 ? (
         <p>No Recipes Found.</p>
       ) : (
-        <ImageList cols={6} gap={16} sx={{ marginTop: 2 }}>
+        <ImageList cols={7} gap={16} sx={{ marginTop: 2 }}>
           {filteredRecipes.map((recipe) => (
             <ImageListItem
               key={recipe.id}
@@ -83,7 +83,7 @@ export default function CommunityRecipeList() {
                   src={recipe.image_url}
                   alt={recipe.title}
                   loading="lazy"
-                  style={{ objectFit: "cover", width: "100%", height: 200 }}
+                  style={{ objectFit: "cover", width: "100%", height: 250 }}
                 />
               ) : (
                 <div
@@ -107,7 +107,7 @@ export default function CommunityRecipeList() {
                     }}
                   >
                     {favorites.some((fav) => fav.id === recipe.id) ? (
-                      <FavoriteIcon sx={{ color: "red" }} />
+                      <FavoriteIcon sx={{ color: "white" }} />
                     ) : (
                       <FavoriteBorderIcon sx={{ color: "#fff" }} />
                     )}
