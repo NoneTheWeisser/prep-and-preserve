@@ -12,6 +12,7 @@ import {
   IconButton,
   Typography,
   Stack,
+  Button,
 } from "@mui/material";
 
 export default function MyRecipeList() {
@@ -29,6 +30,8 @@ export default function MyRecipeList() {
   // Filter & Search
   const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [selectedTagIds, setSelectedTagIds] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showFavorites, setShowFavorites] = useState(false);
 
   const selectedTags = tags.filter((tag) => selectedTagIds.includes(tag.id));
 
@@ -37,42 +40,56 @@ export default function MyRecipeList() {
     fetchFavorites();
   }, [fetchUserRecipes, fetchFavorites]);
 
-  useEffect(() => {
-    setFilteredRecipes(userRecipes);
-  }, [userRecipes]);
+  //  Compute combined recipes without duplicates
+  const combinedRecipes = [
+    ...userRecipes,
+    ...favorites.filter((fav) => !userRecipes.some((r) => r.id === fav.id)),
+  ];
 
-  const handleFilterChange = ({ searchTerm, selectedTagIds }) => {
-    setSelectedTagIds(selectedTagIds);
-    let filtered = userRecipes;
+  //  Apply filters (search and tags) whenever combinedRecipes or filters change
+  useEffect(() => {
+    let recipesToFilter = showFavorites ? combinedRecipes : userRecipes;
 
     if (searchTerm) {
-      filtered = filtered.filter((recipe) =>
-        recipe.title.toLowerCase().includes(searchTerm.toLowerCase())
+      recipesToFilter = recipesToFilter.filter((r) =>
+        r.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    // filter by many tags
-    if (selectedTagIds && selectedTagIds.length > 0) {
-      filtered = filtered.filter((recipe) => {
-        const recipeTagIds = recipe.tags?.map((tag) => tag.id) || [];
-        return selectedTagIds.every((id) => recipeTagIds.includes(id));
-      });
+    if (selectedTagIds.length > 0) {
+      recipesToFilter = recipesToFilter.filter((r) =>
+        selectedTagIds.every((id) => r.tags?.map((t) => t.id).includes(id))
+      );
     }
 
-    setFilteredRecipes(filtered);
-  };
-
-  // only show the tags that have been assigned to a recipe.
+    setFilteredRecipes(recipesToFilter);
+  }, [userRecipes, favorites, searchTerm, selectedTagIds, showFavorites]);
+  // only show the tags that have been assigned
   const usedTags = tags.filter((tag) =>
-    userRecipes.some((recipe) => recipe.tags?.some((rt) => rt.id === tag.id))
+    (showFavorites ? combinedRecipes : userRecipes).some((r) =>
+      r.tags?.some((t) => t.id === tag.id)
+    )
   );
 
   return (
     <Box sx={{ p: 2 }}>
+      {/* Toggle Button */}
+      <Box sx={{ mb: 2 }}>
+        <Button
+          variant="contained"
+          onClick={() => setShowFavorites(!showFavorites)}
+        >
+          {showFavorites
+            ? "Show My Recipes Only"
+            : "Show Favorites & My Recipes"}
+        </Button>
+      </Box>
       <RecipeFilterBar
         tags={usedTags}
-        onFilterChange={handleFilterChange}
-        recipes={userRecipes}
+        onFilterChange={({ searchTerm, selectedTagIds }) => {
+          setSearchTerm(searchTerm);
+          setSelectedTagIds(selectedTagIds);
+        }}
       />
 
       {selectedTags.length > 0 && (
