@@ -21,7 +21,7 @@ export default function HomeHeader() {
           flexDirection: "column",
           justifyContent: "center",
           px: { xs: 2, md: "5%" },
-          backgroundImage: `url("/img/pexels-photo-326281.jpeg")`,
+          backgroundImage: `url("/img/pexels-photo-7799695.jpeg")`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           color: "white",
