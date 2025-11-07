@@ -147,7 +147,7 @@ export default function MyRecipeList() {
                     }}
                   >
                     {favorites.some((fav) => fav.id === recipe.id) ? (
-                      <FavoriteIcon sx={{ color: "red" }} />
+                      <FavoriteIcon sx={{ color: "white" }} />
                     ) : (
                       <FavoriteBorderIcon sx={{ color: "#fff" }} />
                     )}
