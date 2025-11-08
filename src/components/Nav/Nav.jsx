@@ -40,7 +40,7 @@ export default function Nav() {
 
   // if not logged in
   const publicPages = [
-    { label: "Home", to: "/" },
+    // { label: "Home", to: "/" },
     { label: "Login", to: "/login" },
     { label: "Sign Up", to: "/registration" },
   ];

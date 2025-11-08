@@ -70,7 +70,7 @@ export default function CommunityRecipeList() {
       {filteredRecipes.length === 0 ? (
         <p>No Recipes Found.</p>
       ) : (
-        <ImageList cols={7} gap={16} sx={{ marginTop: 2 }}>
+        <ImageList cols={6} gap={16} sx={{ marginTop: 2 }}>
           {filteredRecipes.map((recipe) => (
             <ImageListItem
               key={recipe.id}
