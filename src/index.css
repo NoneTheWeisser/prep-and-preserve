@@ -127,3 +127,9 @@ button:hover, button:focus {
   width: 500px;
   margin-bottom: 1rem;
 }
+/* Recipe print button */
+@media print {
+  button, .MuiIconButton-root {
+    display: none !important;
+  }
+}
