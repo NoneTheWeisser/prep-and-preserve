@@ -71,10 +71,11 @@ export default function RecipeCard({
             direction="row"
             spacing={1}
             alignItems="center"
-            sx={{ mt: 0.5 }}
+            // switching to absolute so I can control where username is. 
+            sx={{ mt: 0.5, position: "absolute", bottom: 10, left: 6 }}
           >
             <Typography variant="body2" color="inherit">
-              {recipe.username}
+              @{recipe.username}
             </Typography>
           </Stack>
         </Box>

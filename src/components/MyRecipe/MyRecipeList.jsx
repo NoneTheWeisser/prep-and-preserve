@@ -30,6 +30,8 @@ export default function MyRecipeList() {
   // // Favorites
   const fetchFavorites = useStore((state) => state.fetchFavorites);
   const favorites = useStore((state) => state.favorites);
+  const fetchRecipes = useStore((state) => state.fetchRecipes);
+  const recipes = useStore((state) => state.recipes);
   const toggleFavorite = useStore((state) => state.toggleFavorite);
 
   // Filter & Search
@@ -43,12 +45,17 @@ export default function MyRecipeList() {
   useEffect(() => {
     fetchUserRecipes();
     fetchFavorites();
+    fetchRecipes();
   }, [fetchUserRecipes, fetchFavorites]);
 
   //  Compute combined recipes without duplicates
   const combinedRecipes = [
     ...userRecipes,
-    ...favorites.filter((fav) => !userRecipes.some((r) => r.id === fav.id)),
+    ...favorites
+    .map((fav) => {
+      return recipes.find((r) => r.id === fav.id) || fav;
+    })
+    .filter((r) => !userRecipes.some((ur) => ur.id === r.id)),
   ];
 
   //  Apply filters (search and tags) whenever combinedRecipes or filters change
