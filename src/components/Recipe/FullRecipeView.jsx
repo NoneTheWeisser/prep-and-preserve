@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useStore from "../../zustand/store";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import parse from "html-react-parser";
 import {
   Box,
@@ -22,6 +24,12 @@ export default function FullRecipeView() {
   const [recipe, setRecipe] = useState(null);
   const user = useStore((state) => state.user);
 
+  // // Favorites
+  const fetchFavorites = useStore((state) => state.fetchFavorites);
+  const favorites = useStore((state) => state.favorites);
+  const toggleFavorite = useStore((state) => state.toggleFavorite);
+  const isFavorited = useStore((state) => state.isFavorited);
+
   // TODO look into why admin isn't working properly
   const canEdit = user && recipe && recipe.user_id === user.id;
 
@@ -36,9 +44,14 @@ export default function FullRecipeView() {
 
   useEffect(() => {
     getRecipe();
+    if (favorites.length === 0) {
+      fetchFavorites();
+    }
   }, [id]);
 
   if (!recipe) return <Typography>Loading...</Typography>;
+  
+  const favoriteActive = isFavorited(recipe.id);
 
   return (
     <Box sx={{ pb: 6 }}>
@@ -62,7 +75,7 @@ export default function FullRecipeView() {
           sx={{
             display: "flex",
             justifyContent: "space-between",
-            alignItems: "flex-start",
+            alignItems: "center",
             mb: 2,
           }}
         >
@@ -70,37 +83,43 @@ export default function FullRecipeView() {
             {recipe.title}
           </Typography>
 
-          {canEdit && (
-            <Stack direction="row" spacing={1}>
-              <IconButton onClick={() => navigate(`/recipes/edit/${id}`)}>
-                <EditIcon fontSize="small" />
-              </IconButton>
-              {/* is it worth it to do a print button?  */}
-              {/* <IconButton onClick={() => window.print()}>
-                <PrintIcon fontSize="small" />
-              </IconButton> */}
-
+          <Stack direction="row" spacing={1} alignItems="center">
+            {/* Favorite icon (only if logged in) */}
+            {user && (
               <IconButton
-                onClick={async () => {
-                  if (!window.confirm("Delete this recipe?")) return;
-                  try {
+                onClick={() => toggleFavorite(recipe.id)}
+                sx={{ color: favoriteActive ? "red" : "gray" }}
+              >
+                {favoriteActive ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+              </IconButton>
+            )}
+
+            {/* Edit/Delete actions (if owner) */}
+            {canEdit && (
+              <>
+                <IconButton onClick={() => navigate(`/recipes/edit/${id}`)}>
+                  <EditIcon fontSize="small" />
+                </IconButton>
+                {/* is it worth it to do a print button?  */}
+                <IconButton onClick={() => window.print()}>
+                   <PrintIcon fontSize="small" />
+                </IconButton>
+                <IconButton
+                  onClick={async () => {
+                    if (!window.confirm("Delete this recipe?")) return;
                     await deleteRecipe(id);
                     navigate("/myrecipes");
-                  } catch (error) {
-                    console.error("Error deleting:", error);
-                  }
-                }}
-              >
-                <DeleteIcon fontSize="small" />
-              </IconButton>
-            </Stack>
-          )}
+                  }}
+                >
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+              </>
+            )}
+          </Stack>
         </Box>
-
         <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
           Submitted by: {recipe.username}
         </Typography>
-
         {recipe.source_url && (
           <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
             Source:{" "}
@@ -113,7 +132,6 @@ export default function FullRecipeView() {
             </a>
           </Typography>
         )}
-
         <Divider sx={{ my: 3 }} />
         {recipe.description && (
           <>
@@ -123,7 +141,6 @@ export default function FullRecipeView() {
             <Typography sx={{ mb: 3 }}>{recipe.description}</Typography>
           </>
         )}
-
         <Typography variant="h5" fontWeight={600} sx={{ mt: 4, mb: 1.5 }}>
           Ingredients
         </Typography>

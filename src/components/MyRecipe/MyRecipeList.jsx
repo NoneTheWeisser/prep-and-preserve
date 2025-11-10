@@ -98,8 +98,11 @@ export default function MyRecipeList() {
       {filteredRecipes.length === 0 ? (
         <Typography>No Recipes Found.</Typography>
       ) : (
-        // todo: I like 6 col for laptop screen, 7 looks nice for bigger screens... need to adjust still
-        <ImageList cols={6} gap={16} sx={{ marginTop: 2 }}>
+        <ImageList
+          cols={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 6 }}
+          gap={16}
+          sx={{ marginTop: 2, textAlign: "left" }}
+        >
           {filteredRecipes.map((recipe) => (
             <ImageListItem
               key={recipe.id}
