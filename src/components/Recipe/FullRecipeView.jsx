@@ -30,8 +30,10 @@ export default function FullRecipeView() {
   const toggleFavorite = useStore((state) => state.toggleFavorite);
   const isFavorited = useStore((state) => state.isFavorited);
 
-  // TODO look into why admin isn't working properly
-  const canEdit = user && recipe && recipe.user_id === user.id;
+  // TODO look into why admin isn't working properly 
+  // UPDATE admin can delete, but the edit form comes back as undefined
+  const canEdit =
+    user && recipe && (recipe.user_id === user.id || user.is_admin);
 
   const getRecipe = async () => {
     try {
@@ -50,7 +52,7 @@ export default function FullRecipeView() {
   }, [id]);
 
   if (!recipe) return <Typography>Loading...</Typography>;
-  
+
   const favoriteActive = isFavorited(recipe.id);
 
   return (
@@ -102,7 +104,7 @@ export default function FullRecipeView() {
                 </IconButton>
                 {/* is it worth it to do a print button?  */}
                 <IconButton onClick={() => window.print()}>
-                   <PrintIcon fontSize="small" />
+                  <PrintIcon fontSize="small" />
                 </IconButton>
                 <IconButton
                   onClick={async () => {

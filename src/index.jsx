@@ -7,6 +7,7 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import theme from "./createTheme/createTheme";
+import axios from "axios";
 
 import App from "./components/App/App";
 import "./index.css";

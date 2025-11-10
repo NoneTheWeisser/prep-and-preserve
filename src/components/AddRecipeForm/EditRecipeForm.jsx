@@ -9,11 +9,13 @@ import axios from "axios";
 export default function EditRecipeForm() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const fetchUserRecipes = useStore((state) => state.fetchUserRecipes);
+  // const fetchUserRecipes = useStore((state) => state.fetchUserRecipes);
+  const fetchRecipes = useStore((state) => state.fetchRecipes);
   const fetchTags = useStore((state) => state.fetchTags);
 
   const tags = useStore((state) => state.tags);
-  const userRecipes = useStore((state) => state.userRecipes);
+  // const userRecipes = useStore((state) => state.userRecipes);
+  const recipes = useStore((state) => state.recipes);
 
   const [instructions, setInstructions] = useState("");
   const [ingredients, setIngredients] = useState("");
@@ -23,22 +25,17 @@ export default function EditRecipeForm() {
   const [sourceUrl, setSourceUrl] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
   const [isPublic, setIsPublic] = useState(true);
-  
+
   // The reason we use a useEffect is so that we can
   // populate the local state after zustand updates
   useEffect(() => {
     // Make sure the recipes, tags, etc are loaded
-    fetchUserRecipes();
+    fetchRecipes();
     fetchTags();
   }, []);
-  
-  useEffect(() => {
-    // After zustand is ready, grab the recipe and populate
-    // the local state
-    // console.log(`recipes`, recipes);
-    // console.log(`Editing recipe with id ${id}`, recipes.find(r => r.id === Number(id)));
 
-    const thisRecipe = userRecipes.find(recipe => recipe.id === Number(id));
+  useEffect(() => {
+    const thisRecipe = recipes.find((recipe) => recipe.id === Number(id));
     console.log(thisRecipe);
 
     if (thisRecipe) {
@@ -51,39 +48,39 @@ export default function EditRecipeForm() {
       setSourceUrl(thisRecipe.source_url);
       setSelectedTags(thisRecipe.tags);
     }
-  }, [userRecipes, tags]);
+  }, [recipes, tags]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     const updatedRecipe = {
-        title,
-        description,
-        instructions,
-        ingredients,
-        image_url: imageUrl,
-        is_public: isPublic,
-        source_url: sourceUrl,
-        tags: selectedTags,
-    }
+      title,
+      description,
+      instructions,
+      ingredients,
+      image_url: imageUrl,
+      is_public: isPublic,
+      source_url: sourceUrl,
+      tags: selectedTags,
+    };
     try {
-        await axios.put(`/api/recipes/${id}`, updatedRecipe);
-        navigate(`/recipes/${id}`);
+      await axios.put(`/api/recipes/${id}`, updatedRecipe);
+      navigate(`/recipes/${id}`);
     } catch (error) {
-        console.error("Error updating recipe:", error);
+      console.error("Error updating recipe:", error);
     }
   };
 
   // Render checkboxes
   const handleTagChange = (tag) => {
     setSelectedTags((prev) =>
-      prev.find(t => t.id === Number(tag.id))
-        ? prev.filter(t => t.id !== tag.id)
+      prev.find((t) => t.id === Number(tag.id))
+        ? prev.filter((t) => t.id !== tag.id)
         : [...prev, tag]
     );
   };
 
-    const openCloudinaryWidget = () => {
+  const openCloudinaryWidget = () => {
     if (!window.cloudinary) return;
     const widget = window.cloudinary.createUploadWidget(
       {
@@ -105,24 +102,24 @@ export default function EditRecipeForm() {
     <div
       style={{
         display: "flex",
-        justifyContent: "center", 
-        alignItems: "center", 
-        minHeight: "100vh", 
-        backgroundColor: "#f5f5f5", 
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+        backgroundColor: "#f5f5f5",
         padding: "2rem",
       }}
     >
       <form
         style={{
           width: "100%",
-          maxWidth: "700px", 
+          maxWidth: "700px",
           backgroundColor: "#fff",
           padding: "2rem",
           borderRadius: "8px",
           boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
         }}
         onSubmit={handleSubmit}
-        >
+      >
         <h2>Edit Recipe</h2>
         <label>Title</label>
         <input

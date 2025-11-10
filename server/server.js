@@ -37,9 +37,6 @@ app.use('/api/tags', tagsRouter);
 app.use('/api/favorites', favoriteRouter);
 // app.use('/api/recipeTags', recipeTagsRouter);
 
-
-
-
 // Start the server:
 app.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}`);
