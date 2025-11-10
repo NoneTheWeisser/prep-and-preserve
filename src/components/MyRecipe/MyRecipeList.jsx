@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useStore from "../../zustand/store";
 import RecipeFilterBar from "../RecipeFilterBar/RecipeFilterBar";
+import RecipeCard from "../RecipeFilterBar/RecipeCard";
+
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+
 import {
   Box,
   ImageList,
@@ -13,6 +16,8 @@ import {
   Typography,
   Stack,
   Button,
+  Grid,
+  Container,
 } from "@mui/material";
 
 export default function MyRecipeList() {
@@ -81,7 +86,7 @@ export default function MyRecipeList() {
         }}
       />
       {/* Toggle Button */}
-      <Box sx={{ mb: 0 }}>
+      <Box sx={{ mb: 2 }}>
         {" "}
         <Button
           variant="contained"
@@ -98,73 +103,26 @@ export default function MyRecipeList() {
       {filteredRecipes.length === 0 ? (
         <Typography>No Recipes Found.</Typography>
       ) : (
-        <ImageList
-          cols={6}
-          gap={16}
-          sx={{ marginTop: 2, textAlign: "left" }}
+        // todo - play around with this container. is it the best way?
+        <Container
+          maxWidth="xl"
+          sx={{ display: "flex", justifyContent: "center", mt: 4 }}
         >
-          {filteredRecipes.map((recipe) => (
-            <ImageListItem
-              key={recipe.id}
-              sx={{ cursor: "pointer" }}
-              onClick={() => navigate(`/recipes/${recipe.id}`)}
-            >
-              {recipe.image_url ? (
-                <img
-                  src={recipe.image_url}
-                  alt={recipe.title}
-                  loading="lazy"
-                  style={{ objectFit: "cover", width: "100%", height: 250 }}
-                />
-              ) : (
-                <div
-                  style={{
-                    width: "100%",
-                    height: 200,
-                    backgroundColor: "#eee",
-                  }}
-                />
-              )}
-
-              <ImageListItemBar
-                title={
-                  <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
-                    {recipe.title}
-                  </Typography>
-                }
-                subtitle={
-                  <Stack direction="row" spacing={1} alignItems="center">
-                    {recipe.profile_image_url && (
-                      <Avatar
-                        src={recipe.profile_image_url}
-                        alt={recipe.username}
-                        sx={{ width: 24, height: 24 }}
-                      />
-                    )}
-                    <Typography variant="body2" color="inherit">
-                      {recipe.username}
-                    </Typography>
-                  </Stack>
-                }
-                actionIcon={
-                  <IconButton
-                    sx={{ color: "rgba(255, 255, 255, 0.8)" }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleFavorite(recipe.id);
-                    }}
-                  >
-                    {favorites.some((fav) => fav.id === recipe.id) ? (
-                      <FavoriteIcon sx={{ color: "white" }} />
-                    ) : (
-                      <FavoriteBorderIcon sx={{ color: "#fff" }} />
-                    )}
-                  </IconButton>
-                }
-              />
-            </ImageListItem>
-          ))}
-        </ImageList>
+          <Grid container spacing={2}>
+            {filteredRecipes.map((recipe) => (
+              <Grid item xs={10} sm={6} md={4} lg={3} xl={2} key={recipe.id}>
+                <Box sx={{ maxWidth: 250, mx: "auto" }}>
+                  <RecipeCard
+                    recipe={recipe}
+                    favorites={favorites}
+                    toggleFavorite={toggleFavorite}
+                    onClick={() => navigate(`/recipes/${recipe.id}`)}
+                  />
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
       )}
     </Box>
   );

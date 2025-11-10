@@ -105,7 +105,7 @@ export default function RecipeFilterBar({ onFilterChange, ...props }) {
           sx={{
             display: "flex",
             flexWrap: "wrap",
-            gap: "8px 8px", // first = row gap, second = column gap
+            gap: "8px 8px", 
           }}
         >
           {" "}
