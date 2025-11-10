@@ -77,17 +77,16 @@ export default function MyRecipeList() {
   );
 
   return (
-    <Box sx={{ p: 2 }}>
-      <RecipeFilterBar
-        tags={usedTags}
-        onFilterChange={({ searchTerm, selectedTagIds }) => {
-          setSearchTerm(searchTerm);
-          setSelectedTagIds(selectedTagIds);
-        }}
-      />
-      {/* Toggle Button */}
-      <Box sx={{ mb: 2 }}>
-        {" "}
+    <Container maxWidth="xl" sx={{ mt: 4 }}>
+      <Stack spacing={2} sx={{ mb: 4 }}>
+        <RecipeFilterBar
+          tags={usedTags}
+          onFilterChange={({ searchTerm, selectedTagIds }) => {
+            setSearchTerm(searchTerm);
+            setSelectedTagIds(selectedTagIds);
+          }}
+        />
+        {/* Toggle Button */}
         <Button
           variant="contained"
           color="primary"
@@ -98,32 +97,25 @@ export default function MyRecipeList() {
             ? "Show My Recipes Only"
             : "Show Favorites & My Recipes"}
         </Button>
-      </Box>
+      </Stack>
 
       {filteredRecipes.length === 0 ? (
         <Typography>No Recipes Found.</Typography>
       ) : (
         // todo - play around with this container. is it the best way?
-        <Container
-          maxWidth="xl"
-          sx={{ display: "flex", justifyContent: "center", mt: 4 }}
-        >
-          <Grid container spacing={2}>
-            {filteredRecipes.map((recipe) => (
-              <Grid item xs={10} sm={6} md={4} lg={3} xl={2} key={recipe.id}>
-                <Box sx={{ maxWidth: 250, mx: "auto" }}>
-                  <RecipeCard
-                    recipe={recipe}
-                    favorites={favorites}
-                    toggleFavorite={toggleFavorite}
-                    onClick={() => navigate(`/recipes/${recipe.id}`)}
-                  />
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
+        <Grid container spacing={2} justifyContent="center">
+          {filteredRecipes.map((recipe) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={recipe.id}>
+              <RecipeCard
+                recipe={recipe}
+                favorites={favorites}
+                toggleFavorite={toggleFavorite}
+                onClick={() => navigate(`/recipes/${recipe.id}`)}
+              />
+            </Grid>
+          ))}
+        </Grid>
       )}
-    </Box>
+    </Container>
   );
 }

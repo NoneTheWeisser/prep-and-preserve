@@ -2,15 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useStore from "../../zustand/store";
 import RecipeFilterBar from "../RecipeFilterBar/RecipeFilterBar";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import {
-  Box,
-  ImageList,
-  ImageListItem,
-  ImageListItemBar,
-  IconButton,
-} from "@mui/material";
+import RecipeCard from "../RecipeFilterBar/RecipeCard";
+import { Container, Grid } from "@mui/material";
 
 export default function CommunityRecipeList() {
   const fetchRecipes = useStore((state) => state.fetchRecipes);
@@ -64,59 +57,38 @@ export default function CommunityRecipeList() {
   );
 
   return (
-    <Box sx={{ p: 4, textAlign: "left" }}>
+    <Container maxWidth="xl" sx={{ mt: 4 }}>
       <RecipeFilterBar tags={usedTags} onFilterChange={handleFilterChange} />
 
       {filteredRecipes.length === 0 ? (
         <p>No Recipes Found.</p>
       ) : (
-        <ImageList cols={6} gap={16} sx={{ marginTop: 2 }}>
+        <Grid
+          container
+          spacing={2}
+          sx={{ mt: 2, justifyContent: "center" }} 
+        >
           {filteredRecipes.map((recipe) => (
-            <ImageListItem
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={4}
+              lg={3}
+              xl={2}
               key={recipe.id}
-              sx={{ cursor: "pointer" }}
-              onClick={() => navigate(`/recipes/${recipe.id}`)}
+              sx={{ display: "flex", justifyContent: "center" }}
             >
-              {recipe.image_url ? (
-                <img
-                  src={recipe.image_url}
-                  alt={recipe.title}
-                  loading="lazy"
-                  style={{ objectFit: "cover", width: "100%", height: 250 }}
-                />
-              ) : (
-                <div
-                  style={{
-                    width: "100%",
-                    height: 200,
-                    backgroundColor: "#eee",
-                  }}
-                />
-              )}
-
-              <ImageListItemBar
-                title={recipe.title}
-                subtitle={`by ${recipe.username}`}
-                actionIcon={
-                  <IconButton
-                    sx={{ color: "rgba(255, 255, 255, 0.8)" }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleFavorite(recipe.id);
-                    }}
-                  >
-                    {favorites.some((fav) => fav.id === recipe.id) ? (
-                      <FavoriteIcon sx={{ color: "white" }} />
-                    ) : (
-                      <FavoriteBorderIcon sx={{ color: "#fff" }} />
-                    )}
-                  </IconButton>
-                }
+              <RecipeCard
+                recipe={recipe}
+                favorites={favorites}
+                toggleFavorite={toggleFavorite}
+                onClick={() => navigate(`/recipes/${recipe.id}`)}
               />
-            </ImageListItem>
+            </Grid>
           ))}
-        </ImageList>
+        </Grid>
       )}
-    </Box>
+    </Container>
   );
 }
