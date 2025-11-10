@@ -99,7 +99,7 @@ export default function MyRecipeList() {
         <Typography>No Recipes Found.</Typography>
       ) : (
         <ImageList
-          cols={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 6 }}
+          cols={6}
           gap={16}
           sx={{ marginTop: 2, textAlign: "left" }}
         >
