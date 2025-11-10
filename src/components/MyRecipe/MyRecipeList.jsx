@@ -111,7 +111,7 @@ export default function MyRecipeList() {
                 favorites={favorites}
                 toggleFavorite={toggleFavorite}
                 onClick={() => navigate(`/recipes/${recipe.id}`)}
-              />
+                />
             </Grid>
           ))}
         </Grid>

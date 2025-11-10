@@ -58,7 +58,7 @@ export default function About() {
           padding: "2rem",
           maxWidth: "1000px",
           margin: "0 auto",
-          backgroundColor: "#f5f5f5",
+          backgroundColor: "#d6d4c6",
           borderRadius: "8px",
           gap: "2rem",
           flexWrap: "wrap",
@@ -72,7 +72,7 @@ export default function About() {
           type="button"
           style={{
             padding: "0.75rem 1.5rem",
-            backgroundColor: "#023c7aff",
+            backgroundColor: "#9E6B53",
             color: "#fff",
             border: "none",
             borderRadius: "4px",

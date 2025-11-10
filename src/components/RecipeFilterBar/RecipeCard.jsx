@@ -15,8 +15,8 @@ export default function RecipeCard({
     <Box
       onClick={onClick}
       sx={{
-        width: 200, // todo figure out what the best fixed w & h is 
-        height: 260,
+        width: 200, // todo figure out what the best fixed w & h is
+        height: 280,
         position: "relative",
         cursor: "pointer",
         borderRadius: 2,
@@ -48,7 +48,7 @@ export default function RecipeCard({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "flex-start",
-          minHeight: 60,
+          minHeight: 80,
         }}
       >
         <Box sx={{ textAlign: "left" }}>
@@ -66,18 +66,18 @@ export default function RecipeCard({
           >
             {recipe.title}
           </Typography>
+
           <Stack
             direction="row"
             spacing={1}
             alignItems="center"
-            sx={{ mt: 0.25 }}
+            sx={{ mt: 0.5 }}
           >
             <Typography variant="body2" color="inherit">
               {recipe.username}
             </Typography>
           </Stack>
         </Box>
-
         <IconButton
           sx={{ color: "white" }}
           onClick={(e) => {
