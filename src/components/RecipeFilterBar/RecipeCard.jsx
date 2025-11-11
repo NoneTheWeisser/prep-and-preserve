@@ -38,11 +38,13 @@ export default function RecipeCard({
       <IconButton
         sx={{
           position: "absolute",
-          top: 10,
-          right: 8,
-          color: "#720000",
-          // bgcolor: "rgba(0,0,0,0.2)", 
-          "&:hover": { bgcolor: "rgba(0,0,0,0.7)" },
+          top: 7,
+          right: 7,
+          color: isFav ? "white" : "white",
+          bgcolor: "rgba(0,0,0,0.35)",
+          borderRadius: "50%",
+          boxShadow: "0 2px 6px rgba(0,0,0,0.4)",
+          "&:hover": { bgcolor: "rgba(0,0,0,0.65)" },
         }}
         onClick={(e) => {
           e.stopPropagation();
@@ -51,7 +53,6 @@ export default function RecipeCard({
       >
         {isFav ? <FavoriteIcon /> : <FavoriteBorderIcon />}
       </IconButton>
-
       {/* Overlay */}
       <Box
         sx={{
@@ -79,7 +80,7 @@ export default function RecipeCard({
               WebkitLineClamp: 2, // wrap max 2 lines
               WebkitBoxOrient: "vertical",
               overflow: "hidden",
-              fontSize: { xs: "0.8rem", sm: "0.9rem", md: "1rem" }, // responsive font
+              // fontSize: { xs: "0.8rem", sm: "0.9rem", md: "1rem" }, // responsive font
             }}
           >
             {recipe.title}
