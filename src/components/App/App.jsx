@@ -14,6 +14,7 @@ import MyRecipe from "../MyRecipe/MyRecipe";
 import FullRecipeView from "../Recipe/FullRecipeView";
 import EditRecipeForm from "../AddRecipeForm/EditRecipeForm";
 import AdminDashboard from "../AdminDashboard/AdminDashboard";
+import AdminRoute from "../AdminDashboard/AdminRoute";
 
 function App() {
   const user = useStore((state) => state.user);
@@ -29,7 +30,14 @@ function App() {
       <main>
         <Routes>
           <Route exact path="/" element={<HomePage />} />
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            }
+          />
           <Route
             exact
             path="/login"

@@ -52,10 +52,10 @@ export default function MyRecipeList() {
   const combinedRecipes = [
     ...userRecipes,
     ...favorites
-    .map((fav) => {
-      return recipes.find((r) => r.id === fav.id) || fav;
-    })
-    .filter((r) => !userRecipes.some((ur) => ur.id === r.id)),
+      .map((fav) => {
+        return recipes.find((r) => r.id === fav.id) || fav;
+      })
+      .filter((r) => !userRecipes.some((ur) => ur.id === r.id)),
   ];
 
   //  Apply filters (search and tags) whenever combinedRecipes or filters change
@@ -112,13 +112,13 @@ export default function MyRecipeList() {
         // todo - play around with this container. is it the best way?
         <Grid container spacing={2} justifyContent="center">
           {filteredRecipes.map((recipe) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={recipe.id}>
+            <Grid key={recipe.id} span={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}>
               <RecipeCard
                 recipe={recipe}
                 favorites={favorites}
                 toggleFavorite={toggleFavorite}
                 onClick={() => navigate(`/recipes/${recipe.id}`)}
-                />
+              />
             </Grid>
           ))}
         </Grid>

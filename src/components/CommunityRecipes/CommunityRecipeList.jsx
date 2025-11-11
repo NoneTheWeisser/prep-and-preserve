@@ -63,20 +63,11 @@ export default function CommunityRecipeList() {
       {filteredRecipes.length === 0 ? (
         <p>No Recipes Found.</p>
       ) : (
-        <Grid
-          container
-          spacing={2}
-          sx={{ mt: 2, justifyContent: "center" }} 
-        >
+        <Grid container spacing={2} sx={{ mt: 2, justifyContent: "center" }}>
           {filteredRecipes.map((recipe) => (
             <Grid
-              item
-              xs={12}
-              sm={6}
-              md={4}
-              lg={3}
-              xl={2}
               key={recipe.id}
+              span={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
               sx={{ display: "flex", justifyContent: "center" }}
             >
               <RecipeCard

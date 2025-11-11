@@ -12,7 +12,6 @@ export default function HomeHeader() {
     <Box>
       {/* Hero Section */}
       <Box
-        Box
         sx={{
           position: "relative",
           height: { xs: 450, md: 500 },

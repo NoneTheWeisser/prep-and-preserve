@@ -61,99 +61,82 @@ export default function Nav() {
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ minHeight: { xs: 56, sm: 48 }, px: 2 }}>
-          {/* --- LEFT: Logo + Links --- */}
-          <Box sx={{ display: "flex", alignItems: "center", flexGrow: 1 }}>
-            {/* Desktop logo scales down with screen size */}
+          {/* --- MOBILE: Hamburger left, Logo center --- */}
+          <Box
+            sx={{
+              display: { xs: "flex", md: "none" },
+              alignItems: "center",
+              flexGrow: 1,
+            }}
+          >
+            <IconButton
+              size="large"
+              onClick={handleOpenNavMenu}
+              color="inherit"
+            >
+              <MenuIcon />
+            </IconButton>
+
+            <NavLink to="/" style={{ margin: "0 auto" }}>
+              <Box
+                component="img"
+                src="/img/prepperservelogo_horizontal.svg"
+                alt="Logo"
+                sx={{ height: 28 }}
+              />
+            </NavLink>
+
+            {/* Mobile Menu */}
+            <Menu
+              anchorEl={anchorElNav}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+            >
+              {pages.map((page) => (
+                <MenuItem key={page.label} onClick={handleCloseNavMenu}>
+                  <NavLink
+                    to={page.to}
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    {page.label}
+                  </NavLink>
+                </MenuItem>
+              ))}
+              {user?.id && <MenuItem onClick={handleLogout}>Log Out</MenuItem>}
+            </Menu>
+          </Box>
+
+          {/* --- DESKTOP: Logo + Links left --- */}
+          <Box
+            sx={{
+              display: { xs: "none", md: "flex" },
+              alignItems: "center",
+              flexGrow: 1,
+            }}
+          >
             <NavLink to="/">
               <Box
                 component="img"
                 src="/img/prepperservelogo_horizontal.svg"
-                alt="Prep & Preserve logo"
-                sx={{
-                  height: { xs: 28, sm: 32, md: 36, lg: 40 }, // scales nicely
-                  mr: 3,
-                  display: { xs: "none", md: "flex" },
-                }}
+                alt="Logo"
+                sx={{ height: 40, mr: 3 }}
               />
             </NavLink>
-
-            {/* Desktop Links */}
-            <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
+            <Box sx={{ display: "flex", gap: 2 }}>
               {pages.map((page) => (
                 <Button
                   key={page.label}
                   component={NavLink}
                   to={page.to}
-                  sx={{
-                    color: "black",
-                    fontSize: "0.95rem",
-                    textTransform: "none",
-                    p: 0,
-                  }}
+                  sx={{ color: "black", textTransform: "none", p: 0 }}
                 >
                   {page.label}
                 </Button>
               ))}
-              {/* If I'm going to have it in the drop down I dont need it here */}
-              {/* {user?.id && (
-                <Button
-                  onClick={handleLogout}
-                  sx={{ color: "black", textTransform: "none", p: 0 }}
-                >
-                  Log Out
-                </Button>
-              )} */}
-            </Box>
-
-            {/* Mobile: small menu button */}
-            <Box
-              sx={{
-                display: { xs: "flex", md: "none" },
-                alignItems: "center",
-                gap: 1,
-                flexGrow: 1,
-              }}
-            >
-              <NavLink to="/">
-                <Box
-                  component="img"
-                  src="/img/prepperservelogo_horizontal.svg"
-                  alt="Prep & Preserve favicon"
-                  sx={{ height: 28 }}
-                />
-              </NavLink>
-
-              <IconButton
-                size="large"
-                onClick={handleOpenNavMenu}
-                color="inherit"
-              >
-                <MenuIcon />
-              </IconButton>
-
-              <Menu
-                anchorEl={anchorElNav}
-                open={Boolean(anchorElNav)}
-                onClose={handleCloseNavMenu}
-              >
-                {pages.map((page) => (
-                  <MenuItem key={page.label} onClick={handleCloseNavMenu}>
-                    <NavLink
-                      to={page.to}
-                      style={{ textDecoration: "none", color: "inherit" }}
-                    >
-                      {page.label}
-                    </NavLink>
-                  </MenuItem>
-                ))}
-                {user?.id && (
-                  <MenuItem onClick={handleLogout}>Log Out</MenuItem>
-                )}
-              </Menu>
             </Box>
           </Box>
 
-          {/* --- RIGHT: Avatar --- */}
+          {/* --- DESKTOP/MOBILE: Avatar right --- */}
           {user?.id && (
             <Box sx={{ flexShrink: 0 }}>
               <Tooltip title="Profile Menu">
@@ -179,6 +162,15 @@ export default function Nav() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
+                {user?.is_admin && (
+                  <MenuItem
+                    component={NavLink}
+                    to="/admin"
+                    onClick={handleCloseUserMenu}
+                  >
+                    Admin
+                  </MenuItem>
+                )}
                 <MenuItem
                   component={NavLink}
                   to="/myrecipes"
