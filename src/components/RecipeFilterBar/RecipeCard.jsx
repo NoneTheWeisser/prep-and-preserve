@@ -35,6 +35,22 @@ export default function RecipeCard({
       ) : (
         <Box sx={{ width: "100%", height: "100%", backgroundColor: "#eee" }} />
       )}
+      <IconButton
+        sx={{
+          position: "absolute",
+          top: 10,
+          right: 8,
+          color: "#720000",
+          // bgcolor: "rgba(0,0,0,0.2)", 
+          "&:hover": { bgcolor: "rgba(0,0,0,0.7)" },
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+          toggleFavorite(recipe.id);
+        }}
+      >
+        {isFav ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+      </IconButton>
 
       {/* Overlay */}
       <Box
@@ -79,7 +95,7 @@ export default function RecipeCard({
               position: "absolute",
               bottom: 6,
               left: 6,
-              // fontSize: { xs: "0.6rem", sm: "0.75rem", md: "0.8rem" }, 
+              // fontSize: { xs: "0.6rem", sm: "0.75rem", md: "0.8rem" },
             }}
           >
             <Typography variant="body2" color="inherit">
@@ -87,15 +103,6 @@ export default function RecipeCard({
             </Typography>
           </Stack>
         </Box>
-        <IconButton
-          sx={{ color: "white" }}
-          onClick={(e) => {
-            e.stopPropagation();
-            toggleFavorite(recipe.id);
-          }}
-        >
-          {isFav ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-        </IconButton>
       </Box>
     </Box>
   );
