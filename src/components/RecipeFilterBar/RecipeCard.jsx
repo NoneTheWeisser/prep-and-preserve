@@ -15,10 +15,11 @@ export default function RecipeCard({
     <Box
       onClick={onClick}
       sx={{
-        width: 200, // todo figure out what the best fixed w & h is
-        height: 280,
+        width: "100%", // fills the Grid column
+        aspectRatio: "6 / 8", // keeps uniform card shape
         position: "relative",
         cursor: "pointer",
+        maxWidth: { xs: 150, sm: 200, md: 250 },
         borderRadius: 2,
         overflow: "hidden",
         boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
@@ -48,7 +49,7 @@ export default function RecipeCard({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "flex-start",
-          minHeight: 80,
+          minHeight: 70,
         }}
       >
         <Box sx={{ textAlign: "left" }}>
@@ -62,6 +63,7 @@ export default function RecipeCard({
               WebkitLineClamp: 2, // wrap max 2 lines
               WebkitBoxOrient: "vertical",
               overflow: "hidden",
+              fontSize: { xs: "0.8rem", sm: "0.9rem", md: "1rem" }, // responsive font
             }}
           >
             {recipe.title}
@@ -71,8 +73,14 @@ export default function RecipeCard({
             direction="row"
             spacing={1}
             alignItems="center"
-            // switching to absolute so I can control where username is. 
-            sx={{ mt: 0.5, position: "absolute", bottom: 10, left: 6 }}
+            // switching to absolute so I can control where username is.
+            sx={{
+              mt: 0.5,
+              position: "absolute",
+              bottom: 6,
+              left: 6,
+              // fontSize: { xs: "0.6rem", sm: "0.75rem", md: "0.8rem" }, 
+            }}
           >
             <Typography variant="body2" color="inherit">
               @{recipe.username}

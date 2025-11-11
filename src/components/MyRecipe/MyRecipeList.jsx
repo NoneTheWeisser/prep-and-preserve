@@ -3,22 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useStore from "../../zustand/store";
 import RecipeFilterBar from "../RecipeFilterBar/RecipeFilterBar";
 import RecipeCard from "../RecipeFilterBar/RecipeCard";
-
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-
-import {
-  Box,
-  ImageList,
-  ImageListItem,
-  ImageListItemBar,
-  IconButton,
-  Typography,
-  Stack,
-  Button,
-  Grid,
-  Container,
-} from "@mui/material";
+import { Typography, Stack, Button, Grid, Container } from "@mui/material";
 
 export default function MyRecipeList() {
   const userRecipes = useStore((state) => state.userRecipes);
