@@ -31,7 +31,7 @@ function App() {
         <Routes>
           <Route exact path="/" element={<HomePage />} />
           <Route
-            path="/admin"
+            path="/admin/*"
             element={
               <AdminRoute>
                 <AdminDashboard />
