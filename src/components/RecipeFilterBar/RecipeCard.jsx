@@ -93,9 +93,9 @@ export default function RecipeCard({
             // switching to absolute so I can control where username is.
             sx={{
               mt: 0.5,
-              position: "absolute",
-              bottom: 6,
-              left: 6,
+              // position: "absolute",
+              // bottom: 6,
+              // left: 6,
               // fontSize: { xs: "0.6rem", sm: "0.75rem", md: "0.8rem" },
             }}
           >
