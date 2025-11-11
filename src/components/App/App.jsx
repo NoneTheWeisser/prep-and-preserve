@@ -13,6 +13,7 @@ import CommunityRecipes from "../CommunityRecipes/CommunityRecipes";
 import MyRecipe from "../MyRecipe/MyRecipe";
 import FullRecipeView from "../Recipe/FullRecipeView";
 import EditRecipeForm from "../AddRecipeForm/EditRecipeForm";
+import AdminDashboard from "../AdminDashboard/AdminDashboard";
 
 function App() {
   const user = useStore((state) => state.user);
@@ -28,6 +29,7 @@ function App() {
       <main>
         <Routes>
           <Route exact path="/" element={<HomePage />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route
             exact
             path="/login"

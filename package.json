@@ -12,6 +12,7 @@
     "@mui/icons-material": "^7.3.5",
     "@mui/material": "^7.3.5",
     "@mui/styled-engine-sc": "^7.3.5",
+    "@mui/x-data-grid": "^8.17.0",
     "@vitest/mocker": "^3.0.6",
     "axios": "^1.6.8",
     "bcryptjs": "^3.0.2",

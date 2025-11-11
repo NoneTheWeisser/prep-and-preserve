@@ -16,10 +16,9 @@ const userRouter = require('./routes/user.router');
 const recipeRouter = require('./routes/recipes.router');
 const tagsRouter = require('./routes/tags.router');
 const favoriteRouter = require('./routes/favorites.router');
+const adminTagsRouter = require ('./routes/adminTags.router');
+
 // const recipeTagsRouter = require('./routes/recipeTags.router');
-
-
-
 
 
 // Apply middleware:
@@ -35,6 +34,8 @@ app.use('/api/user', userRouter);
 app.use('/api/recipes', recipeRouter);
 app.use('/api/tags', tagsRouter);
 app.use('/api/favorites', favoriteRouter);
+app.use("/api/admin/tags", adminTagsRouter);
+
 // app.use('/api/recipeTags', recipeTagsRouter);
 
 // Start the server:
