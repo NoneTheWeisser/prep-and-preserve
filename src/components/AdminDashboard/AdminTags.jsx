@@ -56,7 +56,11 @@ export default function AdminTags() {
       headerName: "Edit",
       width: 100,
       renderCell: (params) => (
-        <Button variant="outlined" size="small" onClick={() => handleEditClick(params.row)}>
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={() => handleEditClick(params.row)}
+        >
           Edit
         </Button>
       ),
@@ -70,7 +74,10 @@ export default function AdminTags() {
           variant="outlined"
           size="small"
           color="error"
-          onClick={() => deleteTag(params.row.id)}
+          onClick={async () => {
+            if (!window.confirm(`Delete tag "${params.row.name}"?`)) return;
+            await deleteTag(params.row.id);
+          }}
         >
           Delete
         </Button>
@@ -95,7 +102,12 @@ export default function AdminTags() {
       </Stack>
 
       <div style={{ height: 500, width: "100%" }}>
-        <DataGrid rows={tags} columns={columns} pageSize={20} disableRowSelectionOnClick />
+        <DataGrid
+          rows={tags}
+          columns={columns}
+          pageSize={20}
+          disableRowSelectionOnClick
+        />
       </div>
 
       {/* Edit Dialog */}
@@ -111,7 +123,9 @@ export default function AdminTags() {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button variant="contained" onClick={handleSave}>Save</Button>
+          <Button variant="contained" onClick={handleSave}>
+            Save
+          </Button>
         </DialogActions>
       </Dialog>
     </Box>
