@@ -67,7 +67,7 @@ export default function CommunityRecipeList() {
           {filteredRecipes.map((recipe) => (
             <Grid
               key={recipe.id}
-              span={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+              span={{ xs: 6, sm: 6, md: 4, lg: 3, xl: 2 }}
               sx={{ display: "flex", justifyContent: "center" }}
             >
               <RecipeCard
