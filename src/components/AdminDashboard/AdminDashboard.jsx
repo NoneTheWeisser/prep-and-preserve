@@ -22,21 +22,27 @@ export default function AdminDashboard() {
           alt={"MyRecipe header image"}
           style={{
             width: "100%",
-            height: "200px",
+            height: "300px",
             objectFit: "cover",
             // borderBottom: "4px solid #000000ff",
           }}
         />
 
-        <Box sx={{ padding: 4 }}>
+        <Box sx={{ justifyContent: "center" }}>
           <h2>Admin Dashboard</h2>
-          <Tabs value={currentTab} onChange={handleChange}>
+          <Tabs
+            value={currentTab}
+            onChange={handleChange}
+            centered
+            textColor="primary"
+            indicatorColor="primary"
+          >
             <Tab label="Users" value="users" />
             <Tab label="Tags" value="tags" />
             <Tab label="Recipes" value="recipes" />
           </Tabs>
 
-          <Box sx={{ mt: 3 }}>
+          <Box sx={{ mt: 5 }}>
             <Routes>
               <Route path="users" element={<AdminUsers />} />
               <Route path="tags" element={<AdminTags />} />

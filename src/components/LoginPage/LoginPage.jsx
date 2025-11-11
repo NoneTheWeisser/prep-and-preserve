@@ -96,12 +96,20 @@ export default function LoginPage() {
           </Button>
 
           <Button
-            variant="text"
+            variant="outlined"
             fullWidth
             onClick={() => navigate("/registration")}
           >
             Create Account
           </Button>
+          {/* <Button
+            variant="text"
+            fullWidth
+            onClick={() => navigate("/forgot-password")}
+            sx={{ mt: 1 }}
+          >
+            Forgot my password
+          </Button> */}
         </form>
       </Paper>
     </Box>

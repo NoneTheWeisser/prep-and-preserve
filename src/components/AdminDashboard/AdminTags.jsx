@@ -86,48 +86,65 @@ export default function AdminTags() {
   ];
 
   return (
-    <Box sx={{ padding: 4 }}>
-      <h2>Manage Tags</h2>
-
-      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-        <TextField
-          label="New Tag"
-          size="small"
-          value={tagName}
-          onChange={(e) => setTagName(e.target.value)}
-        />
-        <Button variant="contained" onClick={handleAdd}>
-          Add Tag
-        </Button>
-      </Stack>
-
-      <div style={{ height: 500, width: "100%" }}>
-        <DataGrid
-          rows={tags}
-          columns={columns}
-          pageSize={20}
-          disableRowSelectionOnClick
-        />
-      </div>
-
-      {/* Edit Dialog */}
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>Edit Tag</DialogTitle>
-        <DialogContent>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center", 
+        alignItems: "center", 
+        minHeight: "100vh",
+        p: 1,
+      }}
+    >
+      <Box
+        sx={{
+          padding: 2,
+          textAlign: "left",
+          bgcolor: "white",
+          borderRadius: 2,
+          width: "80%", 
+          maxWidth: 880, 
+        }}
+      >
+        {" "}
+        <h2>Manage Tags</h2>
+        <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
           <TextField
-            label="Tag Name"
+            label="New Tag"
+            size="small"
             value={tagName}
             onChange={(e) => setTagName(e.target.value)}
-            fullWidth
           />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button variant="contained" onClick={handleSave}>
-            Save
+          <Button variant="contained" onClick={handleAdd}>
+            Add Tag
           </Button>
-        </DialogActions>
-      </Dialog>
+        </Stack>
+        <div style={{ height: 500, width: "100%" }}>
+          <DataGrid
+            rows={tags}
+            columns={columns}
+            pageSize={20}
+            disableRowSelectionOnClick
+          />
+        </div>
+        {/* Edit Dialog */}
+        <Dialog open={open} onClose={() => setOpen(false)}>
+          <DialogTitle>Edit Tag</DialogTitle>
+          <DialogContent>
+            <TextField
+              label="Tag Name"
+              value={tagName}
+              onChange={(e) => setTagName(e.target.value)}
+              fullWidth
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpen(false)}>Cancel</Button>
+            <Button variant="contained" onClick={handleSave}>
+              Save
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
     </Box>
   );
 }
