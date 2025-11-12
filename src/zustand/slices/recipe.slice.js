@@ -60,10 +60,10 @@ const recipeSlice = (set, get) => ({
 
       set((state) => ({
         recipes: state.recipes.map((r) =>
-          r.id === recipeId ? updatedRecipe : r
+          r.id === Number(id) ? updatedRecipe : r
         ),
         userRecipes: state.userRecipes.map((r) =>
-          r.id === recipeId ? updatedRecipe : r
+          r.id === Number(id) ? updatedRecipe : r
         ),
       }));
 

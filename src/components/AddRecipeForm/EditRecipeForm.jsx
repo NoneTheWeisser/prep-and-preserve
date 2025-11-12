@@ -1,21 +1,41 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+// import("../AddRecipeForm/AddRecipeForm.css");
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Container,
+  FormControl,
+  FormGroup,
+  FormLabel,
+  FormControlLabel,
+  Switch,
+  TextField,
+  Typography,
+  Checkbox,
+  Paper,
+  Snackbar,
+  Alert,
+  Grid,
+  Chip,
+} from "@mui/material";
 import useStore from "../../zustand/store";
-import tagSlice from "../../zustand/slices/tag.slice";
-import InstructionTextEditor from "./InstructionTextEditor";
-import IngredientTextEditor from "./IngredientTextEditor";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import InstructionTextEditor from "./InstructionTextEditor";
+import { useParams } from "react-router-dom";
+import IngredientTextEditor from "./IngredientTextEditor";
 
 export default function EditRecipeForm() {
   const { id } = useParams();
   const navigate = useNavigate();
-  // const fetchUserRecipes = useStore((state) => state.fetchUserRecipes);
+  const fetchUserRecipes = useStore((state) => state.fetchUserRecipes);
   const fetchRecipes = useStore((state) => state.fetchRecipes);
   const fetchTags = useStore((state) => state.fetchTags);
 
   const tags = useStore((state) => state.tags);
   // const userRecipes = useStore((state) => state.userRecipes);
   const recipes = useStore((state) => state.recipes);
+  const updateRecipe = useStore((state) => state.updateRecipe);
 
   const [instructions, setInstructions] = useState("");
   const [ingredients, setIngredients] = useState("");
@@ -25,6 +45,7 @@ export default function EditRecipeForm() {
   const [sourceUrl, setSourceUrl] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
   const [isPublic, setIsPublic] = useState(true);
+  // const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   // The reason we use a useEffect is so that we can
   // populate the local state after zustand updates
@@ -39,18 +60,17 @@ export default function EditRecipeForm() {
     console.log(thisRecipe);
 
     if (thisRecipe) {
-      setTitle(thisRecipe.title);
-      setDescription(thisRecipe.description);
-      setImageUrl(thisRecipe.image_url);
-      setIngredients(thisRecipe.ingredients);
-      setInstructions(thisRecipe.instructions);
-      setIsPublic(thisRecipe.is_public);
-      setSourceUrl(thisRecipe.source_url);
-      setSelectedTags(thisRecipe.tags);
+      setTitle(thisRecipe.title || "");
+      setDescription(thisRecipe.description || "");
+      setImageUrl(thisRecipe.image_url || "");
+      setIngredients(thisRecipe.ingredients || "");
+      setInstructions(thisRecipe.instructions || "");
+      setIsPublic(thisRecipe.is_public ?? true);
+      setSourceUrl(thisRecipe.source_url || "");
+      setSelectedTags(thisRecipe.tags || []);
     }
-  }, []);
-    // }, [recipes, tags]);
-
+    // }, []);
+  }, [recipes, tags]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -65,8 +85,10 @@ export default function EditRecipeForm() {
       source_url: sourceUrl,
       tags: selectedTags,
     };
+
     try {
-      await axios.put(`/api/recipes/${id}`, updatedRecipe);
+      await updateRecipe(id, updatedRecipe);
+      await fetchUserRecipes();
       navigate(`/recipes/${id}`);
     } catch (error) {
       console.error("Error updating recipe:", error);
@@ -99,99 +121,181 @@ export default function EditRecipeForm() {
     widget.open();
   };
 
-  // }
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "100vh",
-        backgroundColor: "#f5f5f5",
-        padding: "2rem",
-      }}
-    >
-      <form
-        style={{
-          width: "100%",
-          maxWidth: "700px",
-          backgroundColor: "#fff",
-          padding: "2rem",
-          borderRadius: "8px",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-        }}
-        onSubmit={handleSubmit}
+    <Container maxWidth="md" sx={{ py: 6 }}>
+      <Paper elevation={3} sx={{ p: 4, borderRadius: 3 }}>
+        <Typography variant="h4" fontWeight="bold" gutterBottom>
+          Add a New Recipe
+        </Typography>
+
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 3,
+          }}
+        >
+          <TextField
+            label="Recipe Title"
+            variant="outlined"
+            fullWidth
+            required
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+
+          <TextField
+            label="Short Description"
+            variant="outlined"
+            fullWidth
+            required
+            multiline
+            minRows={2}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+
+          <TextField
+            label="Source URL (optional)"
+            variant="outlined"
+            fullWidth
+            value={sourceUrl}
+            onChange={(e) => setSourceUrl(e.target.value)}
+          />
+
+          {/* TAGS */}
+          <FormControl component="fieldset" sx={{ mt: 2 }}>
+            <FormLabel component="legend">Tags</FormLabel>
+            <Typography variant="body2" sx={{ mb: 1 }}>
+              Select all that apply:
+            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 1,
+                p: 1,
+                border: "1px solid #ddd",
+                borderRadius: 2,
+                backgroundColor: "#fafafa",
+              }}
+            >
+              {tags.map((tag) => {
+                const selected = selectedTags.some((t) => t.id === tag.id);
+                return (
+                  <Chip
+                    key={tag.id}
+                    label={tag.name}
+                    variant={selected ? "filled" : "outlined"}
+                    color={selected ? "primary" : "default"}
+                    onClick={() => handleTagChange(tag)}
+                    size="small"
+                    sx={{ fontSize: "0.8rem" }}
+                  />
+                );
+              })}
+            </Box>
+          </FormControl>
+
+          <Box>
+            <Typography variant="h6">Ingredients</Typography>
+            <IngredientTextEditor
+              value={ingredients}
+              onChange={setIngredients}
+            />
+          </Box>
+
+          <Box>
+            <Typography variant="h6">Instructions</Typography>
+            <InstructionTextEditor
+              value={instructions}
+              onChange={setInstructions}
+            />
+          </Box>
+
+          {/* IMAGE UPLOAD */}
+          <Box textAlign="center">
+            <Button variant="outlined" onClick={openCloudinaryWidget}>
+              Upload Image
+            </Button>
+            <Box mt={2}>
+              {imageUrl ? (
+                <img
+                  src={imageUrl}
+                  alt="Uploaded recipe"
+                  width={200}
+                  style={{ borderRadius: 8 }}
+                />
+              ) : (
+                <Box
+                  sx={{
+                    width: 200,
+                    height: 200,
+                    bgcolor: "#f0f0f0",
+                    borderRadius: 2,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "text.secondary",
+                    mx: "auto",
+                  }}
+                >
+                  No image uploaded
+                </Box>
+              )}
+            </Box>
+          </Box>
+
+          {/* TOGGLE */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              mt: 3,
+              p: 2,
+              border: "1px solid #e0e0e0",
+              borderRadius: 2,
+              backgroundColor: "#f9f9f9",
+            }}
+          >
+            <Box>
+              <Typography variant="subtitle1" fontWeight={500}>
+                Privacy Setting
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {isPublic ? "Visible to everyone" : "Only visible to you"}
+              </Typography>
+            </Box>
+            <Switch
+              checked={isPublic}
+              onChange={(e) => setIsPublic(e.target.checked)}
+              color="primary"
+            />
+          </Box>
+
+          <Button type="submit" variant="contained" size="large">
+            Update Recipe
+          </Button>
+        </Box>
+      </Paper>
+
+      {/* Snackbar */}
+      {/* <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
       >
-        <h2>Edit Recipe</h2>
-        <label>Title</label>
-        <input
-          placeholder="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <label>Description</label>
-        <input
-          placeholder="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <label>Recipe Source URL</label>
-        <input
-          placeholder="recipe source url"
-          value={sourceUrl}
-          onChange={(e) => setSourceUrl(e.target.value)}
-        />
-        <label>Recipe Tags</label>
-        <p>
-          Select all tags that apply to your recipe. This will help with
-          filtering.
-        </p>
-        <div className="tag-container">
-          {tags.map((tag) => (
-            <label key={tag.id}>
-              <input
-                type="checkbox"
-                value={tag.id}
-                checked={!!selectedTags.find((t) => t.id === Number(tag.id))}
-                onChange={() => handleTagChange(tag)}
-              />
-              {tag.name}
-            </label>
-          ))}
-        </div>
-        <label>
-          <h3>Ingredients</h3>
-          <IngredientTextEditor value={ingredients} onChange={setIngredients} />
-        </label>
-        <label>
-          <h3>Instructions</h3>
-          <InstructionTextEditor
-            value={instructions}
-            onChange={setInstructions}
-          />
-        </label>
-        <label className="toggle-switch">
-          <input
-            type="checkbox"
-            checked={!isPublic}
-            onChange={() => setIsPublic(!isPublic)}
-          />
-          <span className="slider" />
-          <span className="label-text">Keep this recipe private</span>
-        </label>
-        <div>
-          <button type="button" onClick={openCloudinaryWidget}>
-            Upload Image
-          </button>
-          {imageUrl && (
-            <div>
-              <p>Uploaded Image:</p>
-              <img src={imageUrl} width={150} alt="Uploaded recipe" />
-            </div>
-          )}
-        </div>
-        <button type="submit">Update Recipe</button>
-      </form>
-    </div>
+        <Alert
+          onClose={() => setSnackbarOpen(false)}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Recipe successfully updated!
+        </Alert>
+      </Snackbar> */}
+    </Container>
   );
 }
