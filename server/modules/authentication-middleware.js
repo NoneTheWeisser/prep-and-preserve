@@ -22,20 +22,23 @@ const rejectIfNotAdmin = (req, res, next) => {
   }
 };
 
-// Admin and Recipe Owner
 const rejectIfNotOwnerOrAdmin = async (req, res, next) => {
-  const userId = req.user.id;
-  const recipe_id = req.body.recipe_id || req.params.recipeId || req.params.id;
-  // Admin can do all
-  if (req.user?.is_admin) {
-    return next();
-  }
-  const sqlText = `SELECT user_id FROM recipes WHERE id = $1;`;
   try {
-    const result = await pool.query(sqlText, [recipe_id]);
-    if (result.rows.length === 0) {
-      return res.sendStatus(404);
+    const userId = req.user.id;
+    const recipeId = Number(req.params.id || req.params.recipeId || req.body.recipe_id);
+
+    if (!recipeId) return res.status(400).json({ error: "Missing recipe ID" });
+
+    // Admin can do all
+    if (req.user?.is_admin) {
+      return next();
     }
+
+    const sqlText = `SELECT user_id FROM recipes WHERE id = $1;`;
+    const result = await pool.query(sqlText, [recipeId]);
+
+    if (result.rows.length === 0) return res.sendStatus(404);
+
     if (result.rows[0].user_id === userId) {
       return next();
     } else {
@@ -43,9 +46,10 @@ const rejectIfNotOwnerOrAdmin = async (req, res, next) => {
     }
   } catch (error) {
     console.error("Error checking recipe ownership:", error);
-    res.sendStatus(500);
+    return res.sendStatus(500);
   }
 };
+
 
 module.exports = {
   rejectUnauthenticated,

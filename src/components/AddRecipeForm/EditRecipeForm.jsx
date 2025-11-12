@@ -48,7 +48,9 @@ export default function EditRecipeForm() {
       setSourceUrl(thisRecipe.source_url);
       setSelectedTags(thisRecipe.tags);
     }
-  }, [recipes, tags]);
+  }, []);
+    // }, [recipes, tags]);
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -75,7 +77,7 @@ export default function EditRecipeForm() {
   const handleTagChange = (tag) => {
     setSelectedTags((prev) =>
       prev.find((t) => t.id === Number(tag.id))
-        ? prev.filter((t) => t.id !== tag.id)
+        ? prev.filter((t) => t.id !== Number(tag.id))
         : [...prev, tag]
     );
   };
