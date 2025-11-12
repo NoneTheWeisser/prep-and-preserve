@@ -78,7 +78,6 @@ export default function About() {
             borderRadius: "4px",
             cursor: "pointer",
           }}
-          // TODO: do I include my email? or make an alias? 
           onClick={() => window.location.href = "mailto:nicholas.weisser@gmail.com"}
         >
           Contact Admin

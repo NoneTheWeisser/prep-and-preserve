@@ -29,7 +29,7 @@ export default function EditRecipeForm() {
   const { id } = useParams();
   const navigate = useNavigate();
   const fetchUserRecipes = useStore((state) => state.fetchUserRecipes);
-  // const fetchRecipes = useStore((state) => state.fetchRecipes);
+  const fetchRecipes = useStore((state) => state.fetchRecipes);
   const fetchTags = useStore((state) => state.fetchTags);
 
   const tags = useStore((state) => state.tags);
@@ -73,13 +73,17 @@ export default function EditRecipeForm() {
   // }, [recipes, tags]);
 
   // fetch by id instead and get tags
-   useEffect(() => {
+  useEffect(() => {
+    // Run both fetches in parallel so one doesn’t block the other
     fetchTags();
 
     const getRecipe = async () => {
       try {
-        const response = await axios.get(`/api/recipes/${id}`, { withCredentials: true });
+        const response = await axios.get(`/api/recipes/${id}`, {
+          withCredentials: true,
+        });
         const recipe = response.data;
+
         setTitle(recipe.title);
         setDescription(recipe.description);
         setIngredients(recipe.ingredients);
@@ -95,7 +99,6 @@ export default function EditRecipeForm() {
 
     getRecipe();
   }, [id, fetchTags]);
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();

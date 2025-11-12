@@ -71,10 +71,21 @@ router.get("/:id", async (req, res) => {
   const userId = req.user?.id;
 
   const sqlText = `
-    SELECT recipes.*, "user".username
-    FROM recipes 
-    JOIN "user" ON recipes.user_id = "user".id
-    WHERE recipes.id = $1;
+    SELECT 
+      r.*, 
+      u.username,
+      COALESCE(
+        JSON_AGG(
+          DISTINCT JSONB_BUILD_OBJECT('id', t.id, 'name', t.name)
+        ) FILTER (WHERE t.id IS NOT NULL),
+        '[]'
+      ) AS tags
+    FROM recipes r
+    JOIN "user" u ON r.user_id = u.id
+    LEFT JOIN recipe_tags rt ON r.id = rt.recipe_id
+    LEFT JOIN tags t ON rt.tag_id = t.id
+    WHERE r.id = $1
+    GROUP BY r.id, u.username;
     `;
   try {
     const result = await pool.query(sqlText, [recipeId]);
@@ -94,6 +105,35 @@ router.get("/:id", async (req, res) => {
     res.sendStatus(500);
   }
 });
+
+// router.get("/:id", async (req, res) => {
+//   const recipeId = req.params.id;
+//   const userId = req.user?.id;
+
+//   const sqlText = `
+//     SELECT recipes.*, "user".username
+//     FROM recipes
+//     JOIN "user" ON recipes.user_id = "user".id
+//     WHERE recipes.id = $1;
+//     `;
+//   try {
+//     const result = await pool.query(sqlText, [recipeId]);
+//     if (result.rows.length === 0) {
+//       return res.sendStatus(404);
+//     }
+//     const recipe = result.rows[0];
+//     // check for private/public
+//     if (!recipe.is_public && recipe.user_id !== userId) {
+//       return res
+//         .status(403)
+//         .json({ error: "Unauthorized to view this recipe" });
+//     }
+//     res.json(recipe);
+//   } catch (error) {
+//     console.error(`Error fetching recipe by id:`, error);
+//     res.sendStatus(500);
+//   }
+// });
 
 // POST new recipe
 router.post("/", rejectUnauthenticated, async (req, res) => {
@@ -196,11 +236,10 @@ router.put(
       const deleteTagsQuery = `DELETE from recipe_tags WHERE recipe_id = $1;`;
       await pool.query(deleteTagsQuery, [recipeId]);
       // Insert new tags by looping over req.body.tags
-      const insertTagQuery = `INSERT INTO recipe_tags (recipe_id, tag_id) VALUES ($1, $2)`
+      const insertTagQuery = `INSERT INTO recipe_tags (recipe_id, tag_id) VALUES ($1, $2)`;
       for (const tag of tags) {
         await pool.query(insertTagQuery, [recipeId, tag.id]);
       }
-
 
       if (result.rows.length === 0) {
         return res.sendStatus(404);
