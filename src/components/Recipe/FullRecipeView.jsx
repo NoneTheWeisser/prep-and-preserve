@@ -30,8 +30,6 @@ export default function FullRecipeView() {
   const toggleFavorite = useStore((state) => state.toggleFavorite);
   const isFavorited = useStore((state) => state.isFavorited);
 
-  // TODO look into why admin isn't working properly 
-  // UPDATE admin can delete, but the edit form comes back as undefined
   const canEdit =
     user && recipe && (recipe.user_id === user.id || user.is_admin);
 
@@ -84,7 +82,7 @@ export default function FullRecipeView() {
           <Typography variant="h4" fontWeight={700} sx={{ lineHeight: 1.2 }}>
             {recipe.title}
           </Typography>
-
+          {/* todo - decide if it's worth it to display the recipe tags */}
           <Stack direction="row" spacing={1} alignItems="center">
             {/* Favorite icon (only if logged in) */}
             {user && (
@@ -147,6 +145,7 @@ export default function FullRecipeView() {
           Ingredients
         </Typography>
         <Box sx={{ mb: 3 }}>{parse(recipe.ingredients)}</Box>
+        {/* todo - maybe limit the width of the paragraph? */}
         <Typography variant="h5" fontWeight={600} sx={{ mt: 4, mb: 1.5 }}>
           Instructions
         </Typography>
