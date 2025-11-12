@@ -29,7 +29,7 @@ export default function EditRecipeForm() {
   const { id } = useParams();
   const navigate = useNavigate();
   const fetchUserRecipes = useStore((state) => state.fetchUserRecipes);
-  const fetchRecipes = useStore((state) => state.fetchRecipes);
+  // const fetchRecipes = useStore((state) => state.fetchRecipes);
   const fetchTags = useStore((state) => state.fetchTags);
 
   const tags = useStore((state) => state.tags);
@@ -76,7 +76,7 @@ export default function EditRecipeForm() {
    useEffect(() => {
     fetchTags();
 
-    const fetchRecipe = async () => {
+    const getRecipe = async () => {
       try {
         const response = await axios.get(`/api/recipes/${id}`, { withCredentials: true });
         const recipe = response.data;
@@ -93,7 +93,7 @@ export default function EditRecipeForm() {
       }
     };
 
-    fetchRecipe();
+    getRecipe();
   }, [id, fetchTags]);
 
 
