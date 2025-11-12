@@ -256,7 +256,7 @@ export default function AddRecipeForm() {
                 Privacy Setting
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Toggle to keep your recipe private and off the public feed.
+                {isPublic ? "Visible to everyone" : "Only visible to you"}
               </Typography>
             </Box>
             <Switch

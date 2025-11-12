@@ -6,6 +6,9 @@ import tagSlice from "./slices/tag.slice.js";
 import recipeSlice from "./slices/recipe.slice.js";
 import createFavoritesSlice from "./slices/favorites.slice.js";
 import adminSlice from "./slices/admin.slice.js";
+import axios from "axios";
+
+axios.defaults.withCredentials = true;
 
 // Combine all slices in the store:
 const useStore = create(

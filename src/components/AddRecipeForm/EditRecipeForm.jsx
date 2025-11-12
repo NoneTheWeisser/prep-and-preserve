@@ -49,28 +49,53 @@ export default function EditRecipeForm() {
 
   // The reason we use a useEffect is so that we can
   // populate the local state after zustand updates
-  useEffect(() => {
-    // Make sure the recipes, tags, etc are loaded
-    fetchRecipes();
+  // useEffect(() => {
+  //   // Make sure the recipes, tags, etc are loaded
+  //   fetchRecipes();
+  //   fetchTags();
+  // }, []);
+
+  // useEffect(() => {
+  //   const thisRecipe = recipes.find((recipe) => recipe.id === Number(id));
+  //   console.log(thisRecipe);
+
+  //   if (thisRecipe) {
+  //     setTitle(thisRecipe.title || "");
+  //     setDescription(thisRecipe.description || "");
+  //     setImageUrl(thisRecipe.image_url || "");
+  //     setIngredients(thisRecipe.ingredients || "");
+  //     setInstructions(thisRecipe.instructions || "");
+  //     setIsPublic(thisRecipe.is_public ?? true);
+  //     setSourceUrl(thisRecipe.source_url || "");
+  //     setSelectedTags(thisRecipe.tags || []);
+  //   }
+  //   // }, []);
+  // }, [recipes, tags]);
+
+  // fetch by id instead and get tags
+   useEffect(() => {
     fetchTags();
-  }, []);
 
-  useEffect(() => {
-    const thisRecipe = recipes.find((recipe) => recipe.id === Number(id));
-    console.log(thisRecipe);
+    const fetchRecipe = async () => {
+      try {
+        const response = await axios.get(`/api/recipes/${id}`, { withCredentials: true });
+        const recipe = response.data;
+        setTitle(recipe.title);
+        setDescription(recipe.description);
+        setIngredients(recipe.ingredients);
+        setInstructions(recipe.instructions);
+        setImageUrl(recipe.image_url);
+        setSourceUrl(recipe.source_url);
+        setIsPublic(recipe.is_public);
+        setSelectedTags(recipe.tags || []);
+      } catch (error) {
+        console.error("Error fetching recipe:", error);
+      }
+    };
 
-    if (thisRecipe) {
-      setTitle(thisRecipe.title || "");
-      setDescription(thisRecipe.description || "");
-      setImageUrl(thisRecipe.image_url || "");
-      setIngredients(thisRecipe.ingredients || "");
-      setInstructions(thisRecipe.instructions || "");
-      setIsPublic(thisRecipe.is_public ?? true);
-      setSourceUrl(thisRecipe.source_url || "");
-      setSelectedTags(thisRecipe.tags || []);
-    }
-    // }, []);
-  }, [recipes, tags]);
+    fetchRecipe();
+  }, [id, fetchTags]);
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
