@@ -3,7 +3,15 @@ import { useNavigate } from "react-router-dom";
 import useStore from "../../zustand/store";
 import RecipeFilterBar from "../RecipeFilterBar/RecipeFilterBar";
 import RecipeCard from "../RecipeFilterBar/RecipeCard";
-import { Typography, Stack, Button, Grid, Container } from "@mui/material";
+import {
+  Typography,
+  Stack,
+  Button,
+  Grid,
+  Container,
+  Box,
+  Switch,
+} from "@mui/material";
 
 export default function MyRecipeList() {
   const userRecipes = useStore((state) => state.userRecipes);
@@ -79,7 +87,44 @@ export default function MyRecipeList() {
           }}
         />
         {/* Toggle Button */}
-        <Button
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            mt: 3,
+            p: 2,
+            border: "1px solid #e0e0e0",
+            borderRadius: 2,
+            backgroundColor: "#f9f9f9",
+            maxWidth: "50%",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 2, 
+            }}
+          >
+            <Typography variant="subtitle1" fontWeight={500}>
+              Recipe View
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {showFavorites
+                ? "Showing Favorites & My Recipes"
+                : "Showing My Recipes Only"}
+            </Typography>
+          </Box>
+
+          <Switch
+            checked={showFavorites}
+            onChange={(e) => setShowFavorites(e.target.checked)}
+            color="primary"
+          />
+        </Box>
+
+        {/* <Button
           variant="contained"
           color="primary"
           onClick={() => setShowFavorites((prev) => !prev)}
@@ -88,7 +133,7 @@ export default function MyRecipeList() {
           {showFavorites
             ? "Show My Recipes Only"
             : "Show Favorites & My Recipes"}
-        </Button>
+        </Button> */}
       </Stack>
 
       {filteredRecipes.length === 0 ? (
