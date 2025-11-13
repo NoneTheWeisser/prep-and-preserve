@@ -90,57 +90,64 @@ export default function MyRecipeList() {
         <Box
           sx={{
             display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            mt: 3,
-            p: 2,
-            border: "1px solid #e0e0e0",
-            borderRadius: 2,
-            backgroundColor: "#f9f9f9",
-            maxWidth: "50%",
+            justifyContent: "center", 
           }}
         >
           <Box
             sx={{
+              width: "97%",
               display: "flex",
+              flexWrap: "wrap",
               alignItems: "center",
-              gap: 2, 
+              justifyContent: "space-between",
+              p: 2,
+              mb: 3,
+              borderBottom: "1px solid #e0e0e0",
+              backgroundColor: "#eae9dbff",
+              borderRadius: 2,
             }}
           >
-            <Typography variant="subtitle1" fontWeight={500}>
-              Recipe View
+            {/* Left side: Header title */}
+            <Typography
+              variant="h6"
+              component="h4"
+              fontWeight={500}
+              sx={{ fontSize: { xs: "1rem", sm: "1.25rem", md: "1.5rem" } }}
+            >
+              Recipe List View
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {showFavorites
-                ? "Showing Favorites & My Recipes"
-                : "Showing My Recipes Only"}
-            </Typography>
+
+            {/* Right side: Toggle + text (and future buttons) */}
+            <Stack
+              direction="row"
+              spacing={{ xs: 1, sm: 2 }}
+              alignItems="center"
+              sx={{ mt: { xs: 1, sm: 0 } }}
+            >
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ fontSize: { xs: "0.75rem", sm: "0.875rem" } }}
+              >
+                {showFavorites
+                  ? "Showing Favorites & My Recipes"
+                  : "Showing My Recipes Only"}
+              </Typography>
+              <Switch
+                checked={showFavorites}
+                onChange={(e) => setShowFavorites(e.target.checked)}
+                color="primary"
+              />
+              {/* Future buttons - Stretch */}
+              {/* <Button variant="outlined" size="small">Sort</Button> */}
+            </Stack>
           </Box>
-
-          <Switch
-            checked={showFavorites}
-            onChange={(e) => setShowFavorites(e.target.checked)}
-            color="primary"
-          />
         </Box>
-        
-
-        {/* <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setShowFavorites((prev) => !prev)}
-          fullWidth
-        >
-          {showFavorites
-            ? "Show My Recipes Only"
-            : "Show Favorites & My Recipes"}
-        </Button> */}
       </Stack>
 
       {filteredRecipes.length === 0 ? (
         <Typography>No Recipes Found.</Typography>
       ) : (
-        // todo - play around with this container. is it the best way?
         <Grid container spacing={2} justifyContent="center">
           {filteredRecipes.map((recipe) => (
             <Grid key={recipe.id} span={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}>

@@ -51,99 +51,101 @@ export default function RecipeFilterBar({ onFilterChange, ...props }) {
   const clearAllTags = () => setSelectedTags([]);
   const selectedTags = tags.filter((tag) => selectedTagIds.includes(tag.id));
 
-  
-
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 2,
-        mb: 2,
-        p: 2,
-        bgcolor: "#fafafa",
-        borderRadius: 1,
-      }}
+return (
+  <Box
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      gap: 2,
+      mb: 2,
+      p: 2,
+      bgcolor: "#fafafa",
+      borderRadius: 1,
+    }}
+  >
+    {/* Filter and search bar row */}
+    <Stack
+      direction={{ xs: "column", sm: "row" }} 
+      spacing={2}
+      alignItems="stretch"
     >
-      {/* Filter and search bar row */}
-      <Stack direction="row" spacing={2}>
-        
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => setAccordionOpen((prev) => !prev)}
-          sx={{ width: "25%" }}
-          endIcon={
-            <ExpandMoreIcon
-              sx={{
-                transform: accordionOpen ? "rotate(180deg)" : "none",
-                transition: "0.2s",
-              }}
-            />
-          }
-        >
-          Filter
-        </Button>
-        {/* Search box */}
-        <TextField
-          placeholder="Search Recipes..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-          size="small"
-          fullWidth
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Stack>
-      {/* Accordion for tags conditionally rendered using state*/}
-      {accordionOpen && (
-        <Box
-          sx={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "8px 8px", 
-          }}
-        >
-          {" "}
-          {tags.map((tag) => (
-            <Chip
-              key={tag.id}
-              label={tag.name}
-              sx={{ mb: 1 }}
-              clickable
-              color={selectedTagIds.includes(tag.id) ? "primary" : "default"}
-              variant={selectedTagIds.includes(tag.id) ? "filled" : "outlined"}
-              onClick={() => handleTagChange(tag.id)}
-            />
-          ))}
-        </Box>
-      )}
-      {/* Selected Tag Chips */}
-      {selectedTags.length > 0 && (
-        <Stack direction="row" spacing={1} flexWrap="wrap">
-          <Typography variant="body2" sx={{ alignSelf: "center" }}>
-            Filtering by:
-          </Typography>
-          {selectedTags.map((tag) => (
-            <Chip
-              key={tag.id}
-              label={tag.name}
-              sx={{ mb: 2 }}
-              onDelete={() => clearTag(tag.id)}
-              color="primary"
-              variant="outlined"
-            />
-          ))}
-          <Chip label="Clear All" onClick={clearAllTags} />
-        </Stack>
-      )}
-    </Box>
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={() => setAccordionOpen((prev) => !prev)}
+        sx={{
+          width: { xs: "100%", sm: "25%" }, 
+          flexShrink: 0, 
+        }}
+        endIcon={
+          <ExpandMoreIcon
+            sx={{
+              transform: accordionOpen ? "rotate(180deg)" : "none",
+              transition: "0.2s",
+            }}
+          />
+        }
+      >
+        Filter
+      </Button>
 
-    // Todo: add mobile or responsive
-  );
+      {/* Search box */}
+      <TextField
+        placeholder="Search Recipes..."
+        value={searchTerm}
+        onChange={handleSearchChange}
+        size="small"
+        sx={{ width: { xs: "100%", sm: "auto" }, flexGrow: 1 }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <SearchIcon />
+            </InputAdornment>
+          ),
+        }}
+      />
+    </Stack>
+
+    {/* Accordion for tags */}
+    {accordionOpen && (
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 1,
+        }}
+      >
+        {tags.map((tag) => (
+          <Chip
+            key={tag.id}
+            label={tag.name}
+            clickable
+            color={selectedTagIds.includes(tag.id) ? "primary" : "default"}
+            variant={selectedTagIds.includes(tag.id) ? "filled" : "outlined"}
+            onClick={() => handleTagChange(tag.id)}
+          />
+        ))}
+      </Box>
+    )}
+
+    {/* Selected Tag Chips */}
+    {selectedTags.length > 0 && (
+      <Stack direction="row" spacing={1} flexWrap="wrap" alignItems="center">
+        <Typography variant="body2" sx={{ alignSelf: "center" }}>
+          Filtering by:
+        </Typography>
+        {selectedTags.map((tag) => (
+          <Chip
+            key={tag.id}
+            label={tag.name}
+            onDelete={() => clearTag(tag.id)}
+            color="primary"
+            variant="outlined"
+          />
+        ))}
+        <Chip label="Clear All" onClick={clearAllTags} />
+      </Stack>
+    )}
+  </Box>
+);
 }
