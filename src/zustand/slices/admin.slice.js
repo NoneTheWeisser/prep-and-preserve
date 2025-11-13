@@ -1,18 +1,34 @@
 import axios from "axios";
-import { create } from "zustand";
 
-const adminSlice =  ((set, get) => ({
+const adminSlice = (set, get) => ({
   users: [],
   tags: [],
 
+  // Users
   fetchUsers: async () => {
     try {
-      const response = await axios.get("/api/admin/users");
+      const response = await axios.get("/api/admin/users", {
+        withCredentials: true,
+      });
       set({ users: response.data });
     } catch (error) {
       console.error("Error fetching users:", error);
     }
   },
+
+  updateUser: async (id, updates) => {
+    try {
+      const response = await axios.put(`/api/admin/users/${id}`, updates, {
+        withCredentials: true,
+      });
+      set((state) => ({
+        users: state.users.map((u) => (u.id === id ? response.data : u)),
+      }));
+    } catch (error) {
+      console.error("Error updating user:", error);
+    }
+  },
+  // Tags
 
   fetchTags: async () => {
     try {
@@ -49,6 +65,6 @@ const adminSlice =  ((set, get) => ({
       console.error("Error deleting tag:", error);
     }
   },
-}));
+});
 
 export default adminSlice;
