@@ -67,6 +67,7 @@ export default function RecipeFilterBar({ onFilterChange, ...props }) {
     >
       {/* Filter and search bar row */}
       <Stack direction="row" spacing={2}>
+        
         <Button
           variant="contained"
           color="secondary"
