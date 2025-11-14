@@ -6,6 +6,7 @@ import {
   Avatar,
   Typography,
   TextField,
+  Alert,
 } from "@mui/material";
 import useStore from "../../zustand/store";
 
@@ -16,6 +17,9 @@ export default function ProfileSettings() {
 
   const [profileImage, setProfileImage] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordSuccess, setPasswordSuccess] = useState("");
 
   useEffect(() => {
     if (user) {
@@ -43,11 +47,30 @@ export default function ProfileSettings() {
     widget.open();
   };
 
-  const handlePasswordUpdate = () => {
-    if (!newPassword) return;
-    updatePassword(newPassword);
-    setNewPassword("");
+  const handlePasswordUpdate = async () => {
+    setPasswordError("");
+    setPasswordSuccess("");
+
+    if (!oldPassword || !newPassword) {
+      setPasswordError("Please fill out both fields.");
+      return;
+    }
+
+    try {
+      await updatePassword({ oldPassword, newPassword });
+      setPasswordSuccess("Password updated successfully!");
+      setOldPassword("");
+      setNewPassword("");
+    } catch (error) {
+      console.error(error);
+      if (error.response?.status === 401) {
+        setPasswordError("Old password is incorrect");
+      } else {
+        setPasswordError("Failed to update password. Please try again");
+      }
+    }
   };
+
   return (
     <Box>
       <img
@@ -64,6 +87,7 @@ export default function ProfileSettings() {
         <Typography variant="h5" gutterBottom fontWeight="bold">
           Profile Settings
         </Typography>
+        {/* Profile pic update */}
         <Box sx={{ mb: 4 }}>
           <Typography variant="h6" gutterBottom>
             Profile Picture
@@ -79,20 +103,40 @@ export default function ProfileSettings() {
             </Button>
           </Stack>
         </Box>
+        {/* Password update */}
         <Box sx={{ mb: 4 }}>
           <Typography variant="h6" gutterBottom>
-            Password
+            Change Password
           </Typography>
-          <Stack direction="row" spacing={2} alignItems="center">
+          <Stack spacing={2}>
+            {passwordError && <Alert severity="error">{passwordError}</Alert>}
+            {passwordSuccess && (
+              <Alert severity="success">{passwordSuccess}</Alert>
+            )}
             <TextField
+              label="Current Password"
               type="password"
+              value={oldPassword}
+              onChange={(e) => {
+                setOldPassword(e.target.value);
+                setPasswordError("");
+                setPasswordSuccess("");
+              }}
+              fullWidth
+            />
+            <TextField
               label="New Password"
+              type="password"
               value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              size="small"
+              onChange={(e) => {
+                setNewPassword(e.target.value);
+                setPasswordError("");
+                setPasswordSuccess("");
+              }}
+              fullWidth
             />
             <Button variant="contained" onClick={handlePasswordUpdate}>
-              Update
+              Update Password
             </Button>
           </Stack>
         </Box>

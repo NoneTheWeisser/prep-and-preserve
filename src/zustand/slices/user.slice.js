@@ -79,22 +79,21 @@ const createUserSlice = (set, get) => ({
       console.error("Error updating profile:", err);
     }
   },
-
-  updatePassword: async (newPassword) => {
-    try {
-      const { data } = await axios.put(
-        "/api/user/settings",
-        { password: newPassword },
-        {
-          withCredentials: true,
-        }
-      );
-      set({ user: data });
-      console.log("Password updated successfully");
-    } catch (err) {
-      console.error("Error updating password:", err);
-    }
-  },
+  
+updatePassword: async ({ oldPassword, newPassword }) => {
+  try {
+    const { data } = await axios.put(
+      "/api/user/settings",
+      { oldPassword, newPassword },
+      { withCredentials: true }
+    );
+    set({ user: data });
+    console.log("Password updated successfully");
+  } catch (err) {
+    console.error("Error updating password:", err);
+    throw err;
+  }
+},
 });
 
 export default createUserSlice;

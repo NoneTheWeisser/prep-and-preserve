@@ -5,6 +5,7 @@ const userStrategy = require("../strategies/user.strategy");
 const {
   rejectUnauthenticated,
 } = require("../modules/authentication-middleware");
+const { encryptPassword, comparePassword } = require("../modules/encryption");
 
 const router = express.Router();
 
@@ -68,7 +69,7 @@ router.delete("/logout", (req, res, next) => {
 // Update user info (profile image)
 router.put("/settings", rejectUnauthenticated, async (req, res) => {
   const userId = req.user.id;
-  const { profile_image_url, password } = req.body;
+  const { profile_image_url, oldPassword, newPassword } = req.body;
 
   try {
     if (profile_image_url) {
@@ -82,16 +83,41 @@ router.put("/settings", rejectUnauthenticated, async (req, res) => {
       return res.json(result.rows[0]);
     }
 
-    if (password) {
-      // hash password before saving (bcrypt)
-      const hashed = await bcrypt.hash(password, 10);
+    if (oldPassword && newPassword) {
+      // fetch current password hash
+      const { rows } = await pool.query(
+        `SELECT password FROM "user" WHERE id = $1`,
+        [userId]
+      );
+
+      if (rows.length === 0) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const currentHash = rows[0].password;
+
+      const {
+        comparePassword,
+        encryptPassword,
+      } = require("../modules/encryption");
+
+      // compare old password
+      const match = comparePassword(oldPassword, currentHash);
+      if (!match) {
+        return res.status(401).json({ message: "Old password is incorrect" });
+      }
+
+      // hash new password
+      const hashed = encryptPassword(newPassword);
+
       const result = await pool.query(
         `UPDATE "user"
-         SET password = $1, updated_at = NOW()
-         WHERE id = $2
-         RETURNING id, username, email, profile_image_url, created_at;`,
+     SET password = $1, updated_at = NOW()
+     WHERE id = $2
+     RETURNING id, username, email, profile_image_url, created_at;`,
         [hashed, userId]
       );
+
       return res.json(result.rows[0]);
     }
 
