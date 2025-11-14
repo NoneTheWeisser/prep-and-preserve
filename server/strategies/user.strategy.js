@@ -63,6 +63,11 @@ passport.use(
         const user = dbRes && dbRes.rows && dbRes.rows[0];
         
         if (user && encryptLib.comparePassword(password, user.password)) {
+          // added - with soft delete in admin, this should keep deactivated users out. 
+          if (!user.is_active){
+            console.log('Login attempt for inactive user:', username);
+            return done (null, false, { message: 'Your account is inactive. Contact admin with questions.'})
+          }
           // The request body's password has been hashed and matches the stored
           // hashed password. AKA: Login was successful! Now, we use Passport's
           // done function to instantiate a new session for this user.
