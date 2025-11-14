@@ -39,7 +39,7 @@ export default function AdminDashboard() {
           >
             <Tab label="Users" value="users" />
             <Tab label="Tags" value="tags" />
-            <Tab label="Recipes" value="recipes" />
+            {/* <Tab label="Recipes" value="recipes" /> */}
           </Tabs>
 
           <Box sx={{ mt: 5 }}>

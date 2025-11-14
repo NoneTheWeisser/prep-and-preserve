@@ -8,6 +8,7 @@ import {
   DialogTitle,
   TextField,
   Box,
+  Typography,
   Stack,
 } from "@mui/material";
 import useStore from "../../zustand/store";
@@ -85,66 +86,83 @@ export default function AdminTags() {
     },
   ];
 
-  return (
+return (
+  <Box
+    sx={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "flex-start",
+      minHeight: "100vh",
+      p: 2,
+      boxSizing: "border-box",
+      bgcolor: "#f5f5f5", // optional: subtle background
+    }}
+  >
     <Box
       sx={{
-        display: "flex",
-        justifyContent: "center", 
-        alignItems: "center", 
-        minHeight: "100vh",
-        p: 1,
+        width: { xs: "100%", sm: "95%", md: "85%", lg: "70%" }, // responsive width
+        maxWidth: 880,
+        bgcolor: "white",
+        borderRadius: 2,
+        padding: 3,
+        boxShadow: 2,
+        overflowX: "auto", // horizontal scroll if necessary
       }}
     >
-      <Box
-        sx={{
-          padding: 2,
-          textAlign: "left",
-          bgcolor: "white",
-          borderRadius: 2,
-          width: "80%", 
-          maxWidth: 880, 
-        }}
+      <Typography variant="h5" fontWeight="bold" gutterBottom>
+        Manage Tags
+      </Typography>
+
+      {/* Add New Tag */}
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        spacing={2}
+        sx={{ mb: 2 }}
       >
-        {" "}
-        <h2>Manage Tags</h2>
-        <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+        <TextField
+          label="New Tag"
+          size="small"
+          value={tagName}
+          onChange={(e) => setTagName(e.target.value)}
+          fullWidth
+        />
+        <Button variant="contained" onClick={handleAdd}>
+          Add Tag
+        </Button>
+      </Stack>
+
+      {/* DataGrid */}
+      <Box sx={{ height: 500, width: "100%" }}>
+        <DataGrid
+          rows={tags}
+          columns={columns}
+          pageSize={20}
+          disableRowSelectionOnClick
+          sx={{
+            "& .MuiDataGrid-root": { border: "none" },
+          }}
+        />
+      </Box>
+
+      {/* Edit Dialog */}
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <DialogTitle>Edit Tag</DialogTitle>
+        <DialogContent>
           <TextField
-            label="New Tag"
-            size="small"
+            label="Tag Name"
             value={tagName}
             onChange={(e) => setTagName(e.target.value)}
+            fullWidth
           />
-          <Button variant="contained" onClick={handleAdd}>
-            Add Tag
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)}>Cancel</Button>
+          <Button variant="contained" onClick={handleSave}>
+            Save
           </Button>
-        </Stack>
-        <div style={{ height: 500, width: "100%" }}>
-          <DataGrid
-            rows={tags}
-            columns={columns}
-            pageSize={20}
-            disableRowSelectionOnClick
-          />
-        </div>
-        {/* Edit Dialog */}
-        <Dialog open={open} onClose={() => setOpen(false)}>
-          <DialogTitle>Edit Tag</DialogTitle>
-          <DialogContent>
-            <TextField
-              label="Tag Name"
-              value={tagName}
-              onChange={(e) => setTagName(e.target.value)}
-              fullWidth
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setOpen(false)}>Cancel</Button>
-            <Button variant="contained" onClick={handleSave}>
-              Save
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Box>
+        </DialogActions>
+      </Dialog>
     </Box>
-  );
+  </Box>
+);
 }
