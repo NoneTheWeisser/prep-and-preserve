@@ -15,6 +15,7 @@ import FullRecipeView from "../Recipe/FullRecipeView";
 import EditRecipeForm from "../AddRecipeForm/EditRecipeForm";
 import AdminDashboard from "../AdminDashboard/AdminDashboard";
 import AdminRoute from "../AdminDashboard/AdminRoute";
+import ProfileSettings from "../Settings/ProfileSettings";
 
 function App() {
   const user = useStore((state) => state.user);
@@ -78,6 +79,8 @@ function App() {
           />
           <Route exact path="/community" element={<CommunityRecipes />} />
           <Route exact path="/about" element={<About />} />
+          <Route exact path="/settings" element={<ProfileSettings />} />
+
           <Route path="/recipes/:id" element={<FullRecipeView />} />
           <Route path="/recipes/edit/:id" element={<EditRecipeForm />} />
           <Route path="*" element={<h2>404 Page</h2>} />

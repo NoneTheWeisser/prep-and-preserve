@@ -18,6 +18,7 @@ const tagsRouter = require('./routes/tags.router');
 const favoriteRouter = require('./routes/favorites.router');
 const adminTagsRouter = require ('./routes/adminTags.router');
 const adminUsersRouter = require("./routes/adminUsers.router");
+// const userSettingsRouter = require("./routes/userSettings.router");
 
 
 
@@ -36,6 +37,8 @@ app.use('/api/tags', tagsRouter);
 app.use('/api/favorites', favoriteRouter);
 app.use("/api/admin/tags", adminTagsRouter);
 app.use("/api/admin", adminUsersRouter);
+// app.use("/api/user/settings", userSettingsRouter);
+
 
 // app.use('/api/recipeTags', recipeTagsRouter);
 

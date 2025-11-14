@@ -2,6 +2,9 @@ const express = require("express");
 const encryptLib = require("../modules/encryption");
 const pool = require("../modules/pool");
 const userStrategy = require("../strategies/user.strategy");
+const {
+  rejectUnauthenticated,
+} = require("../modules/authentication-middleware");
 
 const router = express.Router();
 
@@ -60,6 +63,43 @@ router.delete("/logout", (req, res, next) => {
     }
     res.sendStatus(200);
   });
+});
+
+// Update user info (profile image)
+router.put("/settings", rejectUnauthenticated, async (req, res) => {
+  const userId = req.user.id;
+  const { profile_image_url, password } = req.body;
+
+  try {
+    if (profile_image_url) {
+      const result = await pool.query(
+        `UPDATE "user"
+         SET profile_image_url = $1, updated_at = NOW()
+         WHERE id = $2
+         RETURNING id, username, email, profile_image_url, created_at;`,
+        [profile_image_url, userId]
+      );
+      return res.json(result.rows[0]);
+    }
+
+    if (password) {
+      // hash password before saving (bcrypt)
+      const hashed = await bcrypt.hash(password, 10);
+      const result = await pool.query(
+        `UPDATE "user"
+         SET password = $1, updated_at = NOW()
+         WHERE id = $2
+         RETURNING id, username, email, profile_image_url, created_at;`,
+        [hashed, userId]
+      );
+      return res.json(result.rows[0]);
+    }
+
+    res.status(400).json({ message: "No valid fields to update" });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.sendStatus(500);
+  }
 });
 
 module.exports = router;
