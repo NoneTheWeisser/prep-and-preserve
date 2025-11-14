@@ -28,6 +28,36 @@ const adminSlice = (set, get) => ({
       console.error("Error updating user:", error);
     }
   },
+
+deactivateUser: async (id) => {
+  try {
+    const response = await axios.put(`/api/admin/users/${id}/deactivate`, {}, {
+      withCredentials: true,
+    });
+
+    set((state) => ({
+      users: state.users.map((u) => (u.id === id ? response.data : u)),
+    }));
+  } catch (error) {
+    console.error("Error deactivating user:", error);
+  }
+},
+
+activateUser: async (id) => {
+  try {
+    const response = await axios.put(`/api/admin/users/${id}/activate`, {}, {
+      withCredentials: true,
+    });
+
+    set((state) => ({
+      users: state.users.map((u) => (u.id === id ? response.data : u)),
+    }));
+  } catch (error) {
+    console.error("Error deactivating user:", error);
+  }
+},
+
+
   // Tags
 
   fetchTags: async () => {

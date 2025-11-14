@@ -178,6 +178,13 @@ export default function Nav() {
                 >
                   My Recipes
                 </MenuItem>
+                <MenuItem
+                  component={NavLink}
+                  to="/settings"
+                  onClick={handleCloseUserMenu}
+                >
+                  Profile Settings
+                </MenuItem>
                 <MenuItem onClick={handleLogout}>Log Out</MenuItem>
               </Menu>
             </Box>
