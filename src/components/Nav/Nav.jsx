@@ -47,148 +47,155 @@ export default function Nav() {
 
   // if user is logged in
   const privatePages = [
-    { label: "Add Recipe", to: "/addrecipe" },
     { label: "My Recipes", to: "/myrecipes" },
+    { label: "Add Recipe", to: "/addrecipe" },
   ];
 
   const pages = [...commonPages, ...(user?.id ? privatePages : publicPages)];
 
-  return (
+   return (
     <AppBar
       position="static"
       color="white"
       sx={{ boxShadow: "none", borderBottom: "1px solid #e0e0e0" }}
     >
       <Container maxWidth="xl">
-        <Toolbar disableGutters sx={{ minHeight: { xs: 56, sm: 48 }, px: 2 }}>
-          {/* --- MOBILE: Hamburger left, Logo center --- */}
-          <Box
-            sx={{
-              display: { xs: "flex", md: "none" },
-              alignItems: "center",
-              flexGrow: 1,
-            }}
-          >
-            <IconButton
-              size="large"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-
-            <NavLink to="/" style={{ margin: "0 auto" }}>
-              <Box
-                component="img"
-                src="/img/prepperservelogo_horizontal.svg"
-                alt="Logo"
-                sx={{ height: 28 }}
-              />
-            </NavLink>
-
-            {/* Mobile Menu */}
-            <Menu
-              anchorEl={anchorElNav}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page.label} onClick={handleCloseNavMenu}>
-                  <NavLink
-                    to={page.to}
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    {page.label}
-                  </NavLink>
-                </MenuItem>
-              ))}
-              {user?.id && <MenuItem onClick={handleLogout}>Log Out</MenuItem>}
-            </Menu>
-          </Box>
-
-          {/* --- DESKTOP: Logo + Links left --- */}
-          <Box
-            sx={{
-              display: { xs: "none", md: "flex" },
-              alignItems: "center",
-              flexGrow: 1,
-            }}
-          >
+        <Toolbar disableGutters sx={{ minHeight: { xs: 56, sm: 48 }, px: 2, display: "flex" }}>
+          {/* --- LEFT: Logo --- */}
+          <Box sx={{ display: "flex", alignItems: "center", mt: 1 }}>
             <NavLink to="/">
               <Box
                 component="img"
                 src="/img/prepperservelogo_horizontal.svg"
                 alt="Logo"
-                sx={{ height: 40, mr: 3 }}
+                sx={{ height: { xs: 28, md: 40 } }}
               />
             </NavLink>
-            <Box sx={{ display: "flex", gap: 2 }}>
-              {pages.map((page) => (
-                <Button
-                  key={page.label}
-                  component={NavLink}
-                  to={page.to}
-                  sx={{ color: "black", textTransform: "none", p: 0 }}
-                >
-                  {page.label}
-                </Button>
-              ))}
-            </Box>
           </Box>
 
-          {/* --- DESKTOP/MOBILE: Avatar right --- */}
-          {user?.id && (
-            <Box sx={{ flexShrink: 0 }}>
-              <Tooltip title="Profile Menu">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar
-                    src={user?.profile_image_url || undefined}
-                    alt={user?.username || "User"}
-                    sx={{
-                      width: 32,
-                      height: 32,
-                      fontSize: 16,
-                      bgcolor: "#afac9aff",
-                    }}
-                  >
-                    {!user?.profile_image_url &&
-                      user?.username?.[0]?.toUpperCase()}
-                  </Avatar>
-                </IconButton>
-              </Tooltip>
-
-              <Menu
-                anchorEl={anchorElUser}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
+          {/* --- CENTER: Desktop Links --- */}
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: "none", md: "flex" },
+              justifyContent: "center",
+              gap: 3, // add some spacing between links
+            }}
+          >
+            {pages.map((page) => (
+              <Button
+                key={page.label}
+                component={NavLink}
+                to={page.to}
+                sx={{ color: "black", textTransform: "none", p: 0 }}
               >
-                {user?.is_admin && (
+                {page.label}
+              </Button>
+            ))}
+          </Box>
+
+          {/* --- RIGHT: Desktop avatar / Mobile avatar + hamburger --- */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              ml: "auto",
+            }}
+          >
+            {/* Desktop avatar */}
+            {user?.id && (
+              <Box sx={{ display: { xs: "none", md: "flex" } }}>
+                <Tooltip title="Profile Menu">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar
+                      src={user?.profile_image_url || undefined}
+                      alt={user?.username || "User"}
+                      sx={{ width: 32, height: 32, fontSize: 16, bgcolor: "#afac9aff" }}
+                    >
+                      {!user?.profile_image_url &&
+                        user?.username?.[0]?.toUpperCase()}
+                    </Avatar>
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  anchorEl={anchorElUser}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {user?.is_admin && (
+                    <MenuItem
+                      component={NavLink}
+                      to="/admin"
+                      onClick={handleCloseUserMenu}
+                    >
+                      Admin
+                    </MenuItem>
+                  )}
                   <MenuItem
                     component={NavLink}
-                    to="/admin"
+                    to="/myrecipes"
                     onClick={handleCloseUserMenu}
                   >
-                    Admin
+                    My Recipes
                   </MenuItem>
-                )}
-                <MenuItem
-                  component={NavLink}
-                  to="/myrecipes"
-                  onClick={handleCloseUserMenu}
-                >
-                  My Recipes
-                </MenuItem>
-                <MenuItem
-                  component={NavLink}
-                  to="/settings"
-                  onClick={handleCloseUserMenu}
-                >
-                  Profile Settings
-                </MenuItem>
-                <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+                  <MenuItem
+                    component={NavLink}
+                    to="/settings"
+                    onClick={handleCloseUserMenu}
+                  >
+                    Profile Settings
+                  </MenuItem>
+                  <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+                </Menu>
+              </Box>
+            )}
+
+            {/* Mobile: avatar first, hamburger second */}
+            {user?.id && (
+              <Box sx={{ display: { xs: "flex", md: "none" } }}>
+                <Tooltip title="Profile Menu">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar
+                      src={user?.profile_image_url || undefined}
+                      alt={user?.username || "User"}
+                      sx={{ width: 32, height: 32, fontSize: 16, bgcolor: "#afac9aff" }}
+                    >
+                      {!user?.profile_image_url &&
+                        user?.username?.[0]?.toUpperCase()}
+                    </Avatar>
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            )}
+
+            <Box sx={{ display: { xs: "flex", md: "none" } }}>
+              <IconButton
+                size="large"
+                onClick={handleOpenNavMenu}
+                color="inherit"
+              >
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                anchorEl={anchorElNav}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+              >
+                {pages.map((page) => (
+                  <MenuItem key={page.label} onClick={handleCloseNavMenu}>
+                    <NavLink
+                      to={page.to}
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      {page.label}
+                    </NavLink>
+                  </MenuItem>
+                ))}
+                {user?.id && <MenuItem onClick={handleLogout}>Log Out</MenuItem>}
               </Menu>
             </Box>
-          )}
+          </Box>
         </Toolbar>
       </Container>
     </AppBar>

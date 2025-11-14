@@ -7,7 +7,7 @@ export default function CommunityRecipes() {
       <div style={{ position: "relative" }}>
         <img
           src={"/img/pexels-fauxels-3184195.jpg"}
-          alt={"MyRecipe header image"}
+          alt={"Community header image"}
           style={{
             width: "100%",
             height: "500px",
