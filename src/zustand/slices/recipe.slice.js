@@ -40,7 +40,6 @@ const recipeSlice = (set, get) => ({
       const response = await axios.post("/api/recipes", recipeData);
       const newRecipe = response.data;
 
-      // TODO: fetch recipes and user recipes via GET request
       await get().fetchRecipes();
       await get().fetchUserRecipes();
 

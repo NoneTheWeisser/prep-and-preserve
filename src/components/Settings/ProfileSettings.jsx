@@ -74,11 +74,11 @@ export default function ProfileSettings() {
   return (
     <Box>
       <img
-        src={"/img/pexels-rachel-claire-5490824.jpg"}
+        src={"/img/pexels-zvolskiy-2062426.jpg"}
         alt={"MyRecipe header image"}
         style={{
           width: "100%",
-          height: "200px",
+          height: "400px",
           objectFit: "cover",
           // borderBottom: "4px solid #000000ff",
         }}
