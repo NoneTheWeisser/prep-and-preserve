@@ -2,6 +2,7 @@ import axios from "axios";
 
 const madeSlice = (set, get) => ({
   madeRecipes: [],
+  trendingRecipes: [],
 
   fetchMade: async () => {
     try {
@@ -15,6 +16,24 @@ const madeSlice = (set, get) => ({
       set({ madeRecipes: normalized });
     } catch (error) {
       console.error("Error fetching made recipes counts:", error);
+    }
+  },
+
+  fetchTrending: async () => {
+    try {
+      const response = await axios.get("/api/trending/recent"); 
+      // normalize keys...
+      const normalized = response.data.map((r)=> ({
+        id: r.recipe_id,
+        title: r.recipe_title,
+        image_url: r.recipe_image_url,
+        username: r.recipe_owner_username,
+        made_count: 1.
+
+      }))
+      set({ trendingRecipes: normalized });
+    } catch (error) {
+      console.error("Error fetching trending recipes:", error);
     }
   },
 

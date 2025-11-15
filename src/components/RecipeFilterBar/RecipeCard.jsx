@@ -5,7 +5,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 export default function RecipeCard({
   recipe,
-  favorites,
+  favorites = [],
   toggleFavorite,
   onClick,
 }) {
