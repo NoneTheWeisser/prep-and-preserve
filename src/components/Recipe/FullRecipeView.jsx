@@ -28,6 +28,7 @@ export default function FullRecipeView() {
   const deleteRecipe = useStore((state) => state.deleteRecipe);
   const logMade = useStore((state) => state.logMade);
   const madeRecipes = useStore((state) => state.madeRecipes);
+  const fetchMade = useStore((state) => state.fetchMade);
 
   // Favorites
   const fetchFavorites = useStore((state) => state.fetchFavorites);
@@ -55,43 +56,39 @@ export default function FullRecipeView() {
 
   useEffect(() => {
     getRecipe();
-    if (favorites.length === 0) {
-      fetchFavorites();
-    }
+    if (favorites.length === 0) fetchFavorites();
+
+    // fetch per-user made counts
+    fetchMade();
   }, [id]);
 
   useEffect(() => {
-    if (recipe && madeRecipes.length > 0) {
-      const madeRecord = madeRecipes.find(
-        (record) => record.recipe_id === recipe.id
-      );
-      if (madeRecord) {
-        setMadeCount(madeRecord.count);
-        setHasMade(madeRecord.count > 0);
-      }
-    }
-  }, [recipe]);
+    if (!recipe) return;
+    const madeRecord = madeRecipes.find(
+      (r) => Number(r.recipe_id) === Number(recipe.id)
+    );
+    const count = madeRecord?.count ?? 0;
+    setMadeCount(count);
+    setHasMade(count > 0);
+  }, [recipe, madeRecipes]);
 
   if (!recipe) return <Typography>Loading...</Typography>;
 
   const favoriteActive = isFavorited(recipe.id);
 
   const handleLogMade = async () => {
-    // Update state immediately for better UI 
-    const newCount = madeCount + 1;
-    setMadeCount(newCount);
+    setMadeCount((prev) => (Number(prev) || 0) + 1);
     setHasMade(true);
+    setSnackbarOpen(true);
 
-    console.log(`Recipe ${recipe.title} made! Total: ${newCount}`);
-
-    try {
-      // Call store action 
-      await logMade(recipe.id);
-    } catch (error) {
-      console.error("Error logging made recipe:", error);
-      // rollback if fails
-      setMadeCount((prev) => prev - 1);
-      if (newCount === 1) setHasMade(false);
+    const logged = await logMade(recipe.id);
+    if (!logged) {
+      // rollback if save failed
+      setMadeCount((prev) => Math.max(0, (Number(prev) || 1) - 1));
+      if (madeCount <= 0) setHasMade(false);
+    } else {
+      // optionally re-sync authoritative value:
+      await fetchMade(); // uncomment if you want server truth
     }
   };
 
@@ -210,7 +207,6 @@ export default function FullRecipeView() {
                 variant={hasMade ? "contained" : "outlined"}
                 color="secondary"
                 onClick={handleLogMade}
-                sx={{ mt: { xs: 1, md: 1 } }}
               >
                 {hasMade ? `Made it (${madeCount})` : "I Made This"}
               </Button>
