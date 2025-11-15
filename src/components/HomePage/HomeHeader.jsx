@@ -118,6 +118,7 @@ export default function HomeHeader() {
       <Typography variant="h5" sx={{ textAlign: "center", mt: 4 }}>
         Trending Recipes
       </Typography>
+      <Typography sx={{ textAlign: "center", mt: 1 }}>Take a look at what people have been cooking lately!</Typography>
     </Box>
   );
 }

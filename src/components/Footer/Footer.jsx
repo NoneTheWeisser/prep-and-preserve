@@ -19,6 +19,7 @@ export default function Footer() {
           <NavLink to="/about">About</NavLink>
           <NavLink to="/community">Community Recipes</NavLink>
           <NavLink to="/myrecipes">My Recipes</NavLink>
+          <NavLink to="/addrecipe">Add Recipe</NavLink>
         </nav>
 
         <p className="footer-copy">

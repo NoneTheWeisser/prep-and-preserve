@@ -18,9 +18,8 @@ const tagsRouter = require('./routes/tags.router');
 const favoriteRouter = require('./routes/favorites.router');
 const adminTagsRouter = require ('./routes/adminTags.router');
 const adminUsersRouter = require("./routes/adminUsers.router");
-// const userSettingsRouter = require("./routes/userSettings.router");
-
-
+const madeRouter = require("./routes/made.router");
+const trendingRouter = require('./routes/trending.router');
 
 // Apply middleware:
 app.use(express.json());
@@ -37,10 +36,8 @@ app.use('/api/tags', tagsRouter);
 app.use('/api/favorites', favoriteRouter);
 app.use("/api/admin/tags", adminTagsRouter);
 app.use("/api/admin", adminUsersRouter);
-// app.use("/api/user/settings", userSettingsRouter);
-
-
-// app.use('/api/recipeTags', recipeTagsRouter);
+app.use("/api/made", madeRouter);
+app.use('/api/trending', trendingRouter);
 
 // Start the server:
 app.listen(PORT, () => {

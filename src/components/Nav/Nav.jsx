@@ -53,14 +53,23 @@ export default function Nav() {
 
   const pages = [...commonPages, ...(user?.id ? privatePages : publicPages)];
 
-   return (
+  return (
     <AppBar
       position="static"
       color="white"
       sx={{ boxShadow: "none", borderBottom: "1px solid #e0e0e0" }}
     >
-      <Container maxWidth="xl">
-        <Toolbar disableGutters sx={{ minHeight: { xs: 56, sm: 48 }, px: 2, display: "flex" }}>
+      <Container maxWidth={false}>
+        <Toolbar
+          disableGutters
+          sx={{
+            minHeight: { xs: 56, sm: 48 },
+            px: 2,
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
+          }}
+        >
           {/* --- LEFT: Logo --- */}
           <Box sx={{ display: "flex", alignItems: "center", mt: 1 }}>
             <NavLink to="/">
@@ -111,7 +120,12 @@ export default function Nav() {
                     <Avatar
                       src={user?.profile_image_url || undefined}
                       alt={user?.username || "User"}
-                      sx={{ width: 32, height: 32, fontSize: 16, bgcolor: "#afac9aff" }}
+                      sx={{
+                        width: 32,
+                        height: 32,
+                        fontSize: 16,
+                        bgcolor: "#afac9aff",
+                      }}
                     >
                       {!user?.profile_image_url &&
                         user?.username?.[0]?.toUpperCase()}
@@ -159,7 +173,12 @@ export default function Nav() {
                     <Avatar
                       src={user?.profile_image_url || undefined}
                       alt={user?.username || "User"}
-                      sx={{ width: 32, height: 32, fontSize: 16, bgcolor: "#afac9aff" }}
+                      sx={{
+                        width: 32,
+                        height: 32,
+                        fontSize: 16,
+                        bgcolor: "#afac9aff",
+                      }}
                     >
                       {!user?.profile_image_url &&
                         user?.username?.[0]?.toUpperCase()}
@@ -192,7 +211,9 @@ export default function Nav() {
                     </NavLink>
                   </MenuItem>
                 ))}
-                {user?.id && <MenuItem onClick={handleLogout}>Log Out</MenuItem>}
+                {user?.id && (
+                  <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+                )}
               </Menu>
             </Box>
           </Box>

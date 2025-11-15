@@ -34,12 +34,22 @@ header,
 footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-evenly;
   min-height: 4rem;
   padding: 0 20px;
   background-color: #fff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
+
+/* footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 4rem;
+  padding: 0 20px;
+  background-color: #fff;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+} */
 
 /* Keep footer visually lighter */
 footer {
@@ -67,12 +77,6 @@ input {
   border-radius: 4px;
   margin-bottom: 0.75rem;
   background-color: #fff;
-}
-
-input:focus {
-  border-color: #20c997;
-  box-shadow: 0 0 0 2px rgba(32, 201, 151, 0.25);
-  transition: 0.2s ease;
 }
 
 /* Buttons */

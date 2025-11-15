@@ -74,9 +74,22 @@ CREATE TABLE "favorites" (
   UNIQUE ("user_id", "recipe_id")
 );
 
+-- Stretch Goal
+
+
+CREATE TABLE "made_recipes" (
+  "id" SERIAL PRIMARY KEY,
+  "user_id" INTEGER NOT NULL,
+  "recipe_id" INTEGER NOT NULL,
+  "created_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  FOREIGN KEY ("user_id") REFERENCES "user" ("id") ON DELETE CASCADE,
+  FOREIGN KEY ("recipe_id") REFERENCES "recipes" ("id") ON DELETE CASCADE
+);
 
 
 ------- FUTURE Stretch Goals ------
+
+
 
 -- INGREDIENTS TABLE
 CREATE TABLE "ingredients" (
