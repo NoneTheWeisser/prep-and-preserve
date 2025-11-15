@@ -41,6 +41,8 @@ export default function FullRecipeView() {
   const [madeCount, setMadeCount] = useState(0);
   const [hasMade, setHasMade] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const canEdit =
     user && recipe && (recipe.user_id === user.id || user.is_admin);
@@ -77,18 +79,37 @@ export default function FullRecipeView() {
   const favoriteActive = isFavorited(recipe.id);
 
   const handleLogMade = async () => {
-    setMadeCount((prev) => (Number(prev) || 0) + 1);
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+
+    const prevCount = Number(madeCount) || 0;
+    const newCount = prevCount + 1;
+
+    setMadeCount(newCount);
     setHasMade(true);
+
+    // snackbar message
+    setSnackbarMessage(
+      `You’ve made this ${newCount} ${newCount === 1 ? "time" : "times"}!`
+    );
     setSnackbarOpen(true);
 
-    const logged = await logMade(recipe.id);
-    if (!logged) {
-      // rollback if save failed
-      setMadeCount((prev) => Math.max(0, (Number(prev) || 1) - 1));
-      if (madeCount <= 0) setHasMade(false);
-    } else {
-      // optionally re-sync authoritative value:
-      await fetchMade(); // uncomment if you want server truth
+    try {
+      const logged = await logMade(recipe.id);
+      if (!logged) {
+        // rollback if save failed
+        setMadeCount(prevCount);
+        if (prevCount === 0) setHasMade(false);
+        setSnackbarMessage("Failed to log. Try again.");
+      }
+    } catch (error) {
+      console.error("Error logging made recipe:", error);
+      setMadeCount(prevCount);
+      if (prevCount === 0) setHasMade(false);
+      setSnackbarMessage("Error saving. Try again.");
+    } finally {
+      setTimeout(() => setIsSubmitting(false), 5000);
     }
   };
 
@@ -202,6 +223,7 @@ export default function FullRecipeView() {
             </Stack>
 
             {/* "I Made This" button */}
+            {/* todo - button color, maybe even theme update? */}
             {user && (
               <Button
                 variant={hasMade ? "contained" : "outlined"}
@@ -237,15 +259,15 @@ export default function FullRecipeView() {
         <Snackbar
           open={snackbarOpen}
           autoHideDuration={3000}
-          onClose={handleSnackbarClose}
+          onClose={() => setSnackbarOpen(false)}
           anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
           <Alert
-            onClose={handleSnackbarClose}
+            onClose={() => setSnackbarOpen(false)}
             severity="success"
             sx={{ width: "100%" }}
           >
-            Recipe logged as made!
+            {snackbarMessage}
           </Alert>
         </Snackbar>
       </Container>
