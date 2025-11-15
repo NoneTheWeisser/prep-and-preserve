@@ -7,7 +7,7 @@ export default function CommunityRecipes() {
       <div style={{ position: "relative" }}>
         <img
           src={"/img/pexels-fauxels-3184195.jpg"}
-          alt={"Community header image"}
+          alt={"MyRecipe header image"}
           style={{
             width: "100%",
             height: "500px",
@@ -21,10 +21,13 @@ export default function CommunityRecipes() {
           Community Recipes
         </Typography>
 
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-          Discover new flavors, try new ingredients, and get inspired!<br></br>{" "}
-          See something you like? Tap the favorite icon to save it to your
-          personal recipe book.
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 0 }}>
+          Discover new flavors, try new ingredients, and get inspired! See
+          something you like?
+        </Typography>
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 0 }}>
+          Tap the favorite icon to save it to your personal
+          recipe book.
         </Typography>
       </Box>
 

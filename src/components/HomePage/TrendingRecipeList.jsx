@@ -32,7 +32,8 @@ export default function TrendingRecipeList() {
         </Typography>
       ) : (
         <Grid container spacing={3} justifyContent="center">
-          {trendingRecipes.map((recipe) => (
+          {/* limit to 10 cards */}
+          {trendingRecipes.slice(0, 10).map((recipe) => (
             <Grid
               key={recipe.id}
               item
