@@ -11,6 +11,9 @@ import {
   IconButton,
   Stack,
   Divider,
+  Button,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -19,16 +22,24 @@ import PrintIcon from "@mui/icons-material/Print";
 export default function FullRecipeView() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const fetchRecipeById = useStore((state) => state.fetchRecipeById);
-  const deleteRecipe = useStore((state) => state.deleteRecipe);
-  const [recipe, setRecipe] = useState(null);
   const user = useStore((state) => state.user);
 
-  // // Favorites
+  const fetchRecipeById = useStore((state) => state.fetchRecipeById);
+  const deleteRecipe = useStore((state) => state.deleteRecipe);
+  const logMade = useStore((state) => state.logMade);
+  const madeRecipes = useStore((state) => state.madeRecipes);
+
+  // Favorites
   const fetchFavorites = useStore((state) => state.fetchFavorites);
   const favorites = useStore((state) => state.favorites);
   const toggleFavorite = useStore((state) => state.toggleFavorite);
   const isFavorited = useStore((state) => state.isFavorited);
+
+  // State
+  const [recipe, setRecipe] = useState(null);
+  const [madeCount, setMadeCount] = useState(0);
+  const [hasMade, setHasMade] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const canEdit =
     user && recipe && (recipe.user_id === user.id || user.is_admin);
@@ -49,13 +60,48 @@ export default function FullRecipeView() {
     }
   }, [id]);
 
+  useEffect(() => {
+    if (recipe && madeRecipes.length > 0) {
+      const madeRecord = madeRecipes.find(
+        (record) => record.recipe_id === recipe.id
+      );
+      if (madeRecord) {
+        setMadeCount(madeRecord.count);
+        setHasMade(madeRecord.count > 0);
+      }
+    }
+  }, [recipe]);
+
   if (!recipe) return <Typography>Loading...</Typography>;
 
   const favoriteActive = isFavorited(recipe.id);
 
+  const handleLogMade = async () => {
+    // Update state immediately for better UI 
+    const newCount = madeCount + 1;
+    setMadeCount(newCount);
+    setHasMade(true);
+
+    console.log(`Recipe ${recipe.title} made! Total: ${newCount}`);
+
+    try {
+      // Call store action 
+      await logMade(recipe.id);
+    } catch (error) {
+      console.error("Error logging made recipe:", error);
+      // rollback if fails
+      setMadeCount((prev) => prev - 1);
+      if (newCount === 1) setHasMade(false);
+    }
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
   return (
     <Box sx={{ pb: 6 }}>
       <Container maxWidth="md" sx={{ mt: 4 }}>
+        {/* Recipe image */}
         {recipe.image_url && (
           <Box
             component="img"
@@ -71,68 +117,109 @@ export default function FullRecipeView() {
             }}
           />
         )}
+
+        {/* Title + Actions */}
         <Box
           sx={{
             display: "flex",
+            flexDirection: { xs: "column", md: "row" },
             justifyContent: "space-between",
-            alignItems: "center",
+            alignItems: { xs: "flex-start", md: "center" },
             mb: 2,
           }}
         >
-          <Typography variant="h4" fontWeight={700} sx={{ lineHeight: 1.2 }}>
-            {recipe.title}
-          </Typography>
-          {/* todo - decide if it's worth it to display the recipe tags */}
-          <Stack direction="row" spacing={1} alignItems="center">
-            {/* Favorite icon (only if logged in) */}
-            {user && (
-              <IconButton
-                onClick={() => toggleFavorite(recipe.id)}
-                sx={{ color: favoriteActive ? "red" : "gray" }}
-              >
-                {favoriteActive ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-              </IconButton>
-            )}
-
-            {/* Edit/Delete actions (if owner) */}
-            {canEdit && (
-              <>
-                <IconButton onClick={() => navigate(`/recipes/edit/${id}`)}>
-                  <EditIcon fontSize="small" />
-                </IconButton>
-                {/* is it worth it to do a print button?  */}
-                <IconButton onClick={() => window.print()}>
-                  <PrintIcon fontSize="small" />
-                </IconButton>
-                <IconButton
-                  onClick={async () => {
-                    if (!window.confirm("Delete this recipe?")) return;
-                    await deleteRecipe(id);
-                    navigate("/myrecipes");
-                  }}
-                >
-                  <DeleteIcon fontSize="small" />
-                </IconButton>
-              </>
-            )}
-          </Stack>
-        </Box>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-          Submitted by: {recipe.username}
-        </Typography>
-        {recipe.source_url && (
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            Source:{" "}
-            <a
-              href={recipe.source_url}
-              target="_blank"
-              rel="noopener noreferrer"
+          {/* Left column */}
+          <Box
+            sx={{ maxWidth: { xs: "100%", md: "70%" }, mb: { xs: 2, md: 0 } }}
+          >
+            <Typography
+              variant="h4"
+              fontWeight={700}
+              sx={{ lineHeight: 1.2, mb: 1 }}
             >
-              View Original
-            </a>
-          </Typography>
-        )}
+              {recipe.title}
+            </Typography>
+
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ mb: 0.5, pt: 1 }}
+            >
+              Submitted by: {recipe.username}
+            </Typography>
+
+            {recipe.source_url && (
+              <Typography variant="body2" color="text.secondary">
+                Source:{" "}
+                <a
+                  href={recipe.source_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View Original
+                </a>
+              </Typography>
+            )}
+          </Box>
+
+          {/* Right column */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: { xs: "flex-start", md: "flex-end" },
+              justifyContent: { xs: "flex-start", md: "center" },
+              gap: 1,
+            }}
+          >
+            {/* Icons */}
+            <Stack direction="row" spacing={1}>
+              {user && (
+                <IconButton
+                  onClick={() => toggleFavorite(recipe.id)}
+                  sx={{ color: favoriteActive ? "red" : "gray" }}
+                >
+                  {favoriteActive ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+                </IconButton>
+              )}
+
+              {canEdit && (
+                <>
+                  <IconButton onClick={() => navigate(`/recipes/edit/${id}`)}>
+                    <EditIcon fontSize="small" />
+                  </IconButton>
+                  <IconButton onClick={() => window.print()}>
+                    <PrintIcon fontSize="small" />
+                  </IconButton>
+                  <IconButton
+                    onClick={async () => {
+                      if (!window.confirm("Delete this recipe?")) return;
+                      await deleteRecipe(id);
+                      navigate("/myrecipes");
+                    }}
+                  >
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
+                </>
+              )}
+            </Stack>
+
+            {/* "I Made This" button */}
+            {user && (
+              <Button
+                variant={hasMade ? "contained" : "outlined"}
+                color="secondary"
+                onClick={handleLogMade}
+                sx={{ mt: { xs: 1, md: 1 } }}
+              >
+                {hasMade ? `Made it (${madeCount})` : "I Made This"}
+              </Button>
+            )}
+          </Box>
+        </Box>
+
         <Divider sx={{ my: 3 }} />
+
         {recipe.description && (
           <>
             <Typography variant="h5" fontWeight={600} sx={{ mb: 1.5 }}>
@@ -150,6 +237,21 @@ export default function FullRecipeView() {
           Instructions
         </Typography>
         <Box sx={{ mb: 4 }}>{parse(recipe.instructions)}</Box>
+        {/* Snackbar */}
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={3000}
+          onClose={handleSnackbarClose}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        >
+          <Alert
+            onClose={handleSnackbarClose}
+            severity="success"
+            sx={{ width: "100%" }}
+          >
+            Recipe logged as made!
+          </Alert>
+        </Snackbar>
       </Container>
     </Box>
   );
