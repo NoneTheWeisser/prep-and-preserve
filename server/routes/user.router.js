@@ -128,4 +128,27 @@ router.put("/settings", rejectUnauthenticated, async (req, res) => {
   }
 });
 
+router.put("/deactivate", rejectUnauthenticated, async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const result = await pool.query(
+      `UPDATE "user"
+       SET is_active = FALSE, updated_at = NOW()
+       WHERE id = $1
+       RETURNING id;`,
+      [userId]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ message: "Account deactivated successfully" });
+  } catch (error) {
+    console.error("Error deactivating account:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 module.exports = router;

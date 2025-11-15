@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Box,
   Stack,
@@ -9,11 +10,15 @@ import {
   Alert,
 } from "@mui/material";
 import useStore from "../../zustand/store";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfileSettings() {
   const user = useStore((state) => state.user);
   const updateProfile = useStore((state) => state.updateProfile);
   const updatePassword = useStore((state) => state.updatePassword);
+  const deactivateAccount = useStore((state) => state.deactivateAccount);
+  const logOut = useStore((state) => state.logOut);
+  const navigate = useNavigate();
 
   const [profileImage, setProfileImage] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -68,6 +73,24 @@ export default function ProfileSettings() {
       } else {
         setPasswordError("Failed to update password. Please try again");
       }
+    }
+  };
+
+  const handleDeactivateAccount = async () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to deactivate your account? This can be reversed by contacting support."
+    );
+    if (!confirmed) return;
+
+    try {
+      await axios.put("/api/user/deactivate", {}, { withCredentials: true });
+
+      alert("Your account has been deactivated.");
+      logOut();
+      navigate("/");
+    } catch (err) {
+      console.error("Error deactivating account:", err);
+      alert("Something went wrong. Please try again.");
     }
   };
 
@@ -137,6 +160,18 @@ export default function ProfileSettings() {
             />
             <Button variant="contained" onClick={handlePasswordUpdate}>
               Update Password
+            </Button>
+          </Stack>
+        </Box>
+
+        {/* deactivate account  */}
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="h6" gutterBottom>
+            Deactivate Account
+          </Typography>
+          <Stack spacing={2}>
+            <Button variant="contained" onClick={handleDeactivateAccount}>
+              Deactivate Account
             </Button>
           </Stack>
         </Box>

@@ -79,21 +79,30 @@ const createUserSlice = (set, get) => ({
       console.error("Error updating profile:", err);
     }
   },
-  
-updatePassword: async ({ oldPassword, newPassword }) => {
-  try {
-    const { data } = await axios.put(
-      "/api/user/settings",
-      { oldPassword, newPassword },
-      { withCredentials: true }
-    );
-    set({ user: data });
-    console.log("Password updated successfully");
-  } catch (err) {
-    console.error("Error updating password:", err);
-    throw err;
-  }
-},
+
+  updatePassword: async ({ oldPassword, newPassword }) => {
+    try {
+      const { data } = await axios.put(
+        "/api/user/settings",
+        { oldPassword, newPassword },
+        { withCredentials: true }
+      );
+      set({ user: data });
+      console.log("Password updated successfully");
+    } catch (err) {
+      console.error("Error updating password:", err);
+      throw err;
+    }
+  },
+
+  deactivateAccount: async () => {
+    try {
+      await axios.put("/api/user/deactivate", {}, { withCredentials: true });
+    } catch (err) {
+      console.error("Error deactivating account:", err);
+      throw err;
+    }
+  },
 });
 
 export default createUserSlice;
