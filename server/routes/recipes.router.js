@@ -23,6 +23,7 @@ router.get("/", async (req, res) => {
     LEFT JOIN recipe_tags ON recipe_tags.recipe_id = recipes.id
     LEFT JOIN tags ON tags.id = recipe_tags.tag_id
     WHERE "is_public" = true
+      AND "user".is_active = true
     GROUP BY recipes.id, "user".username
     ORDER BY recipes.created_at DESC;
     `;
@@ -74,6 +75,7 @@ router.get("/:id", async (req, res) => {
     SELECT 
       r.*, 
       u.username,
+      u.is_active AS user_is_active,
       COALESCE(
         JSON_AGG(
           DISTINCT JSONB_BUILD_OBJECT('id', t.id, 'name', t.name)
@@ -85,55 +87,36 @@ router.get("/:id", async (req, res) => {
     LEFT JOIN recipe_tags rt ON r.id = rt.recipe_id
     LEFT JOIN tags t ON rt.tag_id = t.id
     WHERE r.id = $1
-    GROUP BY r.id, u.username;
+    GROUP BY r.id, u.username, u.is_active;
     `;
+
   try {
     const result = await pool.query(sqlText, [recipeId]);
     if (result.rows.length === 0) {
       return res.sendStatus(404);
     }
+
     const recipe = result.rows[0];
-    // check for private/public
+
+    //  if recipe owner is inactive AND current user
+    // is not the owner hide recipe by giving it a 404
+    if (!recipe.user_is_active && recipe.user_id !== userId) {
+      return res.sendStatus(404);
+    }
+
+    // check for private/public access
     if (!recipe.is_public && recipe.user_id !== userId) {
       return res
         .status(403)
         .json({ error: "Unauthorized to view this recipe" });
     }
+
     res.json(recipe);
   } catch (error) {
     console.error(`Error fetching recipe by id:`, error);
     res.sendStatus(500);
   }
 });
-
-// router.get("/:id", async (req, res) => {
-//   const recipeId = req.params.id;
-//   const userId = req.user?.id;
-
-//   const sqlText = `
-//     SELECT recipes.*, "user".username
-//     FROM recipes
-//     JOIN "user" ON recipes.user_id = "user".id
-//     WHERE recipes.id = $1;
-//     `;
-//   try {
-//     const result = await pool.query(sqlText, [recipeId]);
-//     if (result.rows.length === 0) {
-//       return res.sendStatus(404);
-//     }
-//     const recipe = result.rows[0];
-//     // check for private/public
-//     if (!recipe.is_public && recipe.user_id !== userId) {
-//       return res
-//         .status(403)
-//         .json({ error: "Unauthorized to view this recipe" });
-//     }
-//     res.json(recipe);
-//   } catch (error) {
-//     console.error(`Error fetching recipe by id:`, error);
-//     res.sendStatus(500);
-//   }
-// });
 
 // POST new recipe
 router.post("/", rejectUnauthenticated, async (req, res) => {

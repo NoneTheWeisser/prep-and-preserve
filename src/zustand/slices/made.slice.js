@@ -41,7 +41,6 @@ const madeSlice = (set, get) => ({
 
   logMade: async (recipeId) => {
     try {
-      // todo - Optimistically update store before request
       const existing = get().madeRecipes.find((r) => r.recipe_id === recipeId);
       if (existing) {
         // increment existing count
@@ -67,8 +66,6 @@ const madeSlice = (set, get) => ({
       if (response.status !== 201) {
         throw new Error("Failed to save made record");
       }
-
-      // todo - Optionally: refetch authoritative counts from server to ensure sync:
       await get().fetchMade();
       return true;
     } catch (error) {
