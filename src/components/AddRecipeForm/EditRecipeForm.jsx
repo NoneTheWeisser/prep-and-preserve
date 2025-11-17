@@ -1,21 +1,16 @@
 // import("../AddRecipeForm/AddRecipeForm.css");
 import React, { useEffect, useState } from "react";
+import DOMPurify from "dompurify";
 import {
   Box,
   Button,
   Container,
   FormControl,
-  FormGroup,
   FormLabel,
-  FormControlLabel,
   Switch,
   TextField,
   Typography,
-  Checkbox,
   Paper,
-  Snackbar,
-  Alert,
-  Grid,
   Chip,
 } from "@mui/material";
 import useStore from "../../zustand/store";
@@ -36,6 +31,7 @@ export default function EditRecipeForm() {
   // const userRecipes = useStore((state) => state.userRecipes);
   const recipes = useStore((state) => state.recipes);
   const updateRecipe = useStore((state) => state.updateRecipe);
+  const showSnackbar = useStore((state) => state.showSnackbar);
 
   const [instructions, setInstructions] = useState("");
   const [ingredients, setIngredients] = useState("");
@@ -45,32 +41,6 @@ export default function EditRecipeForm() {
   const [sourceUrl, setSourceUrl] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
   const [isPublic, setIsPublic] = useState(true);
-  // const [snackbarOpen, setSnackbarOpen] = useState(false);
-
-  // The reason we use a useEffect is so that we can
-  // populate the local state after zustand updates
-  // useEffect(() => {
-  //   // Make sure the recipes, tags, etc are loaded
-  //   fetchRecipes();
-  //   fetchTags();
-  // }, []);
-
-  // useEffect(() => {
-  //   const thisRecipe = recipes.find((recipe) => recipe.id === Number(id));
-  //   console.log(thisRecipe);
-
-  //   if (thisRecipe) {
-  //     setTitle(thisRecipe.title || "");
-  //     setDescription(thisRecipe.description || "");
-  //     setImageUrl(thisRecipe.image_url || "");
-  //     setIngredients(thisRecipe.ingredients || "");
-  //     setInstructions(thisRecipe.instructions || "");
-  //     setIsPublic(thisRecipe.is_public ?? true);
-  //     setSourceUrl(thisRecipe.source_url || "");
-  //     setSelectedTags(thisRecipe.tags || []);
-  //   }
-  //   // }, []);
-  // }, [recipes, tags]);
 
   // fetch by id instead and get tags
   useEffect(() => {
@@ -103,11 +73,14 @@ export default function EditRecipeForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const safeInstructions = DOMPurify.sanitize(instructions);
+    const safeIngredients = DOMPurify.sanitize(ingredients);
+
     const updatedRecipe = {
       title,
       description,
-      instructions,
-      ingredients,
+      instructions: safeInstructions,
+      ingredients: safeIngredients,
       image_url: imageUrl,
       is_public: isPublic,
       source_url: sourceUrl,
@@ -117,12 +90,20 @@ export default function EditRecipeForm() {
     try {
       await updateRecipe(id, updatedRecipe);
       await fetchUserRecipes();
+      showSnackbar({
+        message: "Recipe successfully updated!",
+        severity: "success",
+      });
       navigate(`/recipes/${id}`);
-    } catch (error) {
-      console.error("Error updating recipe:", error);
-    }
-  };
+  } catch (error) {
+    console.error("Error submitting recipe:", error);
 
+    showSnackbar({
+      message: "Error updating recipe.",
+      severity: "error",
+    });
+  }
+};
   // Render checkboxes
   const handleTagChange = (tag) => {
     setSelectedTags((prev) =>
@@ -309,21 +290,6 @@ export default function EditRecipeForm() {
           </Button>
         </Box>
       </Paper>
-
-      {/* Snackbar */}
-      {/* <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={() => setSnackbarOpen(false)}
-      >
-        <Alert
-          onClose={() => setSnackbarOpen(false)}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          Recipe successfully updated!
-        </Alert>
-      </Snackbar> */}
     </Container>
   );
 }

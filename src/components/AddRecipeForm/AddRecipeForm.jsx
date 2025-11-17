@@ -1,26 +1,20 @@
 // import("../AddRecipeForm/AddRecipeForm.css");
 import React, { useEffect, useState } from "react";
+import DOMPurify from "dompurify";
 import {
   Box,
   Button,
   Container,
   FormControl,
-  FormGroup,
   FormLabel,
-  FormControlLabel,
   Switch,
   TextField,
   Typography,
-  Checkbox,
   Paper,
-  Snackbar,
-  Alert,
-  Grid,
   Chip,
 } from "@mui/material";
 import useStore from "../../zustand/store";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import InstructionTextEditor from "./InstructionTextEditor";
 import IngredientTextEditor from "./IngredientTextEditor";
 
@@ -33,12 +27,11 @@ export default function AddRecipeForm() {
   const [sourceUrl, setSourceUrl] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
   const [isPublic, setIsPublic] = useState(true);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-
   const navigate = useNavigate();
 
   // console.log(selectedTags);
 
+  const showSnackbar = useStore((state) => state.showSnackbar);
   const tags = useStore((state) => state.tags);
   const fetchTags = useStore((state) => state.fetchTags);
   const addRecipe = useStore((state) => state.addRecipe);
@@ -77,21 +70,27 @@ export default function AddRecipeForm() {
   // Form submit
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const safeInstructions = DOMPurify.sanitize(instructions);
+    const safeIngredients = DOMPurify.sanitize(ingredients);
+
     const recipeData = {
       title,
       description,
-      ingredients,
-      instructions,
+      ingredients: safeIngredients,
+      instructions: safeInstructions,
       image_url: imageUrl,
       is_public: isPublic,
       source_url: sourceUrl,
       tags: selectedTags,
     };
+
     console.log("Submitting recipe:", recipeData);
     try {
       const newRecipe = await addRecipe(recipeData);
-      setSnackbarOpen(true);
-
+      showSnackbar({
+        message: "Recipe successfully added!",
+        severity: "success",
+      });
       if (newRecipe?.id) {
         navigate(`/recipes/${newRecipe.id}`);
       } else {
@@ -108,6 +107,11 @@ export default function AddRecipeForm() {
       setSelectedTags([]);
     } catch (error) {
       console.error("Error submitting recipe:", error);
+
+      showSnackbar({
+        message: "Error adding recipe.",
+        severity: "error",
+      });
     }
   };
 
@@ -271,21 +275,6 @@ export default function AddRecipeForm() {
           </Button>
         </Box>
       </Paper>
-
-      {/* Snackbar */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={() => setSnackbarOpen(false)}
-      >
-        <Alert
-          onClose={() => setSnackbarOpen(false)}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          Recipe successfully added!
-        </Alert>
-      </Snackbar>
     </Container>
   );
 }

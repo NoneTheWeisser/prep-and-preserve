@@ -16,6 +16,7 @@ import EditRecipeForm from "../AddRecipeForm/EditRecipeForm";
 import AdminDashboard from "../AdminDashboard/AdminDashboard";
 import AdminRoute from "../AdminDashboard/AdminRoute";
 import ProfileSettings from "../Settings/ProfileSettings";
+import GlobalSnackbar from "../GlobalSnackbar/GlobalSnackbar";
 
 function App() {
   const user = useStore((state) => state.user);
@@ -27,6 +28,7 @@ function App() {
 
   return (
     <>
+    <GlobalSnackbar />
       <Nav />
       <main>
         <Routes>
