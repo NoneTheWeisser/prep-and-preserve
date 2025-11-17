@@ -14,6 +14,8 @@ import {
   Button,
   Snackbar,
   Alert,
+  Badge,
+  Chip,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -195,7 +197,7 @@ export default function FullRecipeView() {
               {user && (
                 <IconButton
                   onClick={() => toggleFavorite(recipe.id)}
-                  sx={{ color: favoriteActive ? "red" : "gray" }}
+                  sx={{ color: favoriteActive ? "#720000" : "gray" }}
                 >
                   {favoriteActive ? <FavoriteIcon /> : <FavoriteBorderIcon />}
                 </IconButton>
@@ -227,10 +229,17 @@ export default function FullRecipeView() {
             {user && (
               <Button
                 variant={hasMade ? "contained" : "outlined"}
-                color="secondary"
+                color="error"
                 onClick={handleLogMade}
               >
-                {hasMade ? `Made it (${madeCount})` : "I Made This"}
+                I Made This
+                {hasMade && (
+                  <Badge
+                    badgeContent={madeCount}
+                    color="primary"
+                    sx={{ ml: 2 }}
+                  />
+                )}
               </Button>
             )}
           </Box>
