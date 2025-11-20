@@ -28,8 +28,10 @@ export default function RecipeCard({
       {recipe.image_url ? (
         <Box
           component="img"
-          src={recipe.image_url}
+          // fallback image - todo
+          src={recipe.image_url || "/img/pexels-enginakyurt-1435904.jpg"}
           alt={recipe.title}
+          onError={(e) => (e.currentTarget.src = "/img/pexels-enginakyurt-1435904.jpg")}
           sx={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
       ) : (

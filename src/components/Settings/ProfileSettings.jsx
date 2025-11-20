@@ -17,6 +17,7 @@ export default function ProfileSettings() {
   const updateProfile = useStore((state) => state.updateProfile);
   const updatePassword = useStore((state) => state.updatePassword);
   const deactivateAccount = useStore((state) => state.deactivateAccount);
+  const showSnackbar = useStore((state) => state.showSnackbar);
   const logOut = useStore((state) => state.logOut);
   const navigate = useNavigate();
 
@@ -41,14 +42,27 @@ export default function ProfileSettings() {
         uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
         sources: ["local", "url", "camera"],
       },
-      (error, result) => {
+      async (error, result) => {
         if (!error && result && result.event === "success") {
-          setProfileImage(result.info.secure_url);
-          updateProfile({ profile_image_url: result.info.secure_url });
+          const url = result.info.secure_url;
+          setProfileImage(url);
+
+          try {
+            await updateProfile({ profile_image_url: url });
+            showSnackbar({
+              message: "Profile picture updated!",
+              severity: "success",
+            });
+          } catch (err) {
+            console.error(err);
+            showSnackbar({
+              message: "Failed to update profile picture.",
+              severity: "error",
+            });
+          }
         }
       }
     );
-
     widget.open();
   };
 
@@ -57,22 +71,30 @@ export default function ProfileSettings() {
     setPasswordSuccess("");
 
     if (!oldPassword || !newPassword) {
-      setPasswordError("Please fill out both fields.");
+      showSnackbar({
+        message: "Please fill out both fields.",
+        severity: "warning",
+      });
       return;
     }
 
     try {
       await updatePassword({ oldPassword, newPassword });
-      setPasswordSuccess("Password updated successfully!");
       setOldPassword("");
       setNewPassword("");
+      showSnackbar({
+        message: "Password updated successfully!",
+        severity: "success",
+      });
     } catch (error) {
       console.error(error);
-      if (error.response?.status === 401) {
-        setPasswordError("Old password is incorrect");
-      } else {
-        setPasswordError("Failed to update password. Please try again");
-      }
+      showSnackbar({
+        message:
+          error.response?.status === 401
+            ? "Old password is incorrect"
+            : "Failed to udpate password.",
+        severity: "error",
+      });
     }
   };
 
@@ -83,14 +105,13 @@ export default function ProfileSettings() {
     if (!confirmed) return;
 
     try {
-      await axios.put("/api/user/deactivate", {}, { withCredentials: true });
-
-      alert("Your account has been deactivated.");
+      await deactivateAccount();
+      showSnackbar({ message: "Your account has been deactivated.", severity: "success"});
       logOut();
       navigate("/");
     } catch (err) {
       console.error("Error deactivating account:", err);
-      alert("Something went wrong. Please try again.");
+      showSnackbar({ message: "Something went wrong. Please try again.", severity: "error" });
     }
   };
 

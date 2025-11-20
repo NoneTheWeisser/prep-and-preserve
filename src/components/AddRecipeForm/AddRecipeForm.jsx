@@ -136,6 +136,8 @@ export default function AddRecipeForm() {
             variant="outlined"
             fullWidth
             required
+            error={!title}
+            helperText={!title ? "Title is required" : ""}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
@@ -210,6 +212,7 @@ export default function AddRecipeForm() {
           </Box>
 
           {/* IMAGE UPLOAD */}
+          {/* TODO - make required or add fallback image */}
           <Box textAlign="center">
             <Button variant="outlined" onClick={openCloudinaryWidget}>
               Upload Image

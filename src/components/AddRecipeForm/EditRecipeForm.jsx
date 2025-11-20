@@ -134,7 +134,7 @@ export default function EditRecipeForm() {
     <Container maxWidth="md" sx={{ py: 6 }}>
       <Paper elevation={3} sx={{ p: 4, borderRadius: 3 }}>
         <Typography variant="h4" fontWeight="bold" gutterBottom>
-          Add a New Recipe
+          Edit Your Recipe
         </Typography>
 
         <Box

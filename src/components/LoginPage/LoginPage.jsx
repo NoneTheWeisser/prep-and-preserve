@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import useStore from "../../zustand/store";
 import { useNavigate } from "react-router-dom";
 
-import { Box, Button, TextField, Typography, Paper } from "@mui/material";
+import { Box, Button, TextField, Typography, Paper, svgIconClasses } from "@mui/material";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -11,6 +11,7 @@ export default function LoginPage() {
   const logIn = useStore((state) => state.logIn);
   const errorMessage = useStore((state) => state.authErrorMessage);
   const setAuthErrorMessage = useStore((state) => state.setAuthErrorMessage);
+  const showSnackbar = useStore((state) => state.showSnackbar);
 
   const navigate = useNavigate();
 
@@ -22,7 +23,30 @@ export default function LoginPage() {
   const handleLogIn = (e) => {
     e.preventDefault();
     logIn({ username, password });
+    // showSnackbar({
+    //   message: "Sign in success!",
+    //   severity: "success",
+    // });
   };
+// todo - decide if it's worth having snackbar here.
+// const handleLogIn = async (event) => {
+//   event.preventDefault();
+//   const result = await logIn({ username, password });
+
+//   if (result?.success) {
+//     showSnackbar({
+//       message: "Sign in successful!",
+//       severity: "success",
+//     });
+//     navigate("/");
+//   } else {
+//     showSnackbar({
+//       message: result?.message || "Login failed. Please check your credentials.",
+//       severity: "error",
+//     });
+//   }
+// };
+
 
   return (
     <Box
