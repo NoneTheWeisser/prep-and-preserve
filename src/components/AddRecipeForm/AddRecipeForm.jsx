@@ -136,8 +136,8 @@ export default function AddRecipeForm() {
             variant="outlined"
             fullWidth
             required
-            error={!title}
-            helperText={!title ? "Title is required" : ""}
+            // error={!title}
+            // helperText={!title ? "Title is required" : ""}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
@@ -147,6 +147,8 @@ export default function AddRecipeForm() {
             variant="outlined"
             fullWidth
             required
+            // error={!description}
+            // helperText={!description ? "Description is required" : ""}
             multiline
             minRows={2}
             value={description}
