@@ -6,22 +6,55 @@ const {
 
 const router = express.Router();
 
-// GET the favorites
+// GET the favorites - pre tabs code.
+// router.get("/", rejectUnauthenticated, async (req, res) => {
+//   try {
+//     const result = await pool.query(
+//       `SELECT recipes.*, favorites.id AS favorite_id
+//             FROM favorites
+//             JOIN recipes ON favorites.recipe_id = recipes.id
+//             WHERE favorites.user_id = $1`,
+//       [req.user.id]
+//     );
+//     res.json(result.rows);
+//   } catch (error) {
+//     console.error("Error fetching favorites:", error);
+//     res.sendStatus(500);
+//   }
+// });
+
+// GET the favorites with full recipe info
 router.get("/", rejectUnauthenticated, async (req, res) => {
+  const userId = req.user.id;
+  const sqlText = `
+    SELECT 
+      r.*,
+      u.username,
+      f.id AS favorite_id,
+      COALESCE(
+        JSON_AGG(
+          DISTINCT JSONB_BUILD_OBJECT('id', t.id, 'name', t.name)
+        ) FILTER (WHERE t.id IS NOT NULL),
+        '[]'
+      ) AS tags
+    FROM favorites f
+    JOIN recipes r ON r.id = f.recipe_id
+    JOIN "user" u ON r.user_id = u.id
+    LEFT JOIN recipe_tags rt ON r.id = rt.recipe_id
+    LEFT JOIN tags t ON rt.tag_id = t.id
+    WHERE f.user_id = $1
+    GROUP BY r.id, u.username, f.id
+    ORDER BY f.created_at DESC;
+  `;
   try {
-    const result = await pool.query(
-      `SELECT recipes.*, favorites.id AS favorite_id
-            FROM favorites
-            JOIN recipes ON favorites.recipe_id = recipes.id
-            WHERE favorites.user_id = $1`,
-      [req.user.id]
-    );
+    const result = await pool.query(sqlText, [userId]);
     res.json(result.rows);
   } catch (error) {
     console.error("Error fetching favorites:", error);
     res.sendStatus(500);
   }
 });
+
 
 // POST favorite
 router.post("/", rejectUnauthenticated, async (req, res) => {

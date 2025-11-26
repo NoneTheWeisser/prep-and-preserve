@@ -17,6 +17,10 @@ import AdminDashboard from "../AdminDashboard/AdminDashboard";
 import AdminRoute from "../AdminDashboard/AdminRoute";
 import ProfileSettings from "../Settings/ProfileSettings";
 import GlobalSnackbar from "../GlobalSnackbar/GlobalSnackbar";
+import MyRecipesTab from "../MyRecipe/RecipeTabs/MyRecipesTab";
+import FavoritesTab from "../MyRecipe/RecipeTabs/FavoritesTab";
+import MadeRecipesTab from "../MyRecipe/RecipeTabs/MadeRecipesTab";
+
 
 function App() {
   const user = useStore((state) => state.user);
@@ -28,7 +32,7 @@ function App() {
 
   return (
     <>
-    <GlobalSnackbar />
+      <GlobalSnackbar />
       <Nav />
       <main>
         <Routes>
@@ -71,18 +75,16 @@ function App() {
               // user.id ? <AddRecipeForm /> : <Navigate to="/login" replace />
             }
           />
-          <Route
-            exact
-            path="/myrecipes"
-            element={
-              <MyRecipe />
-              // user.id ? <MyRecipe /> : <Navigate to="/login" replace />
-            }
-          />
+          <Route path="/myrecipes" element={<MyRecipe />}>
+          {/* // user.id ? <MyRecipe /> : <Navigate to="/login" replace /> */}
+            <Route index element={<Navigate to="mine" replace />} />
+            <Route path="mine" element={<MyRecipesTab />} />
+            <Route path="favorites" element={<FavoritesTab />} />
+            <Route path="made" element={<MadeRecipesTab />} />
+          </Route>
           <Route exact path="/community" element={<CommunityRecipes />} />
           <Route exact path="/about" element={<About />} />
           <Route exact path="/settings" element={<ProfileSettings />} />
-
           <Route path="/recipes/:id" element={<FullRecipeView />} />
           <Route path="/recipes/edit/:id" element={<EditRecipeForm />} />
           <Route path="*" element={<h2>404 Page</h2>} />
