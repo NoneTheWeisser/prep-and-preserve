@@ -29,8 +29,8 @@ To see the fully functional site, please visit: [DEPLOYED VERSION OF APP]
 - [Node.js](https://nodejs.org/en/)
 - [PostgreSQL](https://www.postgresql.org/)
 - A Cloudinary account (for image uploads)
-- Optional: Postico (for running SQL queries)
-- Recommended: VS Code or any other code editor
+- VS Code or any other code editor
+- Postico (for running SQL queries)
 
 ---
 
@@ -39,7 +39,7 @@ To see the fully functional site, please visit: [DEPLOYED VERSION OF APP]
 1. Clone this repository.
 2. Run `npm install` in both the `client` and `server` directories.
 3. Create a PostgreSQL database named `prep_and_preserve`.
-4. Run the queries in `tables.sql` to create all necessary tables and populate initial data.
+4. Run the queries in `database.sql` to create all necessary tables and populate initial data.
 5. Add any necessary environment variables in a `.env` file:
 
 ```

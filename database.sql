@@ -1,13 +1,16 @@
--------------------------------------------------------
---------------------------------------------------
--- START FROM SCRATCH:
+-- START FROM SCRATCH
+
+-- Drop existing tables/triggers to start fresh
 DROP TRIGGER IF EXISTS "on_user_update" ON "user";
-DROP TABLE IF EXISTS "user";
+DROP TABLE IF EXISTS "user" CASCADE;
+DROP TABLE IF EXISTS "recipes" CASCADE;
+DROP TABLE IF EXISTS "tags" CASCADE;
+DROP TABLE IF EXISTS "recipe_tags" CASCADE;
+DROP TABLE IF EXISTS "favorites" CASCADE;
+DROP TABLE IF EXISTS "made_recipes" CASCADE;
 
+-- TABLE SCHEMAS
 
--------------------------------------------------------
---------------------------------------------------
--- TABLE SCHEMAS:
 -- USERS TABLE
 CREATE TABLE "user" (
   "id" SERIAL PRIMARY KEY,
@@ -15,19 +18,11 @@ CREATE TABLE "user" (
   "password" TEXT NOT NULL,
   "email" VARCHAR(255) UNIQUE NOT NULL,
   "profile_image_url" TEXT,
-  "role" VARCHAR(255) NOT NULL DEFAULT 'user',
+  "is_admin" BOOLEAN NOT NULL DEFAULT FALSE,
+  "is_active" BOOLEAN NOT NULL DEFAULT TRUE,
   "created_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
--- Alter 1
-ALTER TABLE "user"
-DROP COLUMN role;
-ALTER TABLE "user"
-ADD COLUMN is_admin BOOLEAN NOT NULL DEFAULT FALSE;
-
--- Alter 2
-ALTER TABLE "user"
-ADD COLUMN is_active BOOLEAN NOT NULL DEFAULT TRUE;
 
 -- RECIPES TABLE
 CREATE TABLE "recipes" (
@@ -74,9 +69,7 @@ CREATE TABLE "favorites" (
   UNIQUE ("user_id", "recipe_id")
 );
 
--- Stretch Goal
-
-
+-- MADE RECIPES TABLE (Stretch Goal)
 CREATE TABLE "made_recipes" (
   "id" SERIAL PRIMARY KEY,
   "user_id" INTEGER NOT NULL,
@@ -86,37 +79,6 @@ CREATE TABLE "made_recipes" (
   FOREIGN KEY ("recipe_id") REFERENCES "recipes" ("id") ON DELETE CASCADE
 );
 
-
-------- FUTURE Stretch Goals ------
-
-
-
--- INGREDIENTS TABLE
-CREATE TABLE "ingredients" (
-  "id" SERIAL PRIMARY KEY,
-  "name" VARCHAR(255) NOT NULL,
-  "category" VARCHAR(255)
-);
-
--- RECIPE TAGS (JOIN TABLE)
-CREATE TABLE "recipe_tags" (
-  "recipe_id" INTEGER NOT NULL,
-  "tag_id" INTEGER NOT NULL,
-  PRIMARY KEY ("recipe_id", "tag_id"),
-  FOREIGN KEY ("recipe_id") REFERENCES "recipes" ("id") ON DELETE CASCADE,
-  FOREIGN KEY ("tag_id") REFERENCES "tags" ("id") ON DELETE CASCADE
-);
-
--- MEAL PLAN TABLE
-CREATE TABLE "meal_plan" (
-  "id" SERIAL PRIMARY KEY,
-  "user_id" INTEGER NOT NULL,
-  "recipe_id" INTEGER NOT NULL,
-  "date" DATE NOT NULL,
-  "meal_time" VARCHAR(255) NOT NULL,
-  FOREIGN KEY ("user_id") REFERENCES "user" ("id") ON DELETE CASCADE,
-  FOREIGN KEY ("recipe_id") REFERENCES "recipes" ("id") ON DELETE CASCADE
-);
 
 -- Initial seed data for ingredients
 
@@ -171,4 +133,3 @@ INSERT INTO ingredients (name, category) VALUES
 ('Honey', 'Condiments'),
 ('Maple syrup', 'Condiments'),
 ('Vinegar', 'Condiments');
-

@@ -225,7 +225,6 @@ export default function FullRecipeView() {
             </Stack>
 
             {/* "I Made This" button */}
-            {/* todo - button color, maybe even theme update? */}
             {user && (
               <Button
                 variant={hasMade ? "contained" : "outlined"}
@@ -259,7 +258,6 @@ export default function FullRecipeView() {
           Ingredients
         </Typography>
         <Box sx={{ mb: 3 }}>{parse(recipe.ingredients)}</Box>
-        {/* todo - maybe limit the width of the paragraph? */}
         <Typography variant="h5" fontWeight={600} sx={{ mt: 4, mb: 1.5 }}>
           Instructions
         </Typography>
