@@ -78,7 +78,7 @@ export default function AddRecipeForm() {
       description,
       ingredients: safeIngredients,
       instructions: safeInstructions,
-      image_url: imageUrl,
+      image_url: imageUrl || "/img/fallbackimage.jpg",
       is_public: isPublic,
       source_url: sourceUrl,
       tags: selectedTags,
@@ -222,7 +222,7 @@ export default function AddRecipeForm() {
             <Box mt={2}>
               {imageUrl ? (
                 <img
-                  src={imageUrl}
+                  src={imageUrl || "/img/fallbackimage.jpg"}
                   alt="Uploaded recipe"
                   width={200}
                   style={{ borderRadius: 8 }}

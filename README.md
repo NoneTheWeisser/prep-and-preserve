@@ -13,10 +13,13 @@ To see the fully functional site, please visit: [DEPLOYED VERSION OF APP]
 ---
 
 ## Screen Shot
-
+#### Home Page
 ![Main Page](screenshots/homepage.png)
+#### Community Recipe Page
 ![Community Page](screenshots/community.png)
+#### My Recipe Page
 ![My Recipe Page](screenshots/mypage.png)
+#### Admin Page
 ![Admin Page](screenshots/admin.png)
 
 ---
