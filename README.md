@@ -13,8 +13,10 @@ To see the fully functional site, please visit: [DEPLOYED VERSION OF APP]
 ---
 
 ## Screen Shot
-
-_(Optional: Add screenshots here)_
+![Main Page](../prep-and-preserve/public/screenshots/homepage.png)
+![Community Page](../prep-and-preserve/public/screenshots/community.png)
+![My Recipe Page](../prep-and-preserve/public/screenshots/mypage.png)
+![Admin Page](../prep-and-preserve/public/screenshots/admin.png)
 
 ---
 
@@ -41,6 +43,8 @@ _(Optional: Add screenshots here)_
 ```
 6. npm run server / npm run client
 
+---
+
 ## Usage
 
 - Explore trending recipes or browse the community page without an account.
@@ -50,6 +54,8 @@ _(Optional: Add screenshots here)_
 - Filter recipes by tags or search terms to quickly find what you want.
 - Deactivate your account safely; your recipes will no longer be visible until you reactivate.
 - Update your profile picture or change your password from the profile settings page.
+
+---
 
 ## Stretch Goals
 
@@ -61,6 +67,7 @@ _(Optional: Add screenshots here)_
   - Upload recipe cards or scanned files and have AI generate the recipe within the app.  
   - Track nutrition information for recipes.  
 
+---
 
 ## Built With
 
@@ -72,11 +79,19 @@ _(Optional: Add screenshots here)_
 6. Rich Text Editor: ReactQuill
 7. Others: Axios for API requests
 
+---
+
 ## License
+MIT
+
+---
+
 
 ## Acknowledgement
 
 Thanks to Prime Digital Academy for providing guidance and support throughout this project.
+
+---
 
 ## Support
 
