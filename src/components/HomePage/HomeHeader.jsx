@@ -42,7 +42,7 @@ export default function HomeHeader() {
             component="img"
             src="/img/prepperservelogo_vertical_white.svg"
             alt="Prep & Preserve White logo"
-            sx={{ width: { xs: 85, md: 200 }, mb: 1, mt: 2 }}
+            sx={{ width: { xs: 85, md: 200 }, mb: 1, mt: 3 }}
           />
 
           <Typography
