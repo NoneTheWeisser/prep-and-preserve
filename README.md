@@ -13,10 +13,11 @@ To see the fully functional site, please visit: [DEPLOYED VERSION OF APP]
 ---
 
 ## Screen Shot
-![Main Page](../prep-and-preserve/public/screenshots/homepage.png)
-![Community Page](../prep-and-preserve/public/screenshots/community.png)
-![My Recipe Page](../prep-and-preserve/public/screenshots/mypage.png)
-![Admin Page](../prep-and-preserve/public/screenshots/admin.png)
+
+![Main Page](screenshots/homepage.png)
+![Community Page](screenshots/community.png)
+![My Recipe Page](screenshots/mypage.png)
+![Admin Page](screenshots/admin.png)
 
 ---
 
@@ -37,10 +38,12 @@ To see the fully functional site, please visit: [DEPLOYED VERSION OF APP]
 3. Create a PostgreSQL database named `prep_and_preserve`.
 4. Run the queries in `tables.sql` to create all necessary tables and populate initial data.
 5. Add any necessary environment variables in a `.env` file:
+
 ```
-- `DATABASE_URL` - PostgreSQL connection string  
+- `DATABASE_URL` - PostgreSQL connection string
 - `VITE_CLOUDINARY_NAME` & `VITE_CLOUDINARY_UPLOAD_PRESET` - for uploading images in recipes and profiles
 ```
+
 6. npm run server / npm run client
 
 ---
@@ -59,13 +62,13 @@ To see the fully functional site, please visit: [DEPLOYED VERSION OF APP]
 
 ## Stretch Goals
 
-- Add a "Most Made" list to complement the trending recipes page.  
+- Add a "Most Made" list to complement the trending recipes page.
 - Implement user profile pages:
-  - Follow other users and receive notifications.  
-- Dark / Light mode toggle for the UI.  
+  - Follow other users and receive notifications.
+- Dark / Light mode toggle for the UI.
 - AI/LLM functionality:
-  - Upload recipe cards or scanned files and have AI generate the recipe within the app.  
-  - Track nutrition information for recipes.  
+  - Upload recipe cards or scanned files and have AI generate the recipe within the app.
+  - Track nutrition information for recipes.
 
 ---
 
@@ -82,10 +85,10 @@ To see the fully functional site, please visit: [DEPLOYED VERSION OF APP]
 ---
 
 ## License
+
 MIT
 
 ---
-
 
 ## Acknowledgement
 
