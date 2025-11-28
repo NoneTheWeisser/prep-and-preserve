@@ -28,10 +28,9 @@ export default function RecipeCard({
       {recipe.image_url ? (
         <Box
           component="img"
-          // fallback image - todo
-          src={recipe.image_url || "/img/pexels-enginakyurt-1435904.jpg"}
+          src={recipe.image_url || "/img/fallbackimage.jpg"}
           alt={recipe.title}
-          onError={(e) => (e.currentTarget.src = "/img/pexels-enginakyurt-1435904.jpg")}
+          onError={(e) => (e.currentTarget.src = "/img/fallbackimage.jpg")}
           sx={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
       ) : (

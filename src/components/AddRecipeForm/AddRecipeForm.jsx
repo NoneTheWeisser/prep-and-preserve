@@ -214,7 +214,6 @@ export default function AddRecipeForm() {
           </Box>
 
           {/* IMAGE UPLOAD */}
-          {/* TODO - make required or add fallback image */}
           <Box textAlign="center">
             <Button variant="outlined" onClick={openCloudinaryWidget}>
               Upload Image

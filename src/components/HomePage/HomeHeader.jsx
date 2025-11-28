@@ -113,30 +113,6 @@ export default function HomeHeader() {
           )}
         </Box>
       </Box>
-
-      {/* Trending Recipes Section */}
-      {/* todo - polish how this looks, I like the idea of directing ppl to the community page.  */}
-      {/* <Box sx={{ mt: 4, mb: 2 }}>
-        <Typography variant="h5" sx={{ textAlign: "center", fontWeight: 600 }}>
-          Trending Recipes
-        </Typography>
-        <Typography
-          sx={{ textAlign: "center", mt: 1, color: "text.secondary" }}
-        >
-          See what’s cooking in the community! These are the recipes people have
-          been making most recently.
-        </Typography>
-        <Typography sx={{ textAlign: "center", mt: 0, color: "primary.main" }}>
-          To explore all community recipes, please visit the{" "}
-          <a
-            href="/community"
-            style={{ textDecoration: "underline", color: "inherit" }}
-          >
-            Community Recipe Page
-          </a>
-          .
-        </Typography>
-      </Box> */}
     </Box>
   );
 }
