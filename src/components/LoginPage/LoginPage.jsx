@@ -20,38 +20,19 @@ export default function LoginPage() {
     return () => setAuthErrorMessage("");
   }, []);
 
-  const handleLogIn = (e) => {
-    e.preventDefault();
+  const handleLogIn = (event) => {
+    event.preventDefault();
     logIn({ username, password });
-    // showSnackbar({
-    //   message: "Sign in success!",
-    //   severity: "success",
-    // });
+    showSnackbar({
+      message: "Sign in success!",
+      severity: "success",
+    });
   };
-// todo - decide if it's worth having snackbar here.
-// const handleLogIn = async (event) => {
-//   event.preventDefault();
-//   const result = await logIn({ username, password });
-
-//   if (result?.success) {
-//     showSnackbar({
-//       message: "Sign in successful!",
-//       severity: "success",
-//     });
-//     navigate("/");
-//   } else {
-//     showSnackbar({
-//       message: result?.message || "Login failed. Please check your credentials.",
-//       severity: "error",
-//     });
-//   }
-// };
-
 
   return (
     <Box
       sx={{
-        minHeight: "100vh",
+        minHeight: "90vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",

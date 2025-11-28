@@ -12,6 +12,7 @@ function RegisterPage() {
   const register = useStore((state) => state.register);
   const errorMessage = useStore((state) => state.authErrorMessage);
   const setAuthErrorMessage = useStore((state) => state.setAuthErrorMessage);
+  const showSnackbar = useStore((state) => state.showSnackbar);
 
   const navigate = useNavigate();
 
@@ -48,12 +49,16 @@ function RegisterPage() {
       email: email,
       profile_image_url: profileImage,
     });
+    showSnackbar({
+      message: "Account created!",
+      severity: "success",
+    });
   };
 
   return (
-      <Box
+    <Box
       sx={{
-        minHeight: "100vh",
+        minHeight: "90vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",

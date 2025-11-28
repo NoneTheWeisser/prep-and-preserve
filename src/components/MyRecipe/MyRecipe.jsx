@@ -34,8 +34,13 @@ export default function MyRecipe() {
     tabs.findIndex((t) => location.pathname.endsWith(t.path))
   );
 
-  // guard if user isn't signed in
-  if (!user) {
+  // still loading user
+  if (user === null) {
+    return null; // or a spinner
+  }
+
+  // user is not logged in
+  if (!user?.id) {
     return (
       <Container maxWidth="md" sx={{ mt: 6, textAlign: "center" }}>
         <Typography variant="h6">
