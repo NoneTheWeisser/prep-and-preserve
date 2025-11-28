@@ -31,13 +31,22 @@ export default function TrendingRecipeList() {
           No trending recipes yet.
         </Typography>
       ) : (
-        <Grid container spacing={3} justifyContent="center">
+        <Grid
+          container
+          spacing={2}
+          justifyContent="center"
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+          }}
+        >
+          {" "}
           {/* limit to 10 cards */}
           {trendingRecipes.slice(0, 10).map((recipe) => (
             <Grid
               key={recipe.id}
               item
-              xs={12}
+              xs={6}
               sm={6}
               md={4}
               lg={3}
