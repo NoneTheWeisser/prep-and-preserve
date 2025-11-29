@@ -16,6 +16,8 @@ function RegisterPage() {
 
   const navigate = useNavigate();
 
+  // to-do safe guard register page, probably check for valid email and then bring in snackbar. 
+
   useEffect(() => {
     // Clear the auth error message when the component unmounts:
     return () => {
@@ -49,10 +51,10 @@ function RegisterPage() {
       email: email,
       profile_image_url: profileImage,
     });
-    showSnackbar({
-      message: "Account created!",
-      severity: "success",
-    });
+    // showSnackbar({
+    //   message: "Account created!",
+    //   severity: "success",
+    // });
   };
 
   return (

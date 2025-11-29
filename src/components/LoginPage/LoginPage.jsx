@@ -23,10 +23,10 @@ export default function LoginPage() {
   const handleLogIn = (event) => {
     event.preventDefault();
     logIn({ username, password });
-    showSnackbar({
-      message: "Sign in success!",
-      severity: "success",
-    });
+    // showSnackbar({
+    //   message: "Sign in success!",
+    //   severity: "success",
+    // });
   };
 
   return (
