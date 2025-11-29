@@ -56,6 +56,7 @@ export default function CommunityRecipeList() {
     recipes.some((recipe) => recipe.tags?.some((rt) => rt.id === tag.id))
   );
 
+  // to-do - randomize the grid to help shake up the order a bit. 
   return (
     <Container maxWidth="xl" sx={{ mt: 4 }}>
       <RecipeFilterBar tags={usedTags} onFilterChange={handleFilterChange} />

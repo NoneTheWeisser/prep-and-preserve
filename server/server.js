@@ -40,6 +40,6 @@ app.use("/api/made", madeRouter);
 app.use('/api/trending', trendingRouter);
 
 // Start the server:
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Listening on port: ${PORT}`);
 });

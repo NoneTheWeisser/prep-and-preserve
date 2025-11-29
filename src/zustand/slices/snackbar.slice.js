@@ -2,7 +2,7 @@ const snackbarSlice = (set) => ({
   snackbar: {
     open: false,
     message: "",
-    // "success", "error", "warning", "info" - todo
+    // "success", "error", "warning", "info" - todo - need to add these for error and such for log in etc
     severity: "info",
     duration: 4000,
     onClose: null,
