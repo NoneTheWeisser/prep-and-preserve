@@ -8,6 +8,8 @@ export default function TrendingRecipeList() {
   const navigate = useNavigate();
   const fetchTrending = useStore((state) => state.fetchTrending);
   const trendingRecipes = useStore((state) => state.trendingRecipes);
+  const favorites = useStore((state) => state.favorites);
+  const toggleFavorite = useStore ((state) => state.toggleFavorite);
 
   useEffect(() => {
     fetchTrending();
@@ -54,6 +56,8 @@ export default function TrendingRecipeList() {
             >
               <RecipeCard
                 recipe={recipe}
+                favorites={favorites}
+                toggleFavorite={toggleFavorite}
                 extraInfo={
                   <Typography
                     variant="body2"
