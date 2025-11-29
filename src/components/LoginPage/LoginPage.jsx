@@ -2,7 +2,14 @@ import { useState, useEffect } from "react";
 import useStore from "../../zustand/store";
 import { useNavigate } from "react-router-dom";
 
-import { Box, Button, TextField, Typography, Paper, svgIconClasses } from "@mui/material";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Paper,
+  svgIconClasses,
+} from "@mui/material";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -20,13 +27,23 @@ export default function LoginPage() {
     return () => setAuthErrorMessage("");
   }, []);
 
-  const handleLogIn = (event) => {
+  const handleLogIn = async (event) => {
     event.preventDefault();
-    logIn({ username, password });
-    // showSnackbar({
-    //   message: "Sign in success!",
-    //   severity: "success",
-    // });
+
+    const success = await logIn({ username, password });
+
+    if (success) {
+      showSnackbar({
+        message: "Sign in success!",
+        severity: "success",
+      });
+      navigate("/"); 
+    } else {
+      showSnackbar({
+        message: errorMessage || "Sign in failed",
+        severity: "error",
+      });
+    }
   };
 
   return (

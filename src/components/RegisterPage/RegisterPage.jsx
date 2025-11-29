@@ -16,8 +16,6 @@ function RegisterPage() {
 
   const navigate = useNavigate();
 
-  // to-do safe guard register page, probably check for valid email and then bring in snackbar. 
-
   useEffect(() => {
     // Clear the auth error message when the component unmounts:
     return () => {
@@ -42,19 +40,37 @@ function RegisterPage() {
     widget.open();
   };
 
-  const handleRegister = (event) => {
+  const handleRegister = async (event) => {
     event.preventDefault();
 
-    register({
-      username: username,
-      password: password,
-      email: email,
+    // Simple email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      showSnackbar({
+        message: "Please enter a valid email address.",
+        severity: "error",
+      });
+      return;
+    }
+    const success = await register({
+      username,
+      password,
+      email,
       profile_image_url: profileImage,
     });
-    // showSnackbar({
-    //   message: "Account created!",
-    //   severity: "success",
-    // });
+
+    if (success) {
+      showSnackbar({
+        message: "Account created successfully!",
+        severity: "success",
+      });
+      navigate("/");
+    } else {
+      showSnackbar({
+        message: errorMessage || "Account creation failed",
+        severity: "error",
+      });
+    }
   };
 
   return (

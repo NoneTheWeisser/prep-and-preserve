@@ -24,12 +24,22 @@ const createUserSlice = (set, get) => ({
     get().setAuthErrorMessage("");
     try {
       await axios.post("/api/user/register", newUserCredentials);
-      get().logIn(newUserCredentials);
+      // attempt to log in immediately
+      const success = await get().logIn(newUserCredentials);
+      return success; // true if login worked...
     } catch (err) {
       console.log("register error:", err);
-      get().setAuthErrorMessage(
-        "Oops! Registration failed. That username might already be taken. Try again!"
-      );
+      if (err.response?.status === 409) {
+        // 409 = conflict, username/email already taken
+        get().setAuthErrorMessage(
+          "Oops! That username or email is already taken. Try again."
+        );
+      } else {
+        get().setAuthErrorMessage(
+          "Registration failed. Something went wrong. Try again."
+        );
+      }
+      return false;
     }
   },
   logIn: async (userCredentials) => {
@@ -38,7 +48,8 @@ const createUserSlice = (set, get) => ({
     get().setAuthErrorMessage("");
     try {
       await axios.post("/api/user/login", userCredentials);
-      get().fetchUser();
+      await get().fetchUser();
+      return true; // login success
     } catch (err) {
       console.log("logIn error:", err);
       if (err.response.status === 401) {
@@ -53,6 +64,7 @@ const createUserSlice = (set, get) => ({
           "Oops! Login failed. It might be our fault. Try again!"
         );
       }
+      return false; // login failed
     }
   },
   logOut: async () => {
