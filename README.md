@@ -37,7 +37,7 @@ To see the fully functional site, please visit: [\[DEPLOYED VERSION OF Prep and 
 ## Installation
 
 1. Clone this repository.
-2. Run `npm install` in both the `client` and `server` directories.
+2. Run `npm install`.
 3. Create a PostgreSQL database named `prep_and_preserve`.
 4. Run the queries in `database.sql` to create all necessary tables and populate initial data.
 5. Add any necessary environment variables in a `.env` file:
@@ -47,7 +47,7 @@ To see the fully functional site, please visit: [\[DEPLOYED VERSION OF Prep and 
 - `VITE_CLOUDINARY_NAME` & `VITE_CLOUDINARY_UPLOAD_PRESET` - for uploading images in recipes and profiles
 ```
 
-6. npm run server / npm run client
+6. Run `npm run server` & `npm run client` in separate terminals.
 
 ---
 
