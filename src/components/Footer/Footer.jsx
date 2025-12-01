@@ -23,7 +23,8 @@ export default function Footer() {
         </nav>
 
         <p className="footer-copy">
-          © NoneTheWeisser {new Date().getFullYear()}
+          © NoneTheWeisser {new Date().getFullYear()}<br />
+            <small>v1.0.1</small>
         </p>
       </div>
     </footer>
