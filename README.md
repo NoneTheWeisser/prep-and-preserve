@@ -8,7 +8,7 @@ Prep and Preserve is an app that lets you save all your favorite recipes in one 
 
 The problem it solves: recipes are scattered across social media, emails, family notes, and bookmarks. Prep and Preserve centralizes them, making it easy to save, edit, and share.
 
-To see the fully functional site, please visit: [DEPLOYED VERSION OF APP]
+To see the fully functional site, please visit: [\[DEPLOYED VERSION OF APP\]](https://www.prepandpreserve.app/#/)
 
 ---
 
