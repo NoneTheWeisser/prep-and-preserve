@@ -24,7 +24,7 @@ export default function Footer() {
 
         <p className="footer-copy">
           © NoneTheWeisser {new Date().getFullYear()}<br />
-            <small>v1.0.1</small>
+            <small>v1.0.2</small>
         </p>
       </div>
     </footer>
