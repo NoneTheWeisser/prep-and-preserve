@@ -1,19 +1,38 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useStore from "../../zustand/store";
 import RecipeCard from "../RecipeFilterBar/RecipeCard";
 import { Box, Container, Grid, Typography, Button } from "@mui/material";
 
 export default function TrendingRecipeList() {
+  const [loading, setLoading] = useState(true);
+
   const navigate = useNavigate();
   const fetchTrending = useStore((state) => state.fetchTrending);
   const trendingRecipes = useStore((state) => state.trendingRecipes);
   const favorites = useStore((state) => state.favorites);
-  const toggleFavorite = useStore ((state) => state.toggleFavorite);
+  const toggleFavorite = useStore((state) => state.toggleFavorite);
 
   useEffect(() => {
-    fetchTrending();
+    const loadTrending = async () => {
+      setLoading(true);
+      await fetchTrending();
+      setLoading(false);
+    };
+    loadTrending();
   }, [fetchTrending]);
+
+  // useEffect(() => {
+  //   fetchTrending();
+  // }, [fetchTrending]);
+  
+    if (loading) {
+    return (
+      <Typography sx={{ textAlign: "center", color: "text.secondary" }}>
+        Loading trending recipes...
+      </Typography>
+    );
+  }
 
   return (
     <Container maxWidth="xl" sx={{ mt: 6 }}>

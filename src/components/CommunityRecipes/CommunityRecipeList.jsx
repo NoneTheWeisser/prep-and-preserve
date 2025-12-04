@@ -3,9 +3,14 @@ import { useNavigate } from "react-router-dom";
 import useStore from "../../zustand/store";
 import RecipeFilterBar from "../RecipeFilterBar/RecipeFilterBar";
 import RecipeCard from "../RecipeFilterBar/RecipeCard";
-import { Container, Grid } from "@mui/material";
+import { Container, Grid, Typography } from "@mui/material";
 
 export default function CommunityRecipeList() {
+  const [loading, setLoading] = useState(true);
+  // Filter & Search
+  const [filteredRecipes, setFilteredRecipes] = useState([]);
+  const [selectedTagIds, setSelectedTagIds] = useState([]);
+
   const fetchRecipes = useStore((state) => state.fetchRecipes);
   const recipes = useStore((state) => state.recipes);
   const navigate = useNavigate();
@@ -17,14 +22,19 @@ export default function CommunityRecipeList() {
   const favorites = useStore((state) => state.favorites);
   const toggleFavorite = useStore((state) => state.toggleFavorite);
 
-  // Filter & Search
-  const [filteredRecipes, setFilteredRecipes] = useState([]);
-  const [selectedTagIds, setSelectedTagIds] = useState([]);
-
   useEffect(() => {
-    fetchRecipes();
-    fetchFavorites();
+    const loadData = async () => {
+      setLoading(true);
+      await Promise.all([fetchRecipes(), fetchFavorites()]);
+      setLoading(false);
+    };
+    loadData();
   }, [fetchRecipes, fetchFavorites]);
+
+  // useEffect(() => {
+  //   fetchRecipes();
+  //   fetchFavorites();
+  // }, [fetchRecipes, fetchFavorites]);
 
   useEffect(() => {
     setFilteredRecipes(recipes);
@@ -56,7 +66,15 @@ export default function CommunityRecipeList() {
     recipes.some((recipe) => recipe.tags?.some((rt) => rt.id === tag.id))
   );
 
-  // to-do - randomize the grid to help shake up the order a bit. 
+  if (loading) {
+    return (
+      <Typography sx={{ textAlign: "center", color: "text.secondary" }}>
+        Loading recipes...
+      </Typography>
+    );
+  }
+
+  // to-do - randomize the grid to help shake up the order a bit.
   return (
     <Container maxWidth="xl" sx={{ mt: 4 }}>
       <RecipeFilterBar tags={usedTags} onFilterChange={handleFilterChange} />
@@ -64,8 +82,7 @@ export default function CommunityRecipeList() {
       {filteredRecipes.length === 0 ? (
         <p>No Recipes Found.</p>
       ) : (
-        
-        <Grid container spacing={2} sx={{ mt: 2, justifyContent: "center" }}>         
+        <Grid container spacing={2} sx={{ mt: 2, justifyContent: "center" }}>
           {filteredRecipes.map((recipe) => (
             <Grid
               key={recipe.id}

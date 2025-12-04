@@ -10,7 +10,7 @@ const madeSlice = (set, get) => ({
       // normalize keys and ensure counts are numbers
       const normalized = (response.data || []).map((r) => ({
         // for RecipeCard
-        id: Number(r.recipe_id), 
+        id: Number(r.recipe_id),
         recipe_id: Number(r.recipe_id),
         title: r.title || "Untitled Recipe",
         username: r.username || "Unknown",
@@ -26,8 +26,8 @@ const madeSlice = (set, get) => ({
 
   fetchTrending: async () => {
     try {
-      const response = await axios.get("/api/trending/recent"); 
-      const normalized = response.data.map((r) => ({
+      const response = await axios.get("/api/trending/recent");
+      const normalized = (response.data || []).map((r) => ({
         id: r.recipe_id,
         title: r.recipe_title,
         image_url: r.recipe_image_url,
@@ -64,7 +64,8 @@ const madeSlice = (set, get) => ({
 
       // Persist
       const response = await axios.post("/api/made", { recipe_id: recipeId });
-      if (response.status !== 201) throw new Error("Failed to save made record");
+      if (response.status !== 201)
+        throw new Error("Failed to save made record");
 
       // refetch to get updated data with titles/usernames
       await get().fetchMade();
@@ -91,7 +92,6 @@ const madeSlice = (set, get) => ({
 
 export default madeSlice;
 
-
 // import axios from "axios";
 
 // const madeSlice = (set, get) => ({
@@ -115,7 +115,7 @@ export default madeSlice;
 
 //   fetchTrending: async () => {
 //     try {
-//       const response = await axios.get("/api/trending/recent"); 
+//       const response = await axios.get("/api/trending/recent");
 //       // normalize keys...
 //       const normalized = response.data.map((r)=> ({
 //         id: r.recipe_id,

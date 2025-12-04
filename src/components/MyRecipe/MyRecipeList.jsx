@@ -28,6 +28,7 @@ export default function MyRecipeList() {
   const toggleFavorite = useStore((state) => state.toggleFavorite);
 
   // Filter & Search
+  const [loading, setLoading] = useState(true);
   const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [selectedTagIds, setSelectedTagIds] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -35,11 +36,24 @@ export default function MyRecipeList() {
 
   const selectedTags = tags.filter((tag) => selectedTagIds.includes(tag.id));
 
+  // Fetch all necessary data before rendering
   useEffect(() => {
-    fetchUserRecipes();
-    fetchFavorites();
-    fetchRecipes();
-  }, [fetchUserRecipes, fetchFavorites]);
+    const loadData = async () => {
+      setLoading(true);
+      await Promise.all([fetchUserRecipes(), fetchFavorites(), fetchRecipes()]);
+      setLoading(false);
+    };
+    loadData();
+  }, [fetchUserRecipes, fetchFavorites, fetchRecipes]);
+
+  // Show loading text while fetching
+  if (loading) {
+    return (
+      <Typography sx={{ textAlign: "center", color: "text.secondary" }}>
+        Loading recipes...
+      </Typography>
+    );
+  }
 
   //  Compute combined recipes without duplicates
   const combinedRecipes = [
@@ -90,7 +104,7 @@ export default function MyRecipeList() {
         <Box
           sx={{
             display: "flex",
-            justifyContent: "center", 
+            justifyContent: "center",
           }}
         >
           <Box
