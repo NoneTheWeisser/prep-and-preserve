@@ -105,7 +105,6 @@ export default function UserProfile() {
           backgroundImage: `url('/img/pexels-ron-lach-8176603.jpg')`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-          position: "relative",
         }}
       />
 
@@ -114,49 +113,50 @@ export default function UserProfile() {
         <Box
           sx={{
             display: "flex",
-            flexDirection: "column",
-            alignItems: { xs: "center", md: "flex-start" },
-            textAlign: { xs: "center", md: "left" },
-            gap: 2,
+            flexDirection: { xs: "column", md: "row" },
+            alignItems: { xs: "center", md: "flex-end" }, // bottom-align text with avatar
+            gap: 3,
           }}
         >
-          {/* Avatar */}
+          {/* Avatar overlapping hero */}
           <Avatar
             src={profileUser?.profile_image_url || undefined}
             alt={profileUser?.username || "User"}
             sx={{
-              width: 200,
-              height: 200,
+              width: 250,
+              height: 250,
               border: "4px solid white",
               boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
               bgcolor: "#afac9aff",
-              fontSize: 64,
+              fontSize: 48,
+              mt: { xs: 0, md: 0 }, // negative margin to overlap hero
             }}
           >
             {!profileUser?.profile_image_url &&
               profileUser?.username?.[0]?.toUpperCase()}
           </Avatar>
 
-          {/* Username */}
-          <Typography variant="h4" fontWeight="bold">
-            {profileUser?.username}
-          </Typography>
-
-          {/* Stats */}
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
+          {/* Username & Stats */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-end", // bottom align text with avatar
+              textAlign: { xs: "center", md: "left" },
+            }}
+          >
+            <Typography variant="h4" fontWeight="bold">
+              {profileUser?.username}
+            </Typography>
             <Typography variant="body1" color="text.secondary">
-              Member since{" "}
+              Member since:{" "}
               {new Date(profileUser?.created_at).toLocaleDateString()}
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              Recipes: {profileRecipes.length}
+              Recipes Created: {profileRecipes.length}
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              Total Favorites:{" "}
-              {profileRecipes.reduce(
-                (sum, recipe) => sum + Number(recipe.favorites_count || 0),
-                0
-              )}
+              Total Favorites Received: {totalFavorites}
             </Typography>
           </Box>
         </Box>
