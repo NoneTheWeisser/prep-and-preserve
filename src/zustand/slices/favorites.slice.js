@@ -7,9 +7,16 @@ const createFavoritesSlice = (set, get) => ({
   fetchFavorites: async () => {
     try {
       const response = await axios.get("/api/favorites");
-      set({ favorites: response.data });
-    } catch (error) {}
+      const normalized = response.data.map((fav) => ({
+        id: fav.recipe_id, //  match recipe.id
+        ...fav,
+      }));
+      set({ favorites: normalized });
+    } catch (error) {
+      console.error(error);
+    }
   },
+
   //   Toggle Favorites
   toggleFavorite: async (recipeId) => {
     const { favorites } = get();

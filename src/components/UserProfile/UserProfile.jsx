@@ -97,60 +97,70 @@ export default function UserProfile() {
   }
 
   return (
-    <Box>
-      {/* Hero Image */}
+  <Box>
+    {/* Hero Image */}
+    <Box
+      sx={{
+        height: 400,
+        backgroundImage: `url('/img/pexels-ron-lach-8176603.jpg')`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    />
+
+    {/* Profile Info */}
+    <Container maxWidth="xl" sx={{ mt: -10, mb: 4 }}>
       <Box
         sx={{
-          height: 400,
-          backgroundImage: `url('/img/pexels-ron-lach-8176603.jpg')`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          alignItems: { xs: "center", md: "flex-end" }, // bottom-align text with avatar
+          gap: 3,
         }}
-      />
+      >
+        {/* Avatar overlapping hero */}
+        <Avatar
+          src={profileUser?.profile_image_url || undefined}
+          alt={profileUser?.username || "User"}
+          sx={{
+            width: 250,
+            height: 250,
+            border: "4px solid white",
+            boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
+            bgcolor: "#afac9aff",
+            fontSize: 48,
+            mt: { xs: 0, md: -5 }, // negative margin to overlap hero
+          }}
+        >
+          {!profileUser?.profile_image_url &&
+            profileUser?.username?.[0]?.toUpperCase()}
+        </Avatar>
 
-      {/* Profile Info */}
-      <Container maxWidth="xl" sx={{ mt: -10, mb: 4 }}>
+        {/* Username & Stats */}
         <Box
           sx={{
             display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            alignItems: { xs: "center", md: "flex-end" }, // bottom-align text with avatar
-            gap: 3,
+            flexDirection: "column",
+            justifyContent: "flex-end", // bottom align text with avatar
+            textAlign: { xs: "center", md: "left" },
           }}
         >
-          {/* Avatar overlapping hero */}
-          <Avatar
-            src={profileUser?.profile_image_url || undefined}
-            alt={profileUser?.username || "User"}
-            sx={{
-              width: 250,
-              height: 250,
-              border: "4px solid white",
-              boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-              bgcolor: "#afac9aff",
-              fontSize: 48,
-              mt: { xs: 0, md: 0 }, // negative margin to overlap hero
-            }}
-          >
-            {!profileUser?.profile_image_url &&
-              profileUser?.username?.[0]?.toUpperCase()}
-          </Avatar>
+          {/* Username */}
+          <Typography variant="h4" fontWeight="bold" sx={{ mb: 1 }}>
+            {profileUser?.username}
+          </Typography>
 
-          {/* Username & Stats */}
+          {/* Stats Row */}
           <Box
             sx={{
               display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-end", // bottom align text with avatar
-              textAlign: { xs: "center", md: "left" },
+              flexDirection: { xs: "column", md: "row" }, // stacked on mobile, inline on desktop
+              gap: { xs: 0.5, md: 4 }, // spacing between stats
+              alignItems: "center",
             }}
           >
-            <Typography variant="h4" fontWeight="bold">
-              {profileUser?.username}
-            </Typography>
             <Typography variant="body1" color="text.secondary">
-              Member since:{" "}
-              {new Date(profileUser?.created_at).toLocaleDateString()}
+              Member since: {new Date(profileUser?.created_at).toLocaleDateString()}
             </Typography>
             <Typography variant="body1" color="text.secondary">
               Recipes Created: {profileRecipes.length}
@@ -160,41 +170,43 @@ export default function UserProfile() {
             </Typography>
           </Box>
         </Box>
-      </Container>
+      </Box>
+    </Container>
 
-      {/* Recipe Filter + Grid */}
-      <Container maxWidth="xl" sx={{ mt: 4 }}>
-        <RecipeFilterBar tags={usedTags} onFilterChange={handleFilterChange} />
+    {/* Recipe Filter + Grid */}
+    <Container maxWidth="xl" sx={{ mt: 4 }}>
+      <RecipeFilterBar tags={usedTags} onFilterChange={handleFilterChange} />
 
-        {filteredRecipes.length === 0 ? (
-          <Typography
-            sx={{ textAlign: "center", color: "text.secondary", mt: 4 }}
-          >
-            This user has no public recipes.
-          </Typography>
-        ) : (
-          <Grid container spacing={2} sx={{ mt: 2, justifyContent: "center" }}>
-            {filteredRecipes.map((recipe) => (
-              <Grid
-                key={recipe.id}
-                item
-                xs={6}
-                sm={6}
-                md={4}
-                lg={3}
-                sx={{ display: "flex", justifyContent: "center" }}
-              >
-                <RecipeCard
-                  recipe={recipe}
-                  favorites={favorites}
-                  toggleFavorite={toggleFavorite}
-                  onClick={() => navigate(`/recipes/${recipe.id}`)}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        )}
-      </Container>
-    </Box>
-  );
+      {filteredRecipes.length === 0 ? (
+        <Typography
+          sx={{ textAlign: "center", color: "text.secondary", mt: 4 }}
+        >
+          This user has no public recipes.
+        </Typography>
+      ) : (
+        <Grid container spacing={2} sx={{ mt: 2, justifyContent: "center" }}>
+          {filteredRecipes.map((recipe) => (
+            <Grid
+              key={recipe.id}
+              item
+              xs={6}
+              sm={6}
+              md={4}
+              lg={3}
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
+              <RecipeCard
+                recipe={recipe}
+                favorites={favorites}
+                toggleFavorite={toggleFavorite}
+                onClick={() => navigate(`/recipes/${recipe.id}`)}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      )}
+    </Container>
+  </Box>
+);
+
 }

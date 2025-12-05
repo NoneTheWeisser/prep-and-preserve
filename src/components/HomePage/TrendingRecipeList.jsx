@@ -9,6 +9,7 @@ export default function TrendingRecipeList() {
 
   const navigate = useNavigate();
   const fetchTrending = useStore((state) => state.fetchTrending);
+  const fetchFavorites = useStore((state) => state.fetchFavorites);
   const trendingRecipes = useStore((state) => state.trendingRecipes);
   const favorites = useStore((state) => state.favorites);
   const toggleFavorite = useStore((state) => state.toggleFavorite);
@@ -16,17 +17,13 @@ export default function TrendingRecipeList() {
   useEffect(() => {
     const loadTrending = async () => {
       setLoading(true);
-      await fetchTrending();
+      await Promise.all([fetchTrending(), fetchFavorites()]);
       setLoading(false);
     };
     loadTrending();
-  }, [fetchTrending]);
+  }, [fetchTrending, fetchFavorites]);
 
-  // useEffect(() => {
-  //   fetchTrending();
-  // }, [fetchTrending]);
-  
-    if (loading) {
+  if (loading) {
     return (
       <Typography sx={{ textAlign: "center", color: "text.secondary" }}>
         Loading trending recipes...
@@ -56,13 +53,8 @@ export default function TrendingRecipeList() {
           container
           spacing={2}
           justifyContent="center"
-          sx={{
-            display: "flex",
-            flexWrap: "wrap",
-          }}
+          sx={{ display: "flex", flexWrap: "wrap" }}
         >
-          {" "}
-          {/* limit to 10 cards */}
           {trendingRecipes.slice(0, 10).map((recipe) => (
             <Grid
               key={recipe.id}
