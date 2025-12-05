@@ -91,55 +91,52 @@ export default function UserProfile() {
   }
 
   return (
-    <div style={{ textAlign: "center" }}>
-      <div style={{ position: "relative" }}>
+    <div>
+      {/* Hero Image */}
+      <Box sx={{ position: "relative" }}>
         <img
-          src={"/img/pexels-rdne-8581016.jpg"}
-          alt={"MyRecipe header image"}
-          style={{
-            width: "100%",
-            height: "500px",
-            objectFit: "cover",
-          }}
+          src="/img/pexels-ron-lach-8176603.jpg"
+          alt="Profile Hero"
+          style={{ width: "100%", height: 400, objectFit: "cover" }}
         />
+
+        {/* Profile Avatar Overlay */}
         <Avatar
-          src={user?.profile_image_url || undefined}
-          alt={user?.username || "User"}
+          src={profileUser?.profile_image_url || undefined}
+          alt={profileUser?.username || "User"}
           sx={{
-            width: 250,
-            height: 250,
+            width: 240,
+            height: 240,
             position: "absolute",
-            bottom: "-40px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            border: "4px solid white",
+            bottom: -30, // overlay a bit on hero image
+            left: "5%",
+            border: "3px solid white",
             boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
             bgcolor: "#afac9aff",
-            fontSize: 64,
+            fontSize: 36,
           }}
         >
-          {!user?.profile_image_url && user?.username?.[0]?.toUpperCase()}
+          {!profileUser?.profile_image_url &&
+            profileUser?.username?.[0]?.toUpperCase()}
         </Avatar>
-      </div>
-      <Container maxWidth="xl" sx={{ mt: 6 }}>
-        {/* Profile Header */}
-        <Box sx={{ textAlign: "center", mb: 4 }}>
-          <Typography variant="h5" fontWeight={600}>
-            {profileUser.username}
-          </Typography>
-          <Typography sx={{ mt: 1, color: "text.secondary" }}>
-            Member since {new Date(profileUser.created_at).toLocaleDateString()}
-          </Typography>
-          <Typography sx={{ mt: 1, color: "text.secondary" }}>
-            {profileRecipes.length}{" "}
-            {profileRecipes.length === 1 ? "recipe" : "recipes"}
-          </Typography>
-        </Box>
+      </Box>
 
-        {/* Filter/Search Bar */}
+      {/* Text Under Profile Image */}
+      <Container maxWidth="xl" sx={{ mt: 6, ml: "5%" }}>
+        <Typography variant="h5" fontWeight={600}>
+          {profileUser.username}
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+          Member since {new Date(profileUser.created_at).toLocaleDateString()} •{" "}
+          {profileRecipes.length}{" "}
+          {profileRecipes.length === 1 ? "recipe" : "recipes"}
+        </Typography>
+      </Container>
+
+      {/* Recipes + Filter */}
+      <Container maxWidth="xl" sx={{ mt: 4 }}>
         <RecipeFilterBar tags={usedTags} onFilterChange={handleFilterChange} />
 
-        {/* Recipes Grid */}
         {filteredRecipes.length === 0 ? (
           <Typography
             sx={{ textAlign: "center", color: "text.secondary", mt: 4 }}
