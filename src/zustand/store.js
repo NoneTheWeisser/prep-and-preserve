@@ -9,6 +9,7 @@ import adminSlice from "./slices/admin.slice.js";
 import axios from "axios";
 import madeSlice from "./slices/made.slice.js";
 import snackbarSlice from "./slices/snackbar.slice.js";
+import profileSlice from "./slices/profile.slice.js";
 
 axios.defaults.withCredentials = true;
 
@@ -23,6 +24,7 @@ const useStore = create(
     ...createFavoritesSlice(set, get),
     ...madeSlice(set, get),
     ...snackbarSlice(set, get),
+    ...profileSlice(set, get),
   }))
 );
 

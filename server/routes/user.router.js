@@ -158,48 +158,55 @@ router.get("/public/:id", async (req, res) => {
   try {
     const result = await pool.query(
       `SELECT id, username, profile_image_url, created_at
-      FROM "user"
-      WHERE id = $1 AND is_active = TRUE`,
+       FROM "user"
+       WHERE id = $1 AND is_active = TRUE`,
       [userId]
     );
 
     if (result.rows.length === 0) {
-      return res.status(400).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
     res.json(result.rows[0]);
   } catch (error) {
     console.error("Error fetching public user:", error);
     res.sendStatus(500);
   }
+});
 
-  // get recipes by specific user (public only recipes unless requested by owner)
-  router.get("/:id/recipes", async (req, res) => {
-    const targetUserId = req.params.id;
-    const requesterId = req.user?.id; //undefined if logged in
+// Get recipes by a specific user (include tags)
+router.get("/:id/recipes", async (req, res) => {
+  const targetUserId = req.params.id;
+  const requesterId = req.user?.id; // undefined if not logged in
 
-    try {
-      let query = ` 
-      SELECT recipes.*, "user".username
-      FROM recipes
-      JOIN "user" ON recipes.user_id = "user".id
-      WHERE recipes.user_id =$1
-      `;
-      let params = [targetUserId];
-
-      if (!requesterId || requesterId != targetUserId) {
-        // not the owner - only show public recipes
-        query += ` AND recipes.is_public = TRUE`;
+  try {
+    const query = `
+      SELECT r.*, u.username,
+        COALESCE(
+          json_agg(
+            json_build_object('id', t.id, 'name', t.name)
+          ) FILTER (WHERE t.id IS NOT NULL),
+          '[]'
+        ) AS tags
+      FROM recipes r
+      JOIN "user" u ON r.user_id = u.id
+      LEFT JOIN recipe_tags rt ON r.id = rt.recipe_id
+      LEFT JOIN tags t ON rt.tag_id = t.id
+      WHERE r.user_id = $1
+      ${
+        !requesterId || requesterId != targetUserId
+          ? "AND r.is_public = TRUE"
+          : ""
       }
+      GROUP BY r.id, u.username
+      ORDER BY r.created_at DESC;
+    `;
 
-      query += ` ORDER BY recipes.created_at DESC;`;
-
-      const result = await pool.query(query, params);
-      res.json(result.rows);
-    } catch (error) {
-      console.error("Error fetching user recipes:", error);
-      res.sendStatus(500);
-    }
-  });
+    const result = await pool.query(query, [targetUserId]);
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Error fetching user recipes:", error);
+    res.sendStatus(500);
+  }
 });
 
 module.exports = router;

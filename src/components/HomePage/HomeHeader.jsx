@@ -53,7 +53,7 @@ export default function HomeHeader() {
               fontWeight: 600,
             }}
           >
-            Welcome {user.username || ""}
+            Welcome {user?.username || ""}
           </Typography>
 
           <Typography
@@ -89,7 +89,7 @@ export default function HomeHeader() {
             mb: 4,
           }}
         >
-          {!user.id ? (
+          {!user?.id ? (
             <>
               <Button
                 variant="contained"

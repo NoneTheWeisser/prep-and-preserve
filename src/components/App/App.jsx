@@ -20,7 +20,7 @@ import GlobalSnackbar from "../GlobalSnackbar/GlobalSnackbar";
 import MyRecipesTab from "../MyRecipe/RecipeTabs/MyRecipesTab";
 import FavoritesTab from "../MyRecipe/RecipeTabs/FavoritesTab";
 import MadeRecipesTab from "../MyRecipe/RecipeTabs/MadeRecipesTab";
-
+import UserProfile from "../UserProfile/UserProfile";
 
 function App() {
   const user = useStore((state) => state.user);
@@ -49,22 +49,15 @@ function App() {
             exact
             path="/login"
             element={
-              user.id ? (
-                <Navigate to="/" replace /> // Redirect authenticated user.
-              ) : (
-                <LoginPage /> // Render LoginPage for unauthenticated user.
-              )
+              user && user.id ? <Navigate to="/" replace /> : <LoginPage />
             }
           />
+
           <Route
             exact
             path="/registration"
             element={
-              user.id ? (
-                <Navigate to="/" replace /> // Redirect authenticated user.
-              ) : (
-                <RegisterPage /> // Render RegisterPage for unauthenticated user.
-              )
+              user && user.id ? <Navigate to="/" replace /> : <RegisterPage />
             }
           />
           <Route
@@ -76,7 +69,7 @@ function App() {
             }
           />
           <Route path="/myrecipes" element={<MyRecipe />}>
-          {/* // user.id ? <MyRecipe /> : <Navigate to="/login" replace /> */}
+            {/* // user.id ? <MyRecipe /> : <Navigate to="/login" replace /> */}
             <Route index element={<Navigate to="mine" replace />} />
             <Route path="mine" element={<MyRecipesTab />} />
             <Route path="favorites" element={<FavoritesTab />} />
@@ -87,6 +80,8 @@ function App() {
           <Route exact path="/settings" element={<ProfileSettings />} />
           <Route path="/recipes/:id" element={<FullRecipeView />} />
           <Route path="/recipes/edit/:id" element={<EditRecipeForm />} />
+          {/* New route for public user profiles */}
+          <Route path="/user/:id" element={<UserProfile />} />
           <Route path="*" element={<h2>404 Page</h2>} />
         </Routes>
       </main>

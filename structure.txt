@@ -1,0 +1,25 @@
+
+/Users/nweisser/eda/tier3/solo-project/prep-and-preserve
+├── Dockerfile
+├── PostmanSoloRoutesv2.json
+├── README.md
+├── archivedCode
+├── build
+├── database.sql
+├── fly.toml
+├── index.html
+├── node_modules
+├── package-lock.json
+├── package.json
+├── public
+├── screenshots
+├── server
+├── src
+├── structure.txt
+└── vite.config.mjs
+
+directory: 7 file: 10
+
+
+
+[2K[1G
