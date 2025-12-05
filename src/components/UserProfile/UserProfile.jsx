@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import useStore from "../../zustand/store";
 import RecipeFilterBar from "../RecipeFilterBar/RecipeFilterBar";
 import RecipeCard from "../RecipeFilterBar/RecipeCard";
-import { Container, Grid, Typography, Box, Avatar } from "@mui/material";
+import { Container, Grid, Typography, Box, Avatar, Paper } from "@mui/material";
 
 export default function UserProfile() {
   const { id } = useParams();
@@ -30,6 +30,12 @@ export default function UserProfile() {
   const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [selectedTagIds, setSelectedTagIds] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  //  Total Favorites
+  const totalFavorites = profileRecipes.reduce(
+    (sum, recipe) => sum + Number(recipe.favorites_count || 0),
+    0
+  );
 
   // Fetch profile and favorites
   useEffect(() => {
@@ -91,49 +97,72 @@ export default function UserProfile() {
   }
 
   return (
-    <div>
+    <Box>
       {/* Hero Image */}
-      <Box sx={{ position: "relative" }}>
-        <img
-          src="/img/pexels-ron-lach-8176603.jpg"
-          alt="Profile Hero"
-          style={{ width: "100%", height: 400, objectFit: "cover" }}
-        />
+      <Box
+        sx={{
+          height: 400,
+          backgroundImage: `url('/img/pexels-ron-lach-8176603.jpg')`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          position: "relative",
+        }}
+      />
 
-        {/* Profile Avatar Overlay */}
-        <Avatar
-          src={profileUser?.profile_image_url || undefined}
-          alt={profileUser?.username || "User"}
+      {/* Profile Info */}
+      <Container maxWidth="xl" sx={{ mt: -10, mb: 4 }}>
+        <Box
           sx={{
-            width: 240,
-            height: 240,
-            position: "absolute",
-            bottom: -30, // overlay a bit on hero image
-            left: "5%",
-            border: "3px solid white",
-            boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-            bgcolor: "#afac9aff",
-            fontSize: 36,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: { xs: "center", md: "flex-start" },
+            textAlign: { xs: "center", md: "left" },
+            gap: 2,
           }}
         >
-          {!profileUser?.profile_image_url &&
-            profileUser?.username?.[0]?.toUpperCase()}
-        </Avatar>
-      </Box>
+          {/* Avatar */}
+          <Avatar
+            src={profileUser?.profile_image_url || undefined}
+            alt={profileUser?.username || "User"}
+            sx={{
+              width: 200,
+              height: 200,
+              border: "4px solid white",
+              boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
+              bgcolor: "#afac9aff",
+              fontSize: 64,
+            }}
+          >
+            {!profileUser?.profile_image_url &&
+              profileUser?.username?.[0]?.toUpperCase()}
+          </Avatar>
 
-      {/* Text Under Profile Image */}
-      <Container maxWidth="xl" sx={{ mt: 6, ml: "5%" }}>
-        <Typography variant="h5" fontWeight={600}>
-          {profileUser.username}
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-          Member since {new Date(profileUser.created_at).toLocaleDateString()} •{" "}
-          {profileRecipes.length}{" "}
-          {profileRecipes.length === 1 ? "recipe" : "recipes"}
-        </Typography>
+          {/* Username */}
+          <Typography variant="h4" fontWeight="bold">
+            {profileUser?.username}
+          </Typography>
+
+          {/* Stats */}
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
+            <Typography variant="body1" color="text.secondary">
+              Member since{" "}
+              {new Date(profileUser?.created_at).toLocaleDateString()}
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Recipes: {profileRecipes.length}
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Total Favorites:{" "}
+              {profileRecipes.reduce(
+                (sum, recipe) => sum + Number(recipe.favorites_count || 0),
+                0
+              )}
+            </Typography>
+          </Box>
+        </Box>
       </Container>
 
-      {/* Recipes + Filter */}
+      {/* Recipe Filter + Grid */}
       <Container maxWidth="xl" sx={{ mt: 4 }}>
         <RecipeFilterBar tags={usedTags} onFilterChange={handleFilterChange} />
 
@@ -166,6 +195,6 @@ export default function UserProfile() {
           </Grid>
         )}
       </Container>
-    </div>
+    </Box>
   );
 }

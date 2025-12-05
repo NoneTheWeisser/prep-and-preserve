@@ -173,7 +173,7 @@ router.get("/public/:id", async (req, res) => {
   }
 });
 
-// Get recipes by a specific user (include tags)
+// Get recipes by specific user (public only unless owner)
 router.get("/:id/recipes", async (req, res) => {
   const targetUserId = req.params.id;
   const requesterId = req.user?.id; // undefined if not logged in
@@ -181,6 +181,7 @@ router.get("/:id/recipes", async (req, res) => {
   try {
     const query = `
       SELECT r.*, u.username,
+        COALESCE(fav_count.count, 0) AS favorites_count,
         COALESCE(
           json_agg(
             json_build_object('id', t.id, 'name', t.name)
@@ -189,6 +190,11 @@ router.get("/:id/recipes", async (req, res) => {
         ) AS tags
       FROM recipes r
       JOIN "user" u ON r.user_id = u.id
+      LEFT JOIN (
+        SELECT recipe_id, COUNT(*) AS count
+        FROM favorites
+        GROUP BY recipe_id
+      ) AS fav_count ON r.id = fav_count.recipe_id
       LEFT JOIN recipe_tags rt ON r.id = rt.recipe_id
       LEFT JOIN tags t ON rt.tag_id = t.id
       WHERE r.user_id = $1
@@ -197,7 +203,7 @@ router.get("/:id/recipes", async (req, res) => {
           ? "AND r.is_public = TRUE"
           : ""
       }
-      GROUP BY r.id, u.username
+      GROUP BY r.id, u.username, fav_count.count
       ORDER BY r.created_at DESC;
     `;
 
