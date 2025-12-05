@@ -14,7 +14,7 @@ export default function About() {
         <div
           style={{
             display: "flex",
-            flexWrap: "wrap", 
+            flexWrap: "wrap",
             alignItems: "center",
             gap: "2rem",
             maxWidth: "1000px",
@@ -27,36 +27,101 @@ export default function About() {
             alt="About Image"
             style={{
               width: "100%",
-              maxWidth: "400px", 
+              maxWidth: "400px",
               borderRadius: "2px",
               objectFit: "cover",
               flex: "1 1 300px",
             }}
           />
 
-          <div
-            style={{
-              flex: "1 1 300px", 
-              minWidth: "280px",
-            }}
-          >
+          <div style={{ flex: "1 1 300px", minWidth: "280px" }}>
             <h2 style={{ marginBottom: "1rem" }}>About Prep & Preserve</h2>
 
             <p style={{ lineHeight: "1.6rem", fontSize: "1.1rem" }}>
-              This app is named Prep & Preserve for a few reasons. First, I'm a fan
-              of alliteration, but the name also reflects the way I like to cook.
-              <strong> Prep </strong> comes from the culinary term <em>mise en
-              place</em>, a French phrase meaning “everything in its place,” which
-              refers to gathering, preparing, and organizing all your ingredients and
-              tools before you start cooking.
-              <strong> Preserve </strong> speaks to the other core purpose of the
-              app: storing and keeping the recipes you love so they're always at
-              hand when you want to make them again.
+              This app is named Prep & Preserve for a few reasons. First, I'm a
+              fan of alliteration, but the name also reflects the way I like to
+              cook.
+              <strong> Prep </strong> comes from the culinary term{" "}
+              <em>mise en place</em>, a French phrase meaning “everything in its
+              place,” which refers to gathering, preparing, and organizing all
+              your ingredients and tools before you start cooking.
+              <strong> Preserve </strong> speaks to the other core purpose of
+              the app: storing and keeping the recipes you love so they're
+              always at hand when you want to make them again.
             </p>
           </div>
         </div>
       </div>
 
+      {/* App Updates Section */}
+      <div
+        style={{
+          backgroundColor: "#e1d1c6ff",
+          padding: "2rem",
+          borderRadius: "8px",
+          maxWidth: "1000px",
+          margin: "4rem auto",
+        }}
+      >
+        <h2 style={{ marginBottom: "1rem" }}>Latest Updates</h2>
+
+        <div style={{ marginBottom: "2rem" }}>
+          <h3>Update 1.2</h3>
+          <ul
+            style={{
+              lineHeight: "1.6rem",
+              fontSize: "1.05rem",
+              paddingLeft: "1.5rem",
+            }}
+          >
+            <li>
+              The Trending page now highlights the most recently made recipes in
+              the community.
+            </li>
+            <li>
+              You can now tap a username in Trending to visit that cook’s full
+              profile.
+            </li>
+            <li>
+              Favorites load immediately on the Trending page, making it easier
+              to see what you’ve saved.
+            </li>
+            <li>
+              General browsing improvements make moving through the app smoother
+              and more consistent.
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>Update 1.1</h3>
+          <ul
+            style={{
+              lineHeight: "1.6rem",
+              fontSize: "1.05rem",
+              paddingLeft: "1.5rem",
+            }}
+          >
+            <li>
+              <strong>
+                My Recipe List View: View your recipes in three different ways.
+              </strong>
+            </li>
+            <ul style={{ marginTop: "0.5rem", paddingLeft: "1.5rem" }}>
+              <li>
+                <strong>My Recipes:</strong> All recipes you’ve submitted.
+              </li>
+              <li>
+                <strong>Favorites:</strong> Every recipe you’ve marked as a
+                favorite.
+              </li>
+              <li>
+                <strong>Made:</strong> Recipes you’ve marked as made.
+              </li>
+            </ul>
+          </ul>
+        </div>
+      </div>
       {/* Contact Section */}
       <div
         style={{
