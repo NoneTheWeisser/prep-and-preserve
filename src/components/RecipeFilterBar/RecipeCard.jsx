@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Typography, IconButton, Stack, Avatar } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { useNavigate } from "react-router-dom";
 
 export default function RecipeCard({
   recipe,
@@ -9,6 +10,7 @@ export default function RecipeCard({
   toggleFavorite,
   onClick,
 }) {
+  const navigate = useNavigate();
   const isFav = favorites.some((fav) => fav.id === recipe.id);
 
   return (
@@ -81,13 +83,39 @@ export default function RecipeCard({
               WebkitLineClamp: 2, // wrap max 2 lines
               WebkitBoxOrient: "vertical",
               overflow: "hidden",
-              // fontSize: { xs: "0.8rem", sm: "0.9rem", md: "1rem" }, // responsive font
             }}
           >
             {recipe.title}
           </Typography>
-
+          {/* Username with navigation and hover styling */}
           <Stack
+            direction="row"
+            spacing={1}
+            alignItems="center"
+            sx={{ mt: 0.5 }}
+          >
+            <Typography
+              variant="body2"
+              color="inherit"
+              sx={{
+                textDecoration: "underline",
+                cursor: "pointer",
+                transition: "color 0.2s, transform 0.2s", // <-- Styling commit
+                "&:hover": {
+                  color: "#ffcc00",
+                  transform: "translateY(-2px)",
+                },
+              }}
+              onClick={(e) => {
+                e.stopPropagation(); // <-- Navigation logic commit
+                navigate(`/user/${recipe.user_id}`); // <-- Navigation logic commit
+              }}
+            >
+              @{recipe.username}
+            </Typography>
+          </Stack>
+
+          {/* <Stack
             direction="row"
             spacing={1}
             alignItems="center"
@@ -103,7 +131,7 @@ export default function RecipeCard({
             <Typography variant="body2" color="inherit">
               @{recipe.username}
             </Typography>
-          </Stack>
+          </Stack> */}
         </Box>
       </Box>
     </Box>

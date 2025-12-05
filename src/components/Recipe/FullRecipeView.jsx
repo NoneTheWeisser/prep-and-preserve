@@ -165,7 +165,18 @@ export default function FullRecipeView() {
               color="text.secondary"
               sx={{ mb: 0.5, pt: 1 }}
             >
-              Submitted by: {recipe.username}
+              Submitted by:{" "}
+              <Box
+                component="span"
+                sx={{
+                  cursor: "pointer",
+                  textDecoration: "underline",
+                  display: "inline",
+                }}
+                onClick={() => navigate(`/user/${recipe.user_id}`)}
+              >
+                {recipe.username}
+              </Box>
             </Typography>
 
             {recipe.source_url && (
