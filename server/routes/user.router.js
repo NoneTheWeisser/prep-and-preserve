@@ -151,4 +151,55 @@ router.put("/deactivate", rejectUnauthenticated, async (req, res) => {
   }
 });
 
+// Get public user info
+router.get("/public/:id", async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const result = await pool.query(
+      `SELECT id, username, profile_image_url, created_at
+      FROM "user"
+      WHERE id = $1 AND is_active = TRUE`,
+      [userId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error("Error fetching public user:", error);
+    res.sendStatus(500);
+  }
+
+  // get recipes by specific user (public only recipes unless requested by owner)
+  router.get("/:id/recipes", async (req, res) => {
+    const targetUserId = req.params.id;
+    const requesterId = req.user?.id; //undefined if logged in
+
+    try {
+      let query = ` 
+      SELECT recipes.*, "user".username
+      FROM recipes
+      JOIN "user" ON recipes.user_id = "user".id
+      WHERE recipes.user_id =$1
+      `;
+      let params = [targetUserId];
+
+      if (!requesterId || requesterId != targetUserId) {
+        // not the owner - only show public recipes
+        query += ` AND recipes.is_public = TRUE`;
+      }
+
+      query += ` ORDER BY recipes.created_at DESC;`;
+
+      const result = await pool.query(query, params);
+      res.json(result.rows);
+    } catch (error) {
+      console.error("Error fetching user recipes:", error);
+      res.sendStatus(500);
+    }
+  });
+});
+
 module.exports = router;
