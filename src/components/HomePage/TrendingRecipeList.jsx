@@ -21,16 +21,25 @@ export default function TrendingRecipeList() {
       setLoading(false);
     };
     loadTrending();
-  }, [fetchTrending, fetchFavorites]);
+  }, []);
 
-  if (loading) {
+  // useEffect(() => {
+  //   const loadTrending = async () => {
+  //     setLoading(true);
+  //     await Promise.all([fetchTrending(), fetchFavorites()]);
+  //     setLoading(false);
+  //   };
+  //   loadTrending();
+  // }, [fetchTrending, fetchFavorites]);
+
+  if (loading || !trendingRecipes) {
     return (
       <Typography sx={{ textAlign: "center", color: "text.secondary" }}>
         Loading trending recipes...
       </Typography>
     );
   }
-
+  
   return (
     <Container maxWidth="xl" sx={{ mt: 6 }}>
       {/* Header */}

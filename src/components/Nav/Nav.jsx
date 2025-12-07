@@ -53,6 +53,8 @@ export default function Nav() {
 
   const pages = [...commonPages, ...(user?.id ? privatePages : publicPages)];
 
+  // todo - add to the search bar a place to search for user.
+
   return (
     <AppBar
       position="static"
