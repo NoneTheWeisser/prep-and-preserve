@@ -15,13 +15,14 @@ export default function TrendingRecipeList() {
   const toggleFavorite = useStore((state) => state.toggleFavorite);
 
   useEffect(() => {
-    const loadTrending = async () => {
+    const loadData = async () => {
       setLoading(true);
-      await Promise.all([fetchTrending(), fetchFavorites()]);
+      await fetchTrending();
+      await fetchFavorites();
       setLoading(false);
     };
-    loadTrending();
-  }, []);
+    loadData();
+  }, [fetchTrending, fetchFavorites]);
 
   // useEffect(() => {
   //   const loadTrending = async () => {
@@ -32,14 +33,22 @@ export default function TrendingRecipeList() {
   //   loadTrending();
   // }, [fetchTrending, fetchFavorites]);
 
-  if (loading || !trendingRecipes) {
+  if (loading) {
     return (
-      <Typography sx={{ textAlign: "center", color: "text.secondary" }}>
+      <Typography sx={{ textAlign: "center" }}>
         Loading trending recipes...
       </Typography>
     );
   }
-  
+
+  if (!trendingRecipes || trendingRecipes.length === 0) {
+    return (
+      <Typography sx={{ textAlign: "center" }}>
+        No trending recipes yet.
+      </Typography>
+    );
+  }
+
   return (
     <Container maxWidth="xl" sx={{ mt: 6 }}>
       {/* Header */}

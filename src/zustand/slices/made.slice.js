@@ -28,7 +28,7 @@ const madeSlice = (set, get) => ({
     try {
       const response = await axios.get("/api/trending/recent");
       const normalized = (response.data || []).map((r) => ({
-        id: r.recipe_id,
+        id: Number(r.recipe_id),
         title: r.recipe_title,
         image_url: r.recipe_image_url,
         user_id: r.user_id,
