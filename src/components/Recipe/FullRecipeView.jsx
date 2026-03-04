@@ -11,7 +11,6 @@ import {
   IconButton,
   Stack,
   Divider,
-  Button,
   Snackbar,
   Alert,
   Badge,
@@ -22,6 +21,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import PrintIcon from "@mui/icons-material/Print";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import PeopleIcon from "@mui/icons-material/People";
+import PersonIcon from "@mui/icons-material/Person";
+import LinkIcon from "@mui/icons-material/Link";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 export default function FullRecipeView() {
   const { id } = useParams();
@@ -161,38 +163,6 @@ export default function FullRecipeView() {
             >
               {recipe.title}
             </Typography>
-
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{ mb: 0.5, pt: 1 }}
-            >
-              Submitted by:{" "}
-              <Box
-                component="span"
-                sx={{
-                  cursor: "pointer",
-                  textDecoration: "underline",
-                  display: "inline",
-                }}
-                onClick={() => navigate(`/user/${recipe.user_id}`)}
-              >
-                {recipe.username}
-              </Box>
-            </Typography>
-
-            {recipe.source_url && (
-              <Typography variant="body2" color="text.secondary">
-                Source:{" "}
-                <a
-                  href={recipe.source_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  View Original
-                </a>
-              </Typography>
-            )}
           </Box>
 
           {/* Right column */}
@@ -236,72 +206,91 @@ export default function FullRecipeView() {
                 </>
               )}
             </Stack>
-
-            {/* "I Made This" button */}
-            {user && (
-              <Button
-                variant={hasMade ? "contained" : "outlined"}
-                color="error"
-                onClick={handleLogMade}
-              >
-                I Made This
-                {hasMade && (
-                  <Badge
-                    badgeContent={madeCount}
-                    color="primary"
-                    sx={{ ml: 2 }}
-                  />
-                )}
-              </Button>
-            )}
           </Box>
         </Box>
 
-        {(recipe.prep_time_minutes ||
-          recipe.cook_time_minutes ||
-          recipe.servings) && (
-          <Box
-            sx={{
-              display: "flex",
-              gap: 2,
-              flexWrap: "wrap",
-              mb: 2,
-            }}
-          >
-            {recipe.prep_time_minutes != null && (
+        {/* Unified meta row: submitter, source, time, servings */}
+        <Box
+          sx={{
+            display: "flex",
+            gap: 2,
+            flexWrap: "wrap",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          {recipe.username && (
+            <Chip
+              icon={<PersonIcon />}
+              label={`@${recipe.username}`}
+              size="small"
+              variant="outlined"
+              onClick={() => navigate(`/user/${recipe.user_id}`)}
+              sx={{ cursor: "pointer" }}
+            />
+          )}
+          {recipe.source_url && (
+            <Chip
+              icon={<LinkIcon />}
+              label="View Original"
+              size="small"
+              variant="outlined"
+              onClick={() =>
+                window.open(recipe.source_url, "_blank", "noopener,noreferrer")
+              }
+              sx={{ cursor: "pointer" }}
+            />
+          )}
+          {recipe.prep_time_minutes != null && (
+            <Chip
+              icon={<ScheduleIcon />}
+              label={`Prep: ${recipe.prep_time_minutes} min`}
+              size="small"
+              variant="outlined"
+            />
+          )}
+          {recipe.cook_time_minutes != null && (
+            <Chip
+              icon={<ScheduleIcon />}
+              label={`Cook: ${recipe.cook_time_minutes} min`}
+              size="small"
+              variant="outlined"
+            />
+          )}
+          {(recipe.prep_time_minutes != null ||
+            recipe.cook_time_minutes != null) && (
+            <Chip
+              label={`Total: ${(recipe.prep_time_minutes || 0) + (recipe.cook_time_minutes || 0)} min`}
+              size="small"
+              variant="outlined"
+            />
+          )}
+          {recipe.servings && (
+            <Chip
+              icon={<PeopleIcon />}
+              label={`Serves ${recipe.servings}`}
+              size="small"
+              variant="outlined"
+            />
+          )}
+          {user && (
+            <Badge
+              badgeContent={madeCount}
+              color="primary"
+              showZero={false}
+            >
               <Chip
-                icon={<ScheduleIcon />}
-                label={`Prep: ${recipe.prep_time_minutes} min`}
+                icon={<CheckCircleIcon />}
+                label="I Made This"
                 size="small"
                 variant="outlined"
+                color={hasMade ? "success" : "default"}
+                onClick={handleLogMade}
+                sx={{ cursor: "pointer" }}
               />
-            )}
-            {recipe.cook_time_minutes != null && (
-              <Chip
-                icon={<ScheduleIcon />}
-                label={`Cook: ${recipe.cook_time_minutes} min`}
-                size="small"
-                variant="outlined"
-              />
-            )}
-            {(recipe.prep_time_minutes != null ||
-              recipe.cook_time_minutes != null) && (
-              <Chip
-                label={`Total: ${(recipe.prep_time_minutes || 0) + (recipe.cook_time_minutes || 0)} min`}
-                size="small"
-                variant="outlined"
-              />
-            )}
-            {recipe.servings && (
-              <Chip
-                icon={<PeopleIcon />}
-                label={`Serves ${recipe.servings}`}
-                size="small"
-                variant="outlined"
-              />
-            )}
-          </Box>
-        )}
+            </Badge>
+          )}
+        </Box>
 
         <Divider sx={{ my: 3 }} />
 
