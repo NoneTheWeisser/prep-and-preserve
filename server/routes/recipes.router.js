@@ -129,12 +129,15 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
     is_public,
     source_url,
     tags,
+    prep_time_minutes,
+    cook_time_minutes,
+    servings,
   } = req.body;
   const userId = req.user.id;
 
   const sqlText = `
-    INSERT INTO recipes (user_id, title, description, instructions, ingredients, image_url, is_public, source_url)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    INSERT INTO recipes (user_id, title, description, instructions, ingredients, image_url, is_public, source_url, prep_time_minutes, cook_time_minutes, servings)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
     RETURNING *;
     `;
 
@@ -147,6 +150,9 @@ router.post("/", rejectUnauthenticated, async (req, res) => {
     image_url,
     is_public,
     source_url,
+    prep_time_minutes ?? null,
+    cook_time_minutes ?? null,
+    servings ?? null,
   ];
 
   try {
@@ -186,6 +192,9 @@ router.put(
       is_public,
       source_url,
       tags,
+      prep_time_minutes,
+      cook_time_minutes,
+      servings,
     } = req.body;
 
     const updateQuery = `
@@ -198,8 +207,11 @@ router.put(
       image_url = $5,
       is_public = $6, 
       source_url = $7,
+      prep_time_minutes = $8,
+      cook_time_minutes = $9,
+      servings = $10,
       updated_at = NOW()
-    WHERE id = $8
+    WHERE id = $11
     RETURNING *;
   `;
     const updateValues = [
@@ -210,6 +222,9 @@ router.put(
       image_url,
       is_public,
       source_url,
+      prep_time_minutes ?? null,
+      cook_time_minutes ?? null,
+      servings ?? null,
       recipeId,
     ];
 

@@ -20,6 +20,8 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PrintIcon from "@mui/icons-material/Print";
+import ScheduleIcon from "@mui/icons-material/Schedule";
+import PeopleIcon from "@mui/icons-material/People";
 
 export default function FullRecipeView() {
   const { id } = useParams();
@@ -254,6 +256,52 @@ export default function FullRecipeView() {
             )}
           </Box>
         </Box>
+
+        {(recipe.prep_time_minutes ||
+          recipe.cook_time_minutes ||
+          recipe.servings) && (
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              flexWrap: "wrap",
+              mb: 2,
+            }}
+          >
+            {recipe.prep_time_minutes != null && (
+              <Chip
+                icon={<ScheduleIcon />}
+                label={`Prep: ${recipe.prep_time_minutes} min`}
+                size="small"
+                variant="outlined"
+              />
+            )}
+            {recipe.cook_time_minutes != null && (
+              <Chip
+                icon={<ScheduleIcon />}
+                label={`Cook: ${recipe.cook_time_minutes} min`}
+                size="small"
+                variant="outlined"
+              />
+            )}
+            {(recipe.prep_time_minutes != null ||
+              recipe.cook_time_minutes != null) && (
+              <Chip
+                label={`Total: ${(recipe.prep_time_minutes || 0) + (recipe.cook_time_minutes || 0)} min`}
+                size="small"
+                variant="outlined"
+              />
+            )}
+            {recipe.servings && (
+              <Chip
+                icon={<PeopleIcon />}
+                label={`Serves ${recipe.servings}`}
+                size="small"
+                variant="outlined"
+              />
+            )}
+          </Box>
+        )}
 
         <Divider sx={{ my: 3 }} />
 

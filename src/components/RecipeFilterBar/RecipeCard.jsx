@@ -12,6 +12,9 @@ export default function RecipeCard({
 }) {
   const navigate = useNavigate();
   const isFav = favorites.some((fav) => fav.id === recipe.id);
+  const totalMinutes =
+    (recipe.prep_time_minutes || 0) + (recipe.cook_time_minutes || 0);
+  const hasTimeOrServings = totalMinutes > 0 || recipe.servings;
 
   return (
     <Box
@@ -114,6 +117,16 @@ export default function RecipeCard({
               @{recipe.username}
             </Typography>
           </Stack>
+          {hasTimeOrServings && (
+            <Typography
+              variant="caption"
+              sx={{ display: "block", mt: 0.5, opacity: 0.9 }}
+            >
+              {totalMinutes > 0 && `${totalMinutes} min`}
+              {totalMinutes > 0 && recipe.servings && " • "}
+              {recipe.servings && `Serves ${recipe.servings}`}
+            </Typography>
+          )}
 
           {/* <Stack
             direction="row"
