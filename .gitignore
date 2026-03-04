@@ -70,3 +70,6 @@ package-lock.json
 # admin notes - archived code
 app.notes.md
 archivedCode
+
+# docs
+docs

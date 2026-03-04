@@ -39,6 +39,9 @@ export default function EditRecipeForm() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [sourceUrl, setSourceUrl] = useState("");
+  const [prepTime, setPrepTime] = useState("");
+  const [cookTime, setCookTime] = useState("");
+  const [servings, setServings] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
   const [isPublic, setIsPublic] = useState(true);
 
@@ -60,6 +63,9 @@ export default function EditRecipeForm() {
         setInstructions(recipe.instructions);
         setImageUrl(recipe.image_url);
         setSourceUrl(recipe.source_url);
+        setPrepTime(recipe.prep_time_minutes != null ? String(recipe.prep_time_minutes) : "");
+        setCookTime(recipe.cook_time_minutes != null ? String(recipe.cook_time_minutes) : "");
+        setServings(recipe.servings || "");
         setIsPublic(recipe.is_public);
         setSelectedTags(recipe.tags || []);
       } catch (error) {
@@ -84,6 +90,9 @@ export default function EditRecipeForm() {
       image_url: imageUrl,
       is_public: isPublic,
       source_url: sourceUrl,
+      prep_time_minutes: prepTime ? Number(prepTime) : null,
+      cook_time_minutes: cookTime ? Number(cookTime) : null,
+      servings: servings.trim() || null,
       tags: selectedTags,
     };
 
@@ -173,6 +182,35 @@ export default function EditRecipeForm() {
             value={sourceUrl}
             onChange={(e) => setSourceUrl(e.target.value)}
           />
+
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
+            <TextField
+              label="Prep time (minutes)"
+              variant="outlined"
+              type="number"
+              inputProps={{ min: 0 }}
+              value={prepTime}
+              onChange={(e) => setPrepTime(e.target.value)}
+              sx={{ minWidth: 140 }}
+            />
+            <TextField
+              label="Cook time (minutes)"
+              variant="outlined"
+              type="number"
+              inputProps={{ min: 0 }}
+              value={cookTime}
+              onChange={(e) => setCookTime(e.target.value)}
+              sx={{ minWidth: 140 }}
+            />
+            <TextField
+              label="Servings"
+              variant="outlined"
+              placeholder="e.g. 4 or 4-6"
+              value={servings}
+              onChange={(e) => setServings(e.target.value)}
+              sx={{ minWidth: 140 }}
+            />
+          </Box>
 
           {/* TAGS */}
           <FormControl component="fieldset" sx={{ mt: 2 }}>

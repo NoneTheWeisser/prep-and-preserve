@@ -66,7 +66,79 @@ export default function About() {
         <h2 style={{ marginBottom: "1rem" }}>Latest Updates</h2>
 
         <div style={{ marginBottom: "2rem" }}>
-          <h3>Update 1.2</h3>
+          <h3 style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+            <span
+              style={{
+                display: "inline-block",
+                padding: "0.25rem 0.6rem",
+                backgroundColor: "#9E6B53",
+                color: "#fff",
+                borderRadius: "12px",
+                fontSize: "0.9rem",
+                fontWeight: 600,
+              }}
+            >
+              v1.3
+            </span>
+            <span
+              style={{
+                display: "inline-block",
+                padding: "0.15rem 0.5rem",
+                backgroundColor: "#720000",
+                color: "#fff",
+                borderRadius: "8px",
+                fontSize: "0.7rem",
+                fontWeight: 600,
+                textTransform: "uppercase",
+              }}
+            >
+              New
+            </span>
+            <span style={{ fontWeight: 400, color: "#555" }}>
+              March 2025
+            </span>
+          </h3>
+          <ul
+            style={{
+              lineHeight: "1.6rem",
+              fontSize: "1.05rem",
+              paddingLeft: "1.5rem",
+            }}
+          >
+            <li>
+              <strong>Recipe time &amp; servings:</strong> Add prep time, cook
+              time, and servings when creating or editing recipes.
+            </li>
+            <li>
+              Recipe pages now display a unified meta row with submitter, source
+              link, time, and servings as chips.
+            </li>
+            <li>
+              &quot;I Made This&quot; is now a chip in the meta row, matching the
+              updated recipe page style.
+            </li>
+            <li>
+              Recipe cards show total time and servings when available.
+            </li>
+          </ul>
+        </div>
+
+        <div style={{ marginBottom: "2rem" }}>
+          <h3 style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+            <span
+              style={{
+                display: "inline-block",
+                padding: "0.25rem 0.6rem",
+                backgroundColor: "#8a7355",
+                color: "#fff",
+                borderRadius: "12px",
+                fontSize: "0.9rem",
+                fontWeight: 600,
+              }}
+            >
+              v1.2
+            </span>
+          </h3>
           <ul
             style={{
               lineHeight: "1.6rem",
@@ -94,7 +166,21 @@ export default function About() {
         </div>
 
         <div>
-          <h3>Update 1.1</h3>
+          <h3 style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+            <span
+              style={{
+                display: "inline-block",
+                padding: "0.25rem 0.6rem",
+                backgroundColor: "#7a6355",
+                color: "#fff",
+                borderRadius: "12px",
+                fontSize: "0.9rem",
+                fontWeight: 600,
+              }}
+            >
+              v1.1
+            </span>
+          </h3>
           <ul
             style={{
               lineHeight: "1.6rem",
