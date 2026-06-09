@@ -17,6 +17,8 @@ import useStore from "../../zustand/store";
 import { useNavigate } from "react-router-dom";
 import InstructionTextEditor from "./InstructionTextEditor";
 import IngredientTextEditor from "./IngredientTextEditor";
+import { toTotalMinutes } from "../../utils/formatDuration";
+import RecipeTimeFields from "./RecipeTimeFields";
 
 export default function AddRecipeForm() {
   const [instructions, setInstructions] = useState("");
@@ -25,8 +27,10 @@ export default function AddRecipeForm() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [sourceUrl, setSourceUrl] = useState("");
-  const [prepTime, setPrepTime] = useState("");
-  const [cookTime, setCookTime] = useState("");
+  const [prepHours, setPrepHours] = useState("");
+  const [prepMinutes, setPrepMinutes] = useState("");
+  const [cookHours, setCookHours] = useState("");
+  const [cookMinutes, setCookMinutes] = useState("");
   const [servings, setServings] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
   const [isPublic, setIsPublic] = useState(true);
@@ -84,8 +88,8 @@ export default function AddRecipeForm() {
       image_url: imageUrl || "/img/fallbackimage.jpg",
       is_public: isPublic,
       source_url: sourceUrl,
-      prep_time_minutes: prepTime ? Number(prepTime) : null,
-      cook_time_minutes: cookTime ? Number(cookTime) : null,
+      prep_time_minutes: toTotalMinutes(prepHours, prepMinutes),
+      cook_time_minutes: toTotalMinutes(cookHours, cookMinutes),
       servings: servings.trim() || null,
       tags: selectedTags,
     };
@@ -109,8 +113,10 @@ export default function AddRecipeForm() {
       setInstructions("");
       setImageUrl("");
       setSourceUrl("");
-      setPrepTime("");
-      setCookTime("");
+      setPrepHours("");
+      setPrepMinutes("");
+      setCookHours("");
+      setCookMinutes("");
       setServings("");
       setIsPublic(true);
       setSelectedTags([]);
@@ -172,34 +178,18 @@ export default function AddRecipeForm() {
             onChange={(e) => setSourceUrl(e.target.value)}
           />
 
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
-            <TextField
-              label="Prep time (minutes)"
-              variant="outlined"
-              type="number"
-              inputProps={{ min: 0 }}
-              value={prepTime}
-              onChange={(e) => setPrepTime(e.target.value)}
-              sx={{ minWidth: 140 }}
-            />
-            <TextField
-              label="Cook time (minutes)"
-              variant="outlined"
-              type="number"
-              inputProps={{ min: 0 }}
-              value={cookTime}
-              onChange={(e) => setCookTime(e.target.value)}
-              sx={{ minWidth: 140 }}
-            />
-            <TextField
-              label="Servings"
-              variant="outlined"
-              placeholder="e.g. 4 or 4-6"
-              value={servings}
-              onChange={(e) => setServings(e.target.value)}
-              sx={{ minWidth: 140 }}
-            />
-          </Box>
+          <RecipeTimeFields
+            prepHours={prepHours}
+            setPrepHours={setPrepHours}
+            prepMinutes={prepMinutes}
+            setPrepMinutes={setPrepMinutes}
+            cookHours={cookHours}
+            setCookHours={setCookHours}
+            cookMinutes={cookMinutes}
+            setCookMinutes={setCookMinutes}
+            servings={servings}
+            setServings={setServings}
+          />
 
           {/* TAGS */}
           <FormControl component="fieldset" sx={{ mt: 2 }}>
