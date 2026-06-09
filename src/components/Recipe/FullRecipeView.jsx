@@ -25,6 +25,8 @@ import PeopleIcon from "@mui/icons-material/People";
 import PersonIcon from "@mui/icons-material/Person";
 import LinkIcon from "@mui/icons-material/Link";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CookModeBar from "../CookMode/CookModeBar";
+import CookModeToggle from "../CookMode/CookModeToggle";
 
 export default function FullRecipeView() {
   const { id } = useParams();
@@ -42,6 +44,7 @@ export default function FullRecipeView() {
   const favorites = useStore((state) => state.favorites);
   const toggleFavorite = useStore((state) => state.toggleFavorite);
   const isFavorited = useStore((state) => state.isFavorited);
+  const cookModeEnabled = useStore((state) => state.cookModeEnabled);
 
   // State
   const [recipe, setRecipe] = useState(null);
@@ -123,8 +126,19 @@ export default function FullRecipeView() {
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
+
+  const recipeContentSx = cookModeEnabled
+    ? {
+        fontSize: { xs: "1.125rem", md: "1.25rem" },
+        lineHeight: 1.7,
+        "& p": { mb: 2 },
+        "& li": { mb: 1.5 },
+        "& ol, & ul": { pl: 3 },
+      }
+    : {};
+
   return (
-    <Box sx={{ pb: 6 }}>
+    <Box sx={{ pb: cookModeEnabled ? 10 : 6 }}>
       <Container maxWidth="md" sx={{ mt: 4 }}>
         {/* Recipe image */}
         {recipe.image_url && (
@@ -158,7 +172,7 @@ export default function FullRecipeView() {
             sx={{ maxWidth: { xs: "100%", md: "70%" }, mb: { xs: 2, md: 0 } }}
           >
             <Typography
-              variant="h4"
+              variant={cookModeEnabled ? "h3" : "h4"}
               fontWeight={700}
               sx={{ lineHeight: 1.2, mb: 1 }}
             >
@@ -176,8 +190,7 @@ export default function FullRecipeView() {
               gap: 1,
             }}
           >
-            {/* Icons */}
-            <Stack direction="row" spacing={1}>
+            <Stack direction="row" spacing={1} alignItems="center">
               {user && (
                 <IconButton
                   onClick={() => toggleFavorite(recipe.id)}
@@ -295,22 +308,52 @@ export default function FullRecipeView() {
 
         <Divider sx={{ my: 3 }} />
 
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            gap: 2,
+            mb: recipe.description ? 1.5 : cookModeEnabled ? 2 : 1.5,
+          }}
+        >
+          <Typography
+            variant={cookModeEnabled ? "h4" : "h5"}
+            fontWeight={600}
+          >
+            {recipe.description ? "Description" : "Ingredients"}
+          </Typography>
+          <Box sx={{ flexShrink: 0 }}>
+            <CookModeToggle variant="compact" />
+          </Box>
+        </Box>
+
         {recipe.description && (
-          <>
-            <Typography variant="h5" fontWeight={600} sx={{ mb: 1.5 }}>
-              Description
-            </Typography>
-            <Typography sx={{ mb: 3 }}>{recipe.description}</Typography>
-          </>
+          <Typography sx={{ mb: 3 }}>{recipe.description}</Typography>
         )}
-        <Typography variant="h5" fontWeight={600} sx={{ mt: 4, mb: 1.5 }}>
-          Ingredients
-        </Typography>
-        <Box sx={{ mb: 3 }}>{parse(recipe.ingredients)}</Box>
-        <Typography variant="h5" fontWeight={600} sx={{ mt: 4, mb: 1.5 }}>
+
+        {recipe.description && (
+          <Typography
+            variant={cookModeEnabled ? "h4" : "h5"}
+            fontWeight={600}
+            sx={{ mt: 4, mb: cookModeEnabled ? 2 : 1.5 }}
+          >
+            Ingredients
+          </Typography>
+        )}
+        <Box sx={{ mb: 3, ...recipeContentSx }}>
+          {parse(recipe.ingredients)}
+        </Box>
+        <Typography
+          variant={cookModeEnabled ? "h4" : "h5"}
+          fontWeight={600}
+          sx={{ mt: 4, mb: cookModeEnabled ? 2 : 1.5 }}
+        >
           Instructions
         </Typography>
-        <Box sx={{ mb: 4 }}>{parse(recipe.instructions)}</Box>
+        <Box sx={{ mb: 4, ...recipeContentSx }}>
+          {parse(recipe.instructions)}
+        </Box>
         {/* Snackbar */}
         <Snackbar
           open={snackbarOpen}
@@ -327,6 +370,7 @@ export default function FullRecipeView() {
           </Alert>
         </Snackbar>
       </Container>
+      {cookModeEnabled && <CookModeBar />}
     </Box>
   );
 }

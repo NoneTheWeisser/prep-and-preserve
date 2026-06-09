@@ -13,10 +13,14 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuIcon from "@mui/icons-material/Menu";
+import Chip from "@mui/material/Chip";
+import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
 
 export default function Nav() {
   const user = useStore((state) => state.user);
   const logOut = useStore((state) => state.logOut);
+  const cookModeEnabled = useStore((state) => state.cookModeEnabled);
+  const setCookMode = useStore((state) => state.setCookMode);
   const navigate = useNavigate();
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -105,7 +109,7 @@ export default function Nav() {
             ))}
           </Box>
 
-          {/* --- RIGHT: Desktop avatar / Mobile avatar + hamburger --- */}
+          {/* --- RIGHT: Cook Mode indicator + avatar / hamburger --- */}
           <Box
             sx={{
               display: "flex",
@@ -114,6 +118,17 @@ export default function Nav() {
               ml: "auto",
             }}
           >
+            {cookModeEnabled && (
+              <Chip
+                icon={<RestaurantMenuIcon />}
+                label="Cook Mode"
+                color="primary"
+                size="small"
+                onClick={() => setCookMode(false)}
+                sx={{ cursor: "pointer" }}
+              />
+            )}
+
             {/* Desktop avatar */}
             {user?.id && (
               <Box sx={{ display: { xs: "none", md: "flex" } }}>
