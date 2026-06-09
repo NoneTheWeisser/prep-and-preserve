@@ -78,7 +78,7 @@ export default function About() {
                 fontWeight: 600,
               }}
             >
-              v1.3
+              v1.4
             </span>
             <span
               style={{
@@ -93,6 +93,48 @@ export default function About() {
               }}
             >
               New
+            </span>
+            <span style={{ fontWeight: 400, color: "#555" }}>
+              June 2026
+            </span>
+          </h3>
+          <ul
+            style={{
+              lineHeight: "1.6rem",
+              fontSize: "1.05rem",
+              paddingLeft: "1.5rem",
+            }}
+          >
+            <li>
+              <strong>Readable recipe times:</strong> Prep, cook, and total time
+              now display in hours and minutes (e.g. &quot;1 hr 30 min&quot;
+              instead of &quot;90 min&quot;) on recipe pages and cards.
+            </li>
+            <li>
+              Add and edit forms now use separate Hours and Minutes fields for
+              prep and cook time, grouped under Prep Time and Cook Time.
+            </li>
+            <li>
+              The time and servings section adapts to your screen — one clean row
+              on desktop and iPad, stacked on smaller phones.
+            </li>
+          </ul>
+        </div>
+
+        <div style={{ marginBottom: "2rem" }}>
+          <h3 style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+            <span
+              style={{
+                display: "inline-block",
+                padding: "0.25rem 0.6rem",
+                backgroundColor: "#8a7355",
+                color: "#fff",
+                borderRadius: "12px",
+                fontSize: "0.9rem",
+                fontWeight: 600,
+              }}
+            >
+              v1.3
             </span>
             <span style={{ fontWeight: 400, color: "#555" }}>
               March 2025
@@ -129,7 +171,7 @@ export default function About() {
               style={{
                 display: "inline-block",
                 padding: "0.25rem 0.6rem",
-                backgroundColor: "#8a7355",
+                backgroundColor: "#7a6355",
                 color: "#fff",
                 borderRadius: "12px",
                 fontSize: "0.9rem",
@@ -171,7 +213,7 @@ export default function About() {
               style={{
                 display: "inline-block",
                 padding: "0.25rem 0.6rem",
-                backgroundColor: "#7a6355",
+                backgroundColor: "#6a5345",
                 color: "#fff",
                 borderRadius: "12px",
                 fontSize: "0.9rem",
