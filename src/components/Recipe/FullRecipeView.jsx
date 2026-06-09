@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useStore from "../../zustand/store";
+import { formatDuration } from "../../utils/formatDuration";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import parse from "html-react-parser";
@@ -244,7 +245,7 @@ export default function FullRecipeView() {
           {recipe.prep_time_minutes != null && (
             <Chip
               icon={<ScheduleIcon />}
-              label={`Prep: ${recipe.prep_time_minutes} min`}
+              label={`Prep: ${formatDuration(recipe.prep_time_minutes)}`}
               size="small"
               variant="outlined"
             />
@@ -252,7 +253,7 @@ export default function FullRecipeView() {
           {recipe.cook_time_minutes != null && (
             <Chip
               icon={<ScheduleIcon />}
-              label={`Cook: ${recipe.cook_time_minutes} min`}
+              label={`Cook: ${formatDuration(recipe.cook_time_minutes)}`}
               size="small"
               variant="outlined"
             />
@@ -260,7 +261,7 @@ export default function FullRecipeView() {
           {(recipe.prep_time_minutes != null ||
             recipe.cook_time_minutes != null) && (
             <Chip
-              label={`Total: ${(recipe.prep_time_minutes || 0) + (recipe.cook_time_minutes || 0)} min`}
+              label={`Total: ${formatDuration((recipe.prep_time_minutes || 0) + (recipe.cook_time_minutes || 0))}`}
               size="small"
               variant="outlined"
             />

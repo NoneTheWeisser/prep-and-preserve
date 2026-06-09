@@ -3,6 +3,7 @@ import { Box, Typography, IconButton, Stack, Avatar } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useNavigate } from "react-router-dom";
+import { formatDuration } from "../../utils/formatDuration";
 
 export default function RecipeCard({
   recipe,
@@ -122,7 +123,7 @@ export default function RecipeCard({
               variant="caption"
               sx={{ display: "block", mt: 0.5, opacity: 0.9 }}
             >
-              {totalMinutes > 0 && `${totalMinutes} min`}
+              {totalMinutes > 0 && formatDuration(totalMinutes)}
               {totalMinutes > 0 && recipe.servings && " • "}
               {recipe.servings && `Serves ${recipe.servings}`}
             </Typography>

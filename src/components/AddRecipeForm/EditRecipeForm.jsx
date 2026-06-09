@@ -19,6 +19,8 @@ import axios from "axios";
 import InstructionTextEditor from "./InstructionTextEditor";
 import { useParams } from "react-router-dom";
 import IngredientTextEditor from "./IngredientTextEditor";
+import { splitMinutes, toTotalMinutes } from "../../utils/formatDuration";
+import RecipeTimeFields from "./RecipeTimeFields";
 
 export default function EditRecipeForm() {
   const { id } = useParams();
@@ -39,8 +41,10 @@ export default function EditRecipeForm() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [sourceUrl, setSourceUrl] = useState("");
-  const [prepTime, setPrepTime] = useState("");
-  const [cookTime, setCookTime] = useState("");
+  const [prepHours, setPrepHours] = useState("");
+  const [prepMinutes, setPrepMinutes] = useState("");
+  const [cookHours, setCookHours] = useState("");
+  const [cookMinutes, setCookMinutes] = useState("");
   const [servings, setServings] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
   const [isPublic, setIsPublic] = useState(true);
@@ -63,8 +67,12 @@ export default function EditRecipeForm() {
         setInstructions(recipe.instructions);
         setImageUrl(recipe.image_url);
         setSourceUrl(recipe.source_url);
-        setPrepTime(recipe.prep_time_minutes != null ? String(recipe.prep_time_minutes) : "");
-        setCookTime(recipe.cook_time_minutes != null ? String(recipe.cook_time_minutes) : "");
+        const prep = splitMinutes(recipe.prep_time_minutes);
+        const cook = splitMinutes(recipe.cook_time_minutes);
+        setPrepHours(prep.hours === "" ? "" : String(prep.hours));
+        setPrepMinutes(prep.minutes === "" ? "" : String(prep.minutes));
+        setCookHours(cook.hours === "" ? "" : String(cook.hours));
+        setCookMinutes(cook.minutes === "" ? "" : String(cook.minutes));
         setServings(recipe.servings || "");
         setIsPublic(recipe.is_public);
         setSelectedTags(recipe.tags || []);
@@ -90,8 +98,8 @@ export default function EditRecipeForm() {
       image_url: imageUrl,
       is_public: isPublic,
       source_url: sourceUrl,
-      prep_time_minutes: prepTime ? Number(prepTime) : null,
-      cook_time_minutes: cookTime ? Number(cookTime) : null,
+      prep_time_minutes: toTotalMinutes(prepHours, prepMinutes),
+      cook_time_minutes: toTotalMinutes(cookHours, cookMinutes),
       servings: servings.trim() || null,
       tags: selectedTags,
     };
@@ -183,34 +191,18 @@ export default function EditRecipeForm() {
             onChange={(e) => setSourceUrl(e.target.value)}
           />
 
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
-            <TextField
-              label="Prep time (minutes)"
-              variant="outlined"
-              type="number"
-              inputProps={{ min: 0 }}
-              value={prepTime}
-              onChange={(e) => setPrepTime(e.target.value)}
-              sx={{ minWidth: 140 }}
-            />
-            <TextField
-              label="Cook time (minutes)"
-              variant="outlined"
-              type="number"
-              inputProps={{ min: 0 }}
-              value={cookTime}
-              onChange={(e) => setCookTime(e.target.value)}
-              sx={{ minWidth: 140 }}
-            />
-            <TextField
-              label="Servings"
-              variant="outlined"
-              placeholder="e.g. 4 or 4-6"
-              value={servings}
-              onChange={(e) => setServings(e.target.value)}
-              sx={{ minWidth: 140 }}
-            />
-          </Box>
+          <RecipeTimeFields
+            prepHours={prepHours}
+            setPrepHours={setPrepHours}
+            prepMinutes={prepMinutes}
+            setPrepMinutes={setPrepMinutes}
+            cookHours={cookHours}
+            setCookHours={setCookHours}
+            cookMinutes={cookMinutes}
+            setCookMinutes={setCookMinutes}
+            servings={servings}
+            setServings={setServings}
+          />
 
           {/* TAGS */}
           <FormControl component="fieldset" sx={{ mt: 2 }}>
