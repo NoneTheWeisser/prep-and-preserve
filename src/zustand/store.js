@@ -10,6 +10,7 @@ import axios from "axios";
 import madeSlice from "./slices/made.slice.js";
 import snackbarSlice from "./slices/snackbar.slice.js";
 import profileSlice from "./slices/profile.slice.js";
+import cookModeSlice from "./slices/cookMode.slice.js";
 
 axios.defaults.withCredentials = true;
 
@@ -25,6 +26,7 @@ const useStore = create(
     ...madeSlice(set, get),
     ...snackbarSlice(set, get),
     ...profileSlice(set, get),
+    ...cookModeSlice(set, get),
   }))
 );
 

@@ -78,7 +78,7 @@ export default function About() {
                 fontWeight: 600,
               }}
             >
-              v1.4
+              v1.5
             </span>
             <span
               style={{
@@ -93,6 +93,52 @@ export default function About() {
               }}
             >
               New
+            </span>
+            <span style={{ fontWeight: 400, color: "#555" }}>
+              June 2026
+            </span>
+          </h3>
+          <ul
+            style={{
+              lineHeight: "1.6rem",
+              fontSize: "1.05rem",
+              paddingLeft: "1.5rem",
+            }}
+          >
+            <li>
+              <strong>Cook Mode:</strong> A new toggle on recipe pages keeps your
+              screen awake while you cook — especially handy on iPad.
+            </li>
+            <li>
+              Cook Mode stays on as you move between recipes in the same session,
+              with a nav chip to turn it off from anywhere.
+            </li>
+            <li>
+              When Cook Mode is active, ingredients and instructions use larger,
+              easier-to-read text, and a sticky bottom bar makes it simple to
+              turn off while scrolling.
+            </li>
+            <li>
+              The Cook Mode toggle sits inline with the Description header,
+              always visible on the right.
+            </li>
+          </ul>
+        </div>
+
+        <div style={{ marginBottom: "2rem" }}>
+          <h3 style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+            <span
+              style={{
+                display: "inline-block",
+                padding: "0.25rem 0.6rem",
+                backgroundColor: "#8a7355",
+                color: "#fff",
+                borderRadius: "12px",
+                fontSize: "0.9rem",
+                fontWeight: 600,
+              }}
+            >
+              v1.4
             </span>
             <span style={{ fontWeight: 400, color: "#555" }}>
               June 2026
