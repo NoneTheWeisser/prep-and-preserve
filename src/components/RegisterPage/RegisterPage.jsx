@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { TextField, Button, Box, Paper, Typography } from "@mui/material";
 import useStore from "../../zustand/store";
 import { useNavigate } from "react-router-dom";
+import GoogleSignInButton from "../LoginPage/GoogleSignInButton";
 
 function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -182,6 +183,8 @@ function RegisterPage() {
             Already have an account? Sign In
           </Button>
         </form>
+
+        <GoogleSignInButton label="Sign up with Google" />
       </Paper>
     </Box>
   );

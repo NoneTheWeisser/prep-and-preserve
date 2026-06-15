@@ -44,7 +44,11 @@ To see the fully functional site, please visit: [\[DEPLOYED VERSION OF Prep and 
 
 ```
 - `DATABASE_URL` - PostgreSQL connection string
+- `SERVER_SESSION_SECRET` - session signing secret (8+ characters)
 - `VITE_CLOUDINARY_NAME` & `VITE_CLOUDINARY_UPLOAD_PRESET` - for uploading images in recipes and profiles
+- `GOOGLE_CLIENT_ID` & `GOOGLE_CLIENT_SECRET` - for Google sign-in (optional; omit to disable)
+- `CLIENT_URL` - frontend URL for post-OAuth redirect (e.g. `http://localhost:5173` in dev)
+- `GOOGLE_CALLBACK_URL` - OAuth callback on the API server (e.g. `http://localhost:5001/api/auth/google/callback` in dev)
 ```
 
 6. Run `npm run server` & `npm run client` in separate terminals.

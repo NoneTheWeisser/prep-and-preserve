@@ -15,9 +15,11 @@ DROP TABLE IF EXISTS "made_recipes" CASCADE;
 CREATE TABLE "user" (
   "id" SERIAL PRIMARY KEY,
   "username" VARCHAR(255) UNIQUE NOT NULL,
-  "password" TEXT NOT NULL,
+  "password" TEXT,
   "email" VARCHAR(255) UNIQUE NOT NULL,
   "profile_image_url" TEXT,
+  "google_id" VARCHAR(255) UNIQUE,
+  "auth_provider" VARCHAR(20) NOT NULL DEFAULT 'local',
   "is_admin" BOOLEAN NOT NULL DEFAULT FALSE,
   "is_active" BOOLEAN NOT NULL DEFAULT TRUE,
   "created_at" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),

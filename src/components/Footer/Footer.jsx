@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import { APP_VERSION } from '../../constants/appVersion';
 import './Footer.css';
 
 export default function Footer() {
@@ -24,7 +25,7 @@ export default function Footer() {
 
         <p className="footer-copy">
           © NoneTheWeisser {new Date().getFullYear()}<br />
-            <small>v1.5.0</small>
+            <small>v{APP_VERSION}</small>
         </p>
       </div>
     </footer>
