@@ -6,6 +6,7 @@ const snackbarSlice = (set) => ({
     severity: "info",
     duration: 4000,
     onClose: null,
+    action: null,
   },
 
   showSnackbar: ({
@@ -13,6 +14,7 @@ const snackbarSlice = (set) => ({
     severity = "info",
     duration = 4000,
     onClose = null,
+    action = null,
   }) =>
     set(() => ({
       snackbar: {
@@ -21,6 +23,7 @@ const snackbarSlice = (set) => ({
         severity,
         duration,
         onClose,
+        action,
       },
     })),
 
@@ -31,7 +34,12 @@ const snackbarSlice = (set) => ({
         state.snackbar.onClose();
       }
       return {
-        snackbar: { ...state.snackbar, open: false, onClose: null },
+        snackbar: {
+          ...state.snackbar,
+          open: false,
+          onClose: null,
+          action: null,
+        },
       };
     }),
 });

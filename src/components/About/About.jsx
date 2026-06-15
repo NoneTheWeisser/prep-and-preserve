@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const listStyle = {
@@ -26,6 +27,14 @@ const versionHeadingStyle = {
 
 export default function About() {
   const [showEarlierUpdates, setShowEarlierUpdates] = useState(false);
+  const updatesRef = useRef(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.scrollToUpdates && updatesRef.current) {
+      updatesRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [location.state]);
 
   return (
     <div style={{ padding: "2rem" }}>
@@ -83,6 +92,8 @@ export default function About() {
 
       {/* App Updates Section */}
       <div
+        id="updates"
+        ref={updatesRef}
         style={{
           backgroundColor: "#e1d1c6ff",
           padding: "2rem",
@@ -245,7 +256,7 @@ export default function About() {
             <div style={{ marginBottom: "2rem" }}>
               <h3 style={versionHeadingStyle}>
                 <span style={versionBadgeStyle("#7a6355")}>v1.2</span>
-                <span style={{ fontWeight: 400, color: "#555" }}>Feb 2026</span>
+                <span style={{ fontWeight: 400, color: "#555" }}>February 2026</span>
               </h3>
               <ul style={listStyle}>
                 <li>
@@ -270,7 +281,7 @@ export default function About() {
             <div>
               <h3 style={versionHeadingStyle}>
                 <span style={versionBadgeStyle("#6a5345")}>v1.1</span>
-                <span style={{ fontWeight: 400, color: "#555" }}>Feb 2026</span>
+                <span style={{ fontWeight: 400, color: "#555" }}>February 2026</span>
               </h3>
               <ul style={listStyle}>
                 <li>

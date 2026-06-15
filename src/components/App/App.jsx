@@ -18,6 +18,7 @@ import AdminRoute from "../AdminDashboard/AdminRoute";
 import ProfileSettings from "../Settings/ProfileSettings";
 import GlobalSnackbar from "../GlobalSnackbar/GlobalSnackbar";
 import CookModeManager from "../CookMode/CookModeManager";
+import useWhatsNewNotification from "../../hooks/useWhatsNewNotification";
 import MyRecipesTab from "../MyRecipe/RecipeTabs/MyRecipesTab";
 import FavoritesTab from "../MyRecipe/RecipeTabs/FavoritesTab";
 import MadeRecipesTab from "../MyRecipe/RecipeTabs/MadeRecipesTab";
@@ -30,6 +31,8 @@ function App() {
   useEffect(() => {
     fetchUser();
   }, [fetchUser]);
+
+  useWhatsNewNotification(user);
 
   return (
     <>

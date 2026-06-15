@@ -1,4 +1,4 @@
-import { Snackbar, Alert } from "@mui/material";
+import { Snackbar, Alert, Button } from "@mui/material";
 import useStore from "../../zustand/store";
 
 export default function GlobalSnackbar() {
@@ -12,7 +12,21 @@ export default function GlobalSnackbar() {
       onClose={closeSnackbar}
       anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
     >
-      <Alert severity={snackbar.severity} onClose={closeSnackbar}>
+      <Alert
+        severity={snackbar.severity}
+        onClose={closeSnackbar}
+        action={
+          snackbar.action ? (
+            <Button
+              color="inherit"
+              size="small"
+              onClick={snackbar.action.onClick}
+            >
+              {snackbar.action.label}
+            </Button>
+          ) : null
+        }
+      >
         {snackbar.message}
       </Alert>
     </Snackbar>
