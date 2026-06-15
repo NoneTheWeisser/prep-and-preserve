@@ -20,6 +20,7 @@ const adminTagsRouter = require ('./routes/adminTags.router');
 const adminUsersRouter = require("./routes/adminUsers.router");
 const madeRouter = require("./routes/made.router");
 const trendingRouter = require('./routes/trending.router');
+const authRouter = require('./routes/auth.router');
 
 // Apply middleware:
 app.use(express.json());
@@ -31,6 +32,7 @@ app.use(passport.session());
 
 // Apply router files:
 app.use('/api/user', userRouter);
+app.use('/api/auth', authRouter);
 app.use('/api/recipes', recipeRouter);
 app.use('/api/tags', tagsRouter);
 app.use('/api/favorites', favoriteRouter);

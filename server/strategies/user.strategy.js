@@ -62,7 +62,7 @@ passport.use(
       .then((dbRes) => {
         const user = dbRes && dbRes.rows && dbRes.rows[0];
         
-        if (user && encryptLib.comparePassword(password, user.password)) {
+        if (user && user.password && encryptLib.comparePassword(password, user.password)) {
           // added - with soft delete in admin, this should keep deactivated users out. 
           if (!user.is_active){
             console.log('Login attempt for inactive user:', username);

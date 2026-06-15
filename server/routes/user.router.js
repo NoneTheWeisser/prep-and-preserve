@@ -84,6 +84,12 @@ router.put("/settings", rejectUnauthenticated, async (req, res) => {
     }
 
     if (oldPassword && newPassword) {
+      if (req.user.auth_provider === "google") {
+        return res.status(400).json({
+          message: "Password cannot be changed for Google sign-in accounts.",
+        });
+      }
+
       // fetch current password hash
       const { rows } = await pool.query(
         `SELECT password FROM "user" WHERE id = $1`,

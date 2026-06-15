@@ -147,43 +147,54 @@ export default function ProfileSettings() {
             </Button>
           </Stack>
         </Box>
-        {/* Password update */}
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="h6" gutterBottom>
-            Change Password
-          </Typography>
-          <Stack spacing={2}>
-            {passwordError && <Alert severity="error">{passwordError}</Alert>}
-            {passwordSuccess && (
-              <Alert severity="success">{passwordSuccess}</Alert>
-            )}
-            <TextField
-              label="Current Password"
-              type="password"
-              value={oldPassword}
-              onChange={(e) => {
-                setOldPassword(e.target.value);
-                setPasswordError("");
-                setPasswordSuccess("");
-              }}
-              fullWidth
-            />
-            <TextField
-              label="New Password"
-              type="password"
-              value={newPassword}
-              onChange={(e) => {
-                setNewPassword(e.target.value);
-                setPasswordError("");
-                setPasswordSuccess("");
-              }}
-              fullWidth
-            />
-            <Button variant="contained" onClick={handlePasswordUpdate}>
-              Update Password
-            </Button>
-          </Stack>
-        </Box>
+        {user?.auth_provider === "google" ? (
+          <Box sx={{ mb: 4 }}>
+            <Typography variant="h6" gutterBottom>
+              Sign-in Method
+            </Typography>
+            <Typography color="text.secondary">
+              You sign in with Google. Password changes are not available for
+              this account.
+            </Typography>
+          </Box>
+        ) : (
+          <Box sx={{ mb: 4 }}>
+            <Typography variant="h6" gutterBottom>
+              Change Password
+            </Typography>
+            <Stack spacing={2}>
+              {passwordError && <Alert severity="error">{passwordError}</Alert>}
+              {passwordSuccess && (
+                <Alert severity="success">{passwordSuccess}</Alert>
+              )}
+              <TextField
+                label="Current Password"
+                type="password"
+                value={oldPassword}
+                onChange={(e) => {
+                  setOldPassword(e.target.value);
+                  setPasswordError("");
+                  setPasswordSuccess("");
+                }}
+                fullWidth
+              />
+              <TextField
+                label="New Password"
+                type="password"
+                value={newPassword}
+                onChange={(e) => {
+                  setNewPassword(e.target.value);
+                  setPasswordError("");
+                  setPasswordSuccess("");
+                }}
+                fullWidth
+              />
+              <Button variant="contained" onClick={handlePasswordUpdate}>
+                Update Password
+              </Button>
+            </Stack>
+          </Box>
+        )}
 
         {/* deactivate account  */}
         <Box sx={{ mb: 4 }}>

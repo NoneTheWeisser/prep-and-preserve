@@ -25,6 +25,7 @@
     "express-session": "^1.18.0",
     "html-react-parser": "^5.2.7",
     "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
     "pg": "^8.5.1",
     "quill": "^2.0.3",

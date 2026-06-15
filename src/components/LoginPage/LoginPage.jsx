@@ -8,8 +8,8 @@ import {
   TextField,
   Typography,
   Paper,
-  svgIconClasses,
 } from "@mui/material";
+import GoogleSignInButton from "./GoogleSignInButton";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -23,7 +23,17 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    //     // Clear the auth error message when the component unmounts:
+    const queryString = window.location.hash.split("?")[1] || "";
+    const params = new URLSearchParams(queryString);
+
+    if (params.get("error") === "google") {
+      showSnackbar({
+        message: "Google sign-in failed. Please try again or use your password.",
+        severity: "error",
+      });
+      navigate("/login", { replace: true });
+    }
+
     return () => setAuthErrorMessage("");
   }, []);
 
@@ -124,15 +134,9 @@ export default function LoginPage() {
           >
             Create Account
           </Button>
-          {/* <Button
-            variant="text"
-            fullWidth
-            onClick={() => navigate("/forgot-password")}
-            sx={{ mt: 1 }}
-          >
-            Forgot my password
-          </Button> */}
         </form>
+
+        <GoogleSignInButton />
       </Paper>
     </Box>
   );

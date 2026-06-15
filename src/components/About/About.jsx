@@ -1,4 +1,32 @@
+import { useState } from "react";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
+const listStyle = {
+  lineHeight: "1.6rem",
+  fontSize: "1.05rem",
+  paddingLeft: "1.5rem",
+};
+
+const versionBadgeStyle = (backgroundColor) => ({
+  display: "inline-block",
+  padding: "0.25rem 0.6rem",
+  backgroundColor,
+  color: "#fff",
+  borderRadius: "12px",
+  fontSize: "0.9rem",
+  fontWeight: 600,
+});
+
+const versionHeadingStyle = {
+  display: "flex",
+  alignItems: "center",
+  gap: "0.5rem",
+  flexWrap: "wrap",
+};
+
 export default function About() {
+  const [showEarlierUpdates, setShowEarlierUpdates] = useState(false);
+
   return (
     <div style={{ padding: "2rem" }}>
       {/* Main about section */}
@@ -66,20 +94,8 @@ export default function About() {
         <h2 style={{ marginBottom: "1rem" }}>Latest Updates</h2>
 
         <div style={{ marginBottom: "2rem" }}>
-          <h3 style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
-            <span
-              style={{
-                display: "inline-block",
-                padding: "0.25rem 0.6rem",
-                backgroundColor: "#9E6B53",
-                color: "#fff",
-                borderRadius: "12px",
-                fontSize: "0.9rem",
-                fontWeight: 600,
-              }}
-            >
-              v1.5
-            </span>
+          <h3 style={versionHeadingStyle}>
+            <span style={versionBadgeStyle("#9E6B53")}>v1.6</span>
             <span
               style={{
                 display: "inline-block",
@@ -94,207 +110,191 @@ export default function About() {
             >
               New
             </span>
-            <span style={{ fontWeight: 400, color: "#555" }}>
-              June 2026
-            </span>
+            <span style={{ fontWeight: 400, color: "#555" }}>June 2026</span>
           </h3>
-          <ul
-            style={{
-              lineHeight: "1.6rem",
-              fontSize: "1.05rem",
-              paddingLeft: "1.5rem",
-            }}
-          >
+          <ul style={listStyle}>
+            <li>
+              <strong>Sign in with Google:</strong> You can now log in or create
+              an account using your Google credentials — no separate password
+              required.
+            </li>
+            <li>
+              If you already have an account with the same email, Google sign-in
+              links to your existing profile so your recipes and favorites stay
+              intact.
+            </li>
+            <li>
+              Username and password sign-in still works as before for anyone who
+              prefers it.
+            </li>
+          </ul>
+        </div>
+
+        <div style={{ marginBottom: "2rem" }}>
+          <h3 style={versionHeadingStyle}>
+            <span style={versionBadgeStyle("#8a7355")}>v1.5</span>
+            <span style={{ fontWeight: 400, color: "#555" }}>June 2026</span>
+          </h3>
+          <ul style={listStyle}>
             <li>
               <strong>Cook Mode:</strong> A new toggle on recipe pages keeps your
               screen awake while you cook — especially handy on iPad.
             </li>
-            <li>
-              Cook Mode stays on as you move between recipes in the same session,
-              with a nav chip to turn it off from anywhere.
-            </li>
-            <li>
-              When Cook Mode is active, ingredients and instructions use larger,
-              easier-to-read text, and a sticky bottom bar makes it simple to
-              turn off while scrolling.
-            </li>
-            <li>
-              The Cook Mode toggle sits inline with the Description header,
-              always visible on the right.
-            </li>
+            {showEarlierUpdates && (
+              <>
+                <li>
+                  Cook Mode stays on as you move between recipes in the same
+                  session, with a nav chip to turn it off from anywhere.
+                </li>
+                <li>
+                  When Cook Mode is active, ingredients and instructions use
+                  larger, easier-to-read text, and a sticky bottom bar makes it
+                  simple to turn off while scrolling.
+                </li>
+                <li>
+                  The Cook Mode toggle sits inline with the Description header,
+                  always visible on the right.
+                </li>
+              </>
+            )}
           </ul>
         </div>
 
-        <div style={{ marginBottom: "2rem" }}>
-          <h3 style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
-            <span
-              style={{
-                display: "inline-block",
-                padding: "0.25rem 0.6rem",
-                backgroundColor: "#8a7355",
-                color: "#fff",
-                borderRadius: "12px",
-                fontSize: "0.9rem",
-                fontWeight: 600,
-              }}
-            >
-              v1.4
-            </span>
-            <span style={{ fontWeight: 400, color: "#555" }}>
-              June 2026
-            </span>
-          </h3>
-          <ul
-            style={{
-              lineHeight: "1.6rem",
-              fontSize: "1.05rem",
-              paddingLeft: "1.5rem",
+        <button
+          type="button"
+          onClick={() => setShowEarlierUpdates((prev) => !prev)}
+          aria-expanded={showEarlierUpdates}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "0.35rem",
+            width: "100%",
+            marginBottom: showEarlierUpdates ? "2rem" : 0,
+            padding: "0.75rem 1rem",
+            backgroundColor: "transparent",
+            color: "#9E6B53",
+            border: "1px solid #9E6B53",
+            borderRadius: "4px",
+            fontSize: "1rem",
+            fontWeight: 600,
+            cursor: "pointer",
+          }}
+        >
+          {showEarlierUpdates ? "Show less" : "Show earlier updates"}
+          <ExpandMoreIcon
+            sx={{
+              fontSize: "1.25rem",
+              transform: showEarlierUpdates ? "rotate(180deg)" : "none",
+              transition: "0.2s",
             }}
-          >
-            <li>
-              <strong>Readable recipe times:</strong> Prep, cook, and total time
-              now display in hours and minutes (e.g. &quot;1 hr 30 min&quot;
-              instead of &quot;90 min&quot;) on recipe pages and cards.
-            </li>
-            <li>
-              Add and edit forms now use separate Hours and Minutes fields for
-              prep and cook time, grouped under Prep Time and Cook Time.
-            </li>
-            <li>
-              The time and servings section adapts to your screen — one clean row
-              on desktop and iPad, stacked on smaller phones.
-            </li>
-          </ul>
-        </div>
+          />
+        </button>
 
-        <div style={{ marginBottom: "2rem" }}>
-          <h3 style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
-            <span
-              style={{
-                display: "inline-block",
-                padding: "0.25rem 0.6rem",
-                backgroundColor: "#8a7355",
-                color: "#fff",
-                borderRadius: "12px",
-                fontSize: "0.9rem",
-                fontWeight: 600,
-              }}
-            >
-              v1.3
-            </span>
-            <span style={{ fontWeight: 400, color: "#555" }}>
-              March 2025
-            </span>
-          </h3>
-          <ul
-            style={{
-              lineHeight: "1.6rem",
-              fontSize: "1.05rem",
-              paddingLeft: "1.5rem",
-            }}
-          >
-            <li>
-              <strong>Recipe time &amp; servings:</strong> Add prep time, cook
-              time, and servings when creating or editing recipes.
-            </li>
-            <li>
-              Recipe pages now display a unified meta row with submitter, source
-              link, time, and servings as chips.
-            </li>
-            <li>
-              &quot;I Made This&quot; is now a chip in the meta row, matching the
-              updated recipe page style.
-            </li>
-            <li>
-              Recipe cards show total time and servings when available.
-            </li>
-          </ul>
-        </div>
+        {showEarlierUpdates && (
+          <>
+            <div style={{ marginBottom: "2rem" }}>
+              <h3 style={versionHeadingStyle}>
+                <span style={versionBadgeStyle("#8a7355")}>v1.4</span>
+                <span style={{ fontWeight: 400, color: "#555" }}>June 2026</span>
+              </h3>
+              <ul style={listStyle}>
+                <li>
+                  <strong>Readable recipe times:</strong> Prep, cook, and total
+                  time now display in hours and minutes (e.g. &quot;1 hr 30
+                  min&quot; instead of &quot;90 min&quot;) on recipe pages and
+                  cards.
+                </li>
+                <li>
+                  Add and edit forms now use separate Hours and Minutes fields
+                  for prep and cook time, grouped under Prep Time and Cook Time.
+                </li>
+                <li>
+                  The time and servings section adapts to your screen — one clean
+                  row on desktop and iPad, stacked on smaller phones.
+                </li>
+              </ul>
+            </div>
 
-        <div style={{ marginBottom: "2rem" }}>
-          <h3 style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
-            <span
-              style={{
-                display: "inline-block",
-                padding: "0.25rem 0.6rem",
-                backgroundColor: "#7a6355",
-                color: "#fff",
-                borderRadius: "12px",
-                fontSize: "0.9rem",
-                fontWeight: 600,
-              }}
-            >
-              v1.2
-            </span>
-          </h3>
-          <ul
-            style={{
-              lineHeight: "1.6rem",
-              fontSize: "1.05rem",
-              paddingLeft: "1.5rem",
-            }}
-          >
-            <li>
-              The Trending page now highlights the most recently made recipes in
-              the community.
-            </li>
-            <li>
-              You can now tap a username in Trending to visit that cook’s full
-              profile.
-            </li>
-            <li>
-              Favorites load immediately on the Trending page, making it easier
-              to see what you’ve saved.
-            </li>
-            <li>
-              General browsing improvements make moving through the app smoother
-              and more consistent.
-            </li>
-          </ul>
-        </div>
+            <div style={{ marginBottom: "2rem" }}>
+              <h3 style={versionHeadingStyle}>
+                <span style={versionBadgeStyle("#8a7355")}>v1.3</span>
+                <span style={{ fontWeight: 400, color: "#555" }}>
+                  March 2025
+                </span>
+              </h3>
+              <ul style={listStyle}>
+                <li>
+                  <strong>Recipe time &amp; servings:</strong> Add prep time,
+                  cook time, and servings when creating or editing recipes.
+                </li>
+                <li>
+                  Recipe pages now display a unified meta row with submitter,
+                  source link, time, and servings as chips.
+                </li>
+                <li>
+                  &quot;I Made This&quot; is now a chip in the meta row, matching
+                  the updated recipe page style.
+                </li>
+                <li>
+                  Recipe cards show total time and servings when available.
+                </li>
+              </ul>
+            </div>
 
-        <div>
-          <h3 style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
-            <span
-              style={{
-                display: "inline-block",
-                padding: "0.25rem 0.6rem",
-                backgroundColor: "#6a5345",
-                color: "#fff",
-                borderRadius: "12px",
-                fontSize: "0.9rem",
-                fontWeight: 600,
-              }}
-            >
-              v1.1
-            </span>
-          </h3>
-          <ul
-            style={{
-              lineHeight: "1.6rem",
-              fontSize: "1.05rem",
-              paddingLeft: "1.5rem",
-            }}
-          >
-            <li>
-              <strong>
-                My Recipe List View: View your recipes in three different ways.
-              </strong>
-            </li>
-            <ul style={{ marginTop: "0.5rem", paddingLeft: "1.5rem" }}>
-              <li>
-                <strong>My Recipes:</strong> All recipes you’ve submitted.
-              </li>
-              <li>
-                <strong>Favorites:</strong> Every recipe you’ve marked as a
-                favorite.
-              </li>
-              <li>
-                <strong>Made:</strong> Recipes you’ve marked as made.
-              </li>
-            </ul>
-          </ul>
-        </div>
+            <div style={{ marginBottom: "2rem" }}>
+              <h3 style={versionHeadingStyle}>
+                <span style={versionBadgeStyle("#7a6355")}>v1.2</span>
+                <span style={{ fontWeight: 400, color: "#555" }}>Feb 2026</span>
+              </h3>
+              <ul style={listStyle}>
+                <li>
+                  The Trending page now highlights the most recently made recipes
+                  in the community.
+                </li>
+                <li>
+                  You can now tap a username in Trending to visit that cook’s
+                  full profile.
+                </li>
+                <li>
+                  Favorites load immediately on the Trending page, making it
+                  easier to see what you’ve saved.
+                </li>
+                <li>
+                  General browsing improvements make moving through the app
+                  smoother and more consistent.
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 style={versionHeadingStyle}>
+                <span style={versionBadgeStyle("#6a5345")}>v1.1</span>
+                <span style={{ fontWeight: 400, color: "#555" }}>Feb 2026</span>
+              </h3>
+              <ul style={listStyle}>
+                <li>
+                  <strong>
+                    My Recipe List View: View your recipes in three different
+                    ways.
+                  </strong>
+                </li>
+                <ul style={{ marginTop: "0.5rem", paddingLeft: "1.5rem" }}>
+                  <li>
+                    <strong>My Recipes:</strong> All recipes you’ve submitted.
+                  </li>
+                  <li>
+                    <strong>Favorites:</strong> Every recipe you’ve marked as a
+                    favorite.
+                  </li>
+                  <li>
+                    <strong>Made:</strong> Recipes you’ve marked as made.
+                  </li>
+                </ul>
+              </ul>
+            </div>
+          </>
+        )}
       </div>
       {/* Contact Section */}
       <div
